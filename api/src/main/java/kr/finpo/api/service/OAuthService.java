@@ -64,7 +64,7 @@ public class OAuthService {
           KakaoTokenDto.class
       );
 
-      logger.debug(response.getBody().toString());
+      logger.debug("카카오 tokens:" + response.getBody().toString());
 
       return response.getBody();
     } catch (Exception e) {
@@ -75,6 +75,8 @@ public class OAuthService {
 
   public KakaoAccountDto getKakaoAccount(String accessToken) {
     try {
+      if (accessToken.indexOf("Bearer ") != 0) accessToken = "Bearer " + accessToken;
+
       HttpHeaders headers = new HttpHeaders();
       headers.set("Authorization", accessToken);
       headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
