@@ -32,11 +32,14 @@ public class OAuthController {
     Object loginRes = oAuthService.loginWithKakaoToken(kakaoToken.access_token());
 
     HttpHeaders headers = new HttpHeaders();
-    if (loginRes.getClass() == UserDto.class) // not registered
-      headers.setLocation(new URI(url + "/register"));
+    if (loginRes.getClass() == UserDto.class) { // not registered
+      UserDto userDto = (UserDto) loginRes;
+      headers.set("KakaoToken", kakaoToken.access_token());
+      headers.setLocation(new URI(String.format("%s/register/kakao?%s&kakao-token=%s",url, userDto.toUrlParameter(), kakaoToken.access_token())));
+    }
     else {
-      headers.setLocation(new URI(url));
-      headers.set("Authorization", "Bearer " + loginRes.toString());
+      TokenDto tokenDto = (TokenDto) loginRes;
+      headers.setLocation(new URI(String.format("%s?access-token=%s&refresh-token=%s", url, tokenDto.getAccessToken(), tokenDto.getRefreshToken())));
     }
     return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER); // redirect
   }
@@ -61,7 +64,7 @@ public class OAuthController {
   }
 
 
-  @GetMapping("/reissue")
+  @PostMapping("/reissue")
   public DataResponse<Object> reissueTokens(@RequestBody TokenDto tokenDto) {
     return DataResponse.of(oAuthService.reissueTokens(tokenDto));
   }
