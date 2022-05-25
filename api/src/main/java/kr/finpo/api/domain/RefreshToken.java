@@ -11,9 +11,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@ToString
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@ToString
 public class RefreshToken {
 
   @Id
@@ -43,6 +43,8 @@ public class RefreshToken {
     return new RefreshToken(refreshToken);
   }
 
-  @OneToOne(mappedBy = "refreshToken")
+  @Setter
+  @OneToOne
+  @JoinColumn
   private User user;
 }

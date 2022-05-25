@@ -1,18 +1,14 @@
 package kr.finpo.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import kr.finpo.api.constant.Gender;
+import kr.finpo.api.constant.OAuthType;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record KakaoAccountDto(
     String id,
-    KakaoAccount kakao_account,
-    String name,
-    String email,
-    String gender
+    KakaoAccount kakao_account
 ) {
-  public KakaoAccountDto {
-    name = kakao_account.profile().nickname();
-    email = kakao_account.email();
-    gender = kakao_account.gender();
-  }
-
   record KakaoAccount(
       Profile profile,
       String email,
@@ -20,6 +16,20 @@ public record KakaoAccountDto(
   ) {
     record Profile(String nickname) {
     }
+  }
+
+  public UserDto toUserDto() {
+    return new UserDto(null,
+        kakao_account.profile.nickname,
+        kakao_account.profile.nickname,
+        null,
+        kakao_account.gender.equals("male") ? Gender.MALE : kakao_account.gender.equals("female") ? Gender.FEMALE : null,
+        kakao_account.email,
+        null,
+        null,
+        null,
+        OAuthType.KAKAO
+    );
   }
 }
 

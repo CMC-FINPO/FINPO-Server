@@ -14,21 +14,25 @@ import java.time.LocalDate;
 public record UserDto(
     Long id,
     String name,
+    String nickname,
     LocalDate birth,
     Gender gender,
     String email,
+    String region1,
+    String region2,
+    String profileImg,
     OAuthType oAuthType
 ) {
 
   public User toEntity() {
-    return User.of(name, birth, gender, email, oAuthType);
+    return User.of(name, nickname, birth, gender, email, region1, region2, profileImg, oAuthType);
   }
 
   public String toUrlParameter() {
     try {
       StringBuilder sb = new StringBuilder();
       for (Field field : this.getClass().getDeclaredFields()) {
-        if(field.get(this) == null) continue;
+        if (field.get(this) == null) continue;
         sb.append(field.getName());
         sb.append("=");
         sb.append(field.get(this));
@@ -36,20 +40,25 @@ public record UserDto(
       }
       sb.deleteCharAt(sb.length() - 1);
       return sb.toString();
-    }
-    catch(Exception e) {
+    } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
   public User updateEntity(User user) {
     if (name != null) user.setName(name);
+    if (nickname != null) user.setNickname(nickname);
     if (birth != null) user.setBirth(birth);
+    if (gender != null) user.setGender(gender);
     if (email != null) user.setEmail(email);
+    if (region1 != null) user.setRegion1(region1);
+    if (region2 != null) user.setRegion2(region2);
+    if (profileImg != null) user.setProfileImg(profileImg);
+
     return user;
   }
 
   public static UserDto info(User user) {
-    return new UserDto(user.getId(), user.getName(), user.getBirth(), user.getGender(), user.getEmail(), user.getOAuthType());
+    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getRegion1(), user.getRegion2(), user.getProfileImg(), user.getOAuthType());
   }
 }

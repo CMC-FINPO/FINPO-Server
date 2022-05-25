@@ -101,14 +101,15 @@ public class OAuthService {
 
       Optional<User> user = userRepository.findByKakaoAccountId(kakaoAccount.id());
       if (user.isEmpty())
-        return new UserDto(
-            null,
-            kakaoAccount.name(),
-            null,
-            kakaoAccount.gender().equals("male") ? Gender.MALE : kakaoAccount.gender().equals("female") ? Gender.FEMALE : null,
-            kakaoAccount.email(),
-            null
-        );
+        return kakaoAccount.toUserDto();
+//        return new UserDto(
+//            null,
+//            kakaoAccount.name(),
+//            null,
+//            kakaoAccount.gender().equals("male") ? Gender.MALE : kakaoAccount.gender().equals("female") ? Gender.FEMALE : null,
+//            kakaoAccount.email(),
+//            null
+//        );
 
       TokenDto tokenDto = tokenProvider.generateTokenDto(user.get());
 
@@ -129,17 +130,17 @@ public class OAuthService {
       if(kakaoAccountRepository.findById(kakaoAccountId).isPresent())
         throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
 
-      KakaoAccount kakaoAccount = kakaoAccountRepository.save(KakaoAccount.of(kakaoAccountId));
-
       User user = dto.toEntity();
       user.setOAuthType(OAuthType.KAKAO);
-      user.setKakaoAccount(kakaoAccount);
       user = userRepository.save(user);
+
+      KakaoAccount kakaoAccount = kakaoAccountRepository.save(KakaoAccount.of(kakaoAccountId));
+      kakaoAccount.setUser(user);
 
       TokenDto tokenDto = tokenProvider.generateTokenDto(user);
       RefreshToken refreshToken = RefreshToken.of(tokenDto.getRefreshToken());
-      user.setRefreshToken(refreshToken);
-      userRepository.save(user);
+      refreshToken.setUser(user);
+      refreshToken = refreshTokenRepository.save(refreshToken);
 
       return tokenDto;
     } catch (Exception e) {
@@ -165,6 +166,7 @@ public class OAuthService {
       tokenDto = tokenProvider.generateTokenDto(user);
       refreshToken.setRefreshToken(tokenDto.getRefreshToken());
       refreshTokenRepository.save(refreshToken);
+
 
       return tokenDto;
     } catch (Exception e) {

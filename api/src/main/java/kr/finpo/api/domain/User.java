@@ -1,8 +1,6 @@
 package kr.finpo.api.domain;
 
-import kr.finpo.api.constant.Gender;
-import kr.finpo.api.constant.OAuthType;
-import kr.finpo.api.constant.Role;
+import kr.finpo.api.constant.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -28,6 +26,10 @@ public class User {
 
   @Setter
   @Column(nullable = true)
+  private String nickname;
+
+  @Setter
+  @Column(nullable = true)
   private LocalDate birth;
 
   @Setter
@@ -38,6 +40,18 @@ public class User {
   @Setter
   @Column(nullable = true)
   private String email;
+
+  @Setter
+  @Column(nullable = true)
+  private String region1;
+
+  @Setter
+  @Column(nullable = true)
+  private String region2;
+
+  @Setter
+  @Column(nullable = true)
+  private String profileImg;
 
   @Setter
   @Column(nullable = true)
@@ -60,34 +74,25 @@ public class User {
   protected User() {
   }
 
-  protected User(String name) {
+  protected User(String name, String nickname, LocalDate birth, Gender gender, String email, String region1, String region2, String profileImg, OAuthType oAuthType) {
     this.name = name;
-  }
-
-  protected User(String name, LocalDate birth, Gender gender, String email, OAuthType oAuthType) {
-    this.name = name;
+    this.nickname = nickname;
     this.birth = birth;
     this.gender = gender;
     this.email = email;
+    this.region1 = region1;
+    this.region2 = region2;
+    this.profileImg = profileImg;
     this.oAuthType = oAuthType;
   }
 
-  public static User of(String name) {
-    return new User(name);
+  public static User of(String name, String nickname, LocalDate birth, Gender gender, String email, String region1, String region2, String profileImg, OAuthType oAuthType) {
+    return new User(name, nickname, birth, gender, email, region1, region2, profileImg, oAuthType);
   }
 
-  public static User of(String name, LocalDate birth, Gender gender, String email, OAuthType oauthType) {
-    return new User(name, birth, gender, email, oauthType);
-  }
-
-  @Setter
-  @OneToOne(cascade = CascadeType.PERSIST)
-  @JoinColumn
+  @OneToOne(mappedBy = "user")
   private RefreshToken refreshToken;
 
-
-  @OneToOne
-  @Setter
-  @JoinColumn
+  @OneToOne(mappedBy = "user")
   private KakaoAccount kakaoAccount;
 }

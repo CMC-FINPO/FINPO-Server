@@ -11,9 +11,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@ToString
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@ToString
 public class KakaoAccount {
 
   @Id
@@ -40,6 +40,8 @@ public class KakaoAccount {
     return new KakaoAccount(kakaoId);
   }
 
-  @OneToOne(mappedBy = "kakaoAccount")
+  @Setter
+  @OneToOne
+  @JoinColumn
   private User user;
 }

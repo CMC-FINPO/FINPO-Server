@@ -40,11 +40,15 @@ public class TokenProvider {
 
     Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
     String accessToken = Jwts.builder()
-        .setSubject(user.getId().toString())       // payload "sub": "id"
-        .claim("name", user.getName())       // payload "name": "msk"
-        .claim(AUTHORITIES_KEY, user.getRole())     // payload "auth": "ROLE_USER"
-        .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022
-        .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+        .setSubject(user.getId().toString())
+        .claim("nickname", user.getNickname())
+        .claim("profileImg", user.getProfileImg())
+        .claim("region1", user.getRegion1())
+        .claim("region2", user.getRegion2())
+        .claim("oAuthType", user.getOAuthType())
+        .claim(AUTHORITIES_KEY, user.getRole())
+        .setExpiration(accessTokenExpiresIn)
+        .signWith(key, SignatureAlgorithm.HS512)
         .compact();
 
     // Refresh Token 생성
