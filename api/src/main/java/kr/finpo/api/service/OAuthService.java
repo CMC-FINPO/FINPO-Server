@@ -95,9 +95,9 @@ public class OAuthService {
   }
 
 
-  public Object loginWithKakaoToken(String accessToken) {
+  public Object loginWithKakaoToken(String kakaoAccessToken) {
     try {
-      KakaoAccountDto kakaoAccount = getKakaoAccount(accessToken);
+      KakaoAccountDto kakaoAccount = getKakaoAccount(kakaoAccessToken);
 
       Optional<User> user = userRepository.findByKakaoAccountId(kakaoAccount.id());
       if (user.isEmpty())
@@ -126,6 +126,9 @@ public class OAuthService {
   public TokenDto registerByKakao(String kakaoAccessToken, UserDto dto) {
     try {
       String kakaoAccountId = getKakaoAccount(kakaoAccessToken).id();
+      if(kakaoAccountRepository.findById(kakaoAccountId).isPresent())
+        throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
+
       KakaoAccount kakaoAccount = kakaoAccountRepository.save(KakaoAccount.of(kakaoAccountId));
 
       User user = dto.toEntity();
