@@ -6,6 +6,9 @@ import kr.finpo.api.constant.Gender;
 import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.exception.GeneralException;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
@@ -15,14 +18,18 @@ public record UserDto(
     Long id,
     String name,
     String nickname,
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate birth,
     Gender gender,
     String email,
     String region1,
     String region2,
     String profileImg,
-    OAuthType oAuthType
+    OAuthType oAuthType,
+    MultipartFile profileImgFile
 ) {
+  public UserDto {
+  }
 
   public User toEntity() {
     return User.of(name, nickname, birth, gender, email, region1, region2, profileImg, oAuthType);
@@ -59,6 +66,6 @@ public record UserDto(
   }
 
   public static UserDto info(User user) {
-    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getRegion1(), user.getRegion2(), user.getProfileImg(), user.getOAuthType());
+    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getRegion1(), user.getRegion2(), user.getProfileImg(), user.getOAuthType(), null);
   }
 }

@@ -6,11 +6,13 @@ import kr.finpo.api.dto.TokenDto;
 import kr.finpo.api.dto.UserDto;
 import kr.finpo.api.service.OAuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,6 +20,7 @@ import java.net.URISyntaxException;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/oauth")
+@Slf4j
 public class OAuthController {
 
   private final OAuthService oAuthService;
@@ -29,7 +32,9 @@ public class OAuthController {
   ) throws URISyntaxException {
 
     KakaoTokenDto kakaoToken = oAuthService.getKakaoAccessToken(code);
+    log.debug("카카오 tokens:" + kakaoToken.toString());
     Object loginRes = oAuthService.loginWithKakaoToken(kakaoToken.access_token());
+
 
     HttpHeaders headers = new HttpHeaders();
     if (loginRes.getClass() == UserDto.class) { // not registered
@@ -58,7 +63,7 @@ public class OAuthController {
   @PostMapping("/register/kakao")
   public DataResponse<Object> registerByKakao(
       @RequestHeader("Authorization") String kakaoAccessToken,
-      @RequestBody UserDto body
+      @ModelAttribute UserDto body
   ) {
     return DataResponse.of(oAuthService.registerByKakao(kakaoAccessToken, body));
   }
