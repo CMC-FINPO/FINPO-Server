@@ -56,6 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/oauth/**").permitAll()
         .antMatchers("/region/**").permitAll()
         .antMatchers("/upload/**").permitAll()
+        .antMatchers("/docs/**").permitAll()
+        .antMatchers("/static/**").permitAll()
+
         .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
         .and().cors()

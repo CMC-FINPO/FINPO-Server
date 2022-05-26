@@ -1,0 +1,100 @@
+
+= FINPO API Document
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+:docinfo: shared-head
+
+//include::overview.adoc[]
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+== OAuth
+
+=== 토큰
+
+==== 재발급
+
+Access token이 만료되었을 때 해당 방식으로 토큰을 재발급합니다
+
+operation::reissue[snippets='http-request,request-fields,http-response,response-fields']
+
+Refresh token이 발급된지 7일이 넘었다면 재발급이 불가합니다.
+
+새로 로그인해주세요.
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+=== 카카오
+
+==== 로그인
+operation::kakao-login-success[snippets='http-request,request-headers']
+&nbsp;
+
+**성공 시**
+
+operation::kakao-login-success[snippets='http-response,response-fields']
+
+&nbsp;
+&nbsp;
+
+**실패 시**
+
+각 소셜 아이디로부터 얻어온 데이터를 가능한 return 해드립니다
+
+operation::kakao-login-fail[snippets='http-response,response-fields']
+
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 회원가입
+
+**multipart/form-data 형식으로 보내주세요**
+
+
+operation::kakao-register[snippets='http-request,request-headers,request-parameters']
+
+&nbsp;
+
+&nbsp;
+
+operation::kakao-register[snippets='http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+== 지역
+=== 가져오기
+==== 지역1 이름
+operation::region1[snippets='http-request,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 지역2 이름
+operation::region2-seoul[snippets='http-request,http-response,response-fields']
+operation::region2-gyeonggi[snippets='response-body']
+operation::region2-busan[snippets='response-body']

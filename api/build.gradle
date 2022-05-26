@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
     id 'java'
 }
 
@@ -9,6 +10,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 configurations {
+    asciidoctorExtensions
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -21,9 +23,12 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.projectlombok:lombok'
+    implementation 'junit:junit:4.13.1'
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
 
@@ -42,8 +47,75 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
+    // s3
+    compileOnly 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+    implementation "com.amazonaws:aws-java-sdk-s3:1.11.914"
+
+
+    // Spring REST Docs
+
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+
+
+// Spring Rest DOCS
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+asciidoctor { // asciidoctor 작업 구성
+//    dependsOn test // test 작업 이후에 작동하도록 하는 설정
+    inputs.dir snippetsDir // snippetsDir 를 입력으로 구성
+    configurations 'asciidoctorExtensions' // 위에서 작성한 configuration 적용
+
+    // source가 없으면 .adoc파일을 전부 html로 만들어버림
+    // source 지정시 특정 adoc만 HTML로 만든다.
+    sources{
+        include("**/index.adoc","**/common/*.adoc")
+    }
+
+    // 특정 .adoc에 다른 adoc 파일을 가져와서(include) 사용하고 싶을 경우 경로를 baseDir로 맞춰주는 설정입니다.
+    // 개별 adoc으로 운영한다면 필요 없는 옵션입니다.
+    baseDirFollowsSourceFile()
+}
+
+// static/docs 폴더 비우기
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+// asccidoctor 작업 이후 생성된 HTML 파일을 static/docs 로 copy
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+
+    from file("build/docs/asciidoc")
+    into file("static/docs")
+}
+
+// build 의 의존작업 명시
+build {
+    dependsOn copyDocument
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+
+if (hasProperty('buildScan')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+    }
 }
