@@ -16,8 +16,6 @@ import kr.finpo.api.repository.RefreshTokenRepository;
 import kr.finpo.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -29,9 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class OAuthService {
 
   private final TokenProvider tokenProvider;
@@ -47,8 +45,6 @@ public class OAuthService {
   private String kakaoRedirectUri;
   @Value("${upload.url}")
   private String uploadUrl;
-
-  private final static Logger logger = LoggerFactory.getLogger(UserService.class);
 
 
   public KakaoTokenDto getKakaoAccessToken(String code) {

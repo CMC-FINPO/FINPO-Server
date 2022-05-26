@@ -12,11 +12,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/upload")
 public class UploadController {
 
   private final S3Uploader s3Uploader;
+
+  public UploadController(S3Uploader s3Uploader) {
+    this.s3Uploader = s3Uploader;
+  }
 
   @GetMapping("/{*path}")
   public ResponseEntity<Resource> getUploadedFile(@PathVariable("path") String path) throws IOException {

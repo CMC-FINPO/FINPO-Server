@@ -23,7 +23,7 @@ public record KakaoAccountDto(
         kakao_account.profile.nickname,
         kakao_account.profile.nickname,
         null,
-        kakao_account.gender.equals("male") ? Gender.MALE : kakao_account.gender.equals("female") ? Gender.FEMALE : null,
+        "male".equals(kakao_account.gender) ? Gender.MALE : "female".equals(kakao_account.gender) ? Gender.FEMALE : null,
         kakao_account.email,
         null,
         null,
