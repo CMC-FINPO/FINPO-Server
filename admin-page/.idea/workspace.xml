@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f7a79ad7-9fa7-4899-ae5a-c16706d14df0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../api/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../api/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/controller/UploadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/controller/UploadController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/controller/error/BaseErrorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/controller/error/BaseErrorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/controller/error/ExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/controller/error/ExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/service/OAuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/service/OAuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/service/S3Uploader.java" beforeDir="false" afterPath="$PROJECT_DIR$/../api/src/main/java/kr/finpo/api/service/S3Uploader.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="29dg5IqDg97ElNSmBk4peE9QnKO" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f7a79ad7-9fa7-4899-ae5a-c16706d14df0" name="Changes" comment="" />
+      <created>1653448192638</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1653448192638</updated>
+      <workItem from="1653448194513" duration="1455000" />
+      <workItem from="1653478041632" duration="11069000" />
+      <workItem from="1653532887370" duration="3045000" />
+      <workItem from="1653574236023" duration="1226000" />
+      <workItem from="1653575673842" duration="14000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/component/RegisterPopup.js</url>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
