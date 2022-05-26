@@ -31,7 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(WebSecurity web) {
-//    web.ignoring().antMatchers("/h2-console/**", "/favicon.ico");
+    web.ignoring()
+        .antMatchers("/resources/**");
   }
 
   @Override
@@ -51,8 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // non-token request url
         .and()
         .authorizeRequests()
-        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // - (1)
+        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
         .antMatchers("/oauth/**").permitAll()
+        .antMatchers("/region/**").permitAll()
+        .antMatchers("/upload/**").permitAll()
         .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
         .and().cors()
