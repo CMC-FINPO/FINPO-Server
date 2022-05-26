@@ -1,7 +1,6 @@
 package kr.finpo.api.service;
 
 import kr.finpo.api.constant.ErrorCode;
-import kr.finpo.api.constant.Gender;
 import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.KakaoAccount;
 import kr.finpo.api.domain.RefreshToken;
@@ -16,6 +15,7 @@ import kr.finpo.api.repository.KakaoAccountRepository;
 import kr.finpo.api.repository.RefreshTokenRepository;
 import kr.finpo.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,10 +25,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class OAuthService {
 
@@ -36,12 +38,15 @@ public class OAuthService {
   private final KakaoAccountRepository kakaoAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final UserRepository userRepository;
+  private final S3Uploader s3Uploader;
 
 
   @Value("${oauth.kakao.rest-api-key}")
   private String kakaoApiKey;
   @Value("${oauth.kakao.redirect-uri}")
   private String kakaoRedirectUri;
+  @Value("${upload.url}")
+  private String uploadUrl;
 
   private final static Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -63,8 +68,6 @@ public class OAuthService {
           new HttpEntity<>(params, headers),
           KakaoTokenDto.class
       );
-
-      logger.debug("카카오 tokens:" + response.getBody().toString());
 
       return response.getBody();
     } catch (Exception e) {
@@ -100,21 +103,15 @@ public class OAuthService {
       KakaoAccountDto kakaoAccount = getKakaoAccount(kakaoAccessToken);
 
       Optional<User> user = userRepository.findByKakaoAccountId(kakaoAccount.id());
-      if (user.isEmpty())
-        return kakaoAccount.toUserDto();
-//        return new UserDto(
-//            null,
-//            kakaoAccount.name(),
-//            null,
-//            kakaoAccount.gender().equals("male") ? Gender.MALE : kakaoAccount.gender().equals("female") ? Gender.FEMALE : null,
-//            kakaoAccount.email(),
-//            null
-//        );
+      if (user.isEmpty()) return kakaoAccount.toUserDto();
 
       TokenDto tokenDto = tokenProvider.generateTokenDto(user.get());
 
-      RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.get().getId()).get();
-      refreshToken.setRefreshToken(tokenDto.getRefreshToken());
+      refreshTokenRepository.findByUserId(user.get().getId())
+          .ifPresent(refreshToken->{refreshTokenRepository.delete(refreshToken);});
+
+      RefreshToken refreshToken = RefreshToken.of(tokenDto.getRefreshToken());
+      refreshToken.setUser(user.get());
       refreshTokenRepository.save(refreshToken);
 
       return tokenDto;
@@ -127,10 +124,15 @@ public class OAuthService {
   public TokenDto registerByKakao(String kakaoAccessToken, UserDto dto) {
     try {
       String kakaoAccountId = getKakaoAccount(kakaoAccessToken).id();
-      if(kakaoAccountRepository.findById(kakaoAccountId).isPresent())
+      if (kakaoAccountRepository.findById(kakaoAccountId).isPresent())
         throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
 
+      String profileImgUrl = null;
+      if(dto.profileImgFile() != null)
+        profileImgUrl = uploadUrl + s3Uploader.uploadFile("profile", dto.profileImgFile());
+
       User user = dto.toEntity();
+      user.setProfileImg(profileImgUrl);
       user.setOAuthType(OAuthType.KAKAO);
       user = userRepository.save(user);
 
@@ -140,7 +142,7 @@ public class OAuthService {
       TokenDto tokenDto = tokenProvider.generateTokenDto(user);
       RefreshToken refreshToken = RefreshToken.of(tokenDto.getRefreshToken());
       refreshToken.setUser(user);
-      refreshToken = refreshTokenRepository.save(refreshToken);
+      refreshTokenRepository.save(refreshToken);
 
       return tokenDto;
     } catch (Exception e) {
@@ -162,13 +164,15 @@ public class OAuthService {
       if (!refreshToken.getRefreshToken().equals(tokenDto.getRefreshToken()))
         throw new GeneralException(ErrorCode.INVALID_REFRESH_TOKEN);
 
-      User user = userRepository.findById(userId).get();
-      tokenDto = tokenProvider.generateTokenDto(user);
-      refreshToken.setRefreshToken(tokenDto.getRefreshToken());
-      refreshTokenRepository.save(refreshToken);
+      refreshTokenRepository.delete(refreshToken);
 
+      Optional<User> user = userRepository.findById(userId);
+      TokenDto newTokenDto = tokenProvider.generateTokenDto(user.get());
+      RefreshToken newRefreshToken = RefreshToken.of(newTokenDto.getRefreshToken());
+      newRefreshToken.setUser(user.get());
+      refreshTokenRepository.save(newRefreshToken);
 
-      return tokenDto;
+      return newTokenDto;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

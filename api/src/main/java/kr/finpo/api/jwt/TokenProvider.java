@@ -3,7 +3,9 @@ package kr.finpo.api.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.dto.TokenDto;
+import kr.finpo.api.exception.GeneralException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +27,7 @@ public class TokenProvider {
   private static final String AUTHORITIES_KEY = "auth";
   private static final String BEARER_TYPE = "bearer";
   private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 1;            // 30분
-  private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 2;//1000 * 60 * 60 * 24 * 7;  // 7일
+  private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
   private final Key key;
 

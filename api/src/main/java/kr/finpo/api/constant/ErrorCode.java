@@ -29,6 +29,7 @@ public enum ErrorCode {
   PROVIDER_TOKEN_NOT_FOUND(30002, HttpStatus.BAD_REQUEST, "Auth provider token not found"),
   KAKAO_SERVER_ERROR(30001, HttpStatus.INTERNAL_SERVER_ERROR, "Kakao authorization server may have problem"),
 
+  ACCESS_TOKEN_NOT_FOUND(40000, HttpStatus.UNAUTHORIZED, "Access token not found"),
   ACCESS_TOKEN_EXPIRATION(40001, HttpStatus.UNAUTHORIZED, "Expired access token. Send me refresh token"),
   INVALID_REFRESH_TOKEN(40002, HttpStatus.BAD_REQUEST, "Your refresh token isn't valid"),
   REFRESH_TOKEN_NOT_FOUND(40003, HttpStatus.UNAUTHORIZED, "No refresh token exist. It seemed you've already logout");
