@@ -1,0 +1,25 @@
+|===
+|파라미터|필수여부|설명
+|`+name+`
+|true
+|이름
+|`+nickname+`
+|true
+|닉네임
+|`+birth+`
+|true
+|생년월일(YYYY-MM-DD)
+|`+gender+`
+|true
+|성별
+(MALE, FEMALE, PRIVATE)
+|`+email+`
+|true
+|메일주소
+|`+region1+`
+|true
+|지역1
+|`+region2+`
+|true
+|지역2
+|===

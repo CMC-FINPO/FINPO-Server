@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ curl 'https://api.finpo.kr:8080/oauth/login/kakao' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer q6X77R1iD6JFVT1vDgFPtCxYOqqBOe5OyMlqYC_bCilwngAAAYD_x0UI'
+----

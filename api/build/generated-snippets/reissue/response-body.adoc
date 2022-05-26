@@ -1,0 +1,14 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "grantType" : "bearer",
+    "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzAxMWRjMmVmLTA4MTItNDc1Yy1iY2YwLTY0NTZlNGUzODA3MWltYWdlZmlsZS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM1NjUzMDZ9.abxIYvL3N6eYxKMX-i9b2HX_1lyc_I-2YHS4jJpd80-QAxmrsC47RJywA10slR4y7y-zNgbi1151PVUCzLXZmA",
+    "refreshToken" : "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NTQxNzAwNDZ9.p7qRQWqKBrLlzYImX64HJGNmtCaX5RpCp3t9LzVN9Epfd-4jQA15NGO9Lkrx5WeTUV5OmORPCFnOe9fj211Rtw",
+    "accessTokenExpiresIn" : 1653565306164
+  }
+}
+----

@@ -1,0 +1,15 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "need register",
+  "data" : {
+    "name" : "김명승",
+    "nickname" : "김명승",
+    "gender" : "MALE",
+    "email" : "mskim9967@kakao.com",
+    "oAuthType" : "KAKAO"
+  }
+}
+----

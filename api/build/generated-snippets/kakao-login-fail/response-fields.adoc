@@ -1,0 +1,50 @@
+|===
+|필드명|타입|필수여부|설명
+|`+success+`
+|`+Boolean+`
+|true
+|성공 여부
+|`+errorCode+`
+|`+Number+`
+|true
+|응답 코드
+|`+message+`
+|`+String+`
+|true
+|로그인 성공 여부
+회원가입 하지 않았다면 [need register]
+|`+data.name+`
+|`+String+`
+|false
+|이름
+|`+data.nickname+`
+|`+String+`
+|false
+|닉네임
+|`+data.birth+`
+|`+String+`
+|false
+|생년월일(YYYY-MM-DD)
+|`+data.gender+`
+|`+String+`
+|false
+|성별
+(MALE, FEMALE, PRIVATE)
+|`+data.email+`
+|`+String+`
+|false
+|메일주소
+|`+data.region1+`
+|`+String+`
+|false
+|지역1
+|`+data.region2+`
+|`+String+`
+|false
+|지역2
+|`+data.oAuthType+`
+|`+String+`
+|false
+|소셜 로그인 타입
+KAKAO/GOOGLE/APPLE
+|===

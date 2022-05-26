@@ -1,0 +1,7 @@
+|===
+|Name|Description
+
+|`+Authorization+`
+|Kakao Access Token
+
+|===

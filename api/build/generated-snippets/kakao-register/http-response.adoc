@@ -1,0 +1,28 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 747
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "grantType" : "bearer",
+    "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzljOTVlNDJiLWU4ZjktNDZiMi04NDFiLWM1MGQ3NTJlZDBhZWltYWdlZmlsZS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM1NjU0MjN9.tJc7xlDbG85SG0s-lKto9AXqEKI4P7gubVPkgFJM0-RJKZ6Wf4PyZzllE-lEcTVdfkbcx_sGnMs7loV5OyShQw",
+    "refreshToken" : "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NTQxNzAxNjN9.Dm5-vzLeEYO2VaMzPYncEWWgsJ-YbOJrOgNY8G6tuA0cbCTcamzIGESeM6Nfsj-e4c4l_R_J7jlomr72CJaWCA",
+    "accessTokenExpiresIn" : 1653565423009
+  }
+}
+----

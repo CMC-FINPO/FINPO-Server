@@ -1,0 +1,7 @@
+[source,http,options="nowrap"]
+----
+GET /region?region1=%EA%B2%BD%EA%B8%B0 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Host: localhost:8080
+
+----

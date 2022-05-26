@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ http GET 'http://localhost:8080/region?region1=%EA%B2%BD%EA%B8%B0' \
+    'Content-Type:application/json;charset=UTF-8'
+----

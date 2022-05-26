@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/region?region1=%EA%B2%BD%EA%B8%B0' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8'
+----

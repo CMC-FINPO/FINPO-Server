@@ -1,4 +1,14 @@
 
+build/*
+!build/generated-snippets/
+
+.DS_Store
+src/docs
+.idea
+*.properties
+static/docs
+test.png
+
 # Created by https://www.toptal.com/developers/gitignore/api/gradle,intellij,intellij+iml,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=gradle,intellij,intellij+iml,java
 
@@ -200,7 +210,7 @@ replay_pid*
 
 ### Gradle ###
 .gradle
-**/build/
+# **/build
 !src/**/build/
 
 # Ignore Gradle GUI config

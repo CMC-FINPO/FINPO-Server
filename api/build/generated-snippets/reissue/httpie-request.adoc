@@ -1,0 +1,8 @@
+[source,bash]
+----
+$ echo '{
+  "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzAxMWRjMmVmLTA4MTItNDc1Yy1iY2YwLTY0NTZlNGUzODA3MWltYWdlZmlsZS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM1NjUzMDV9.nXzu4QXy1IV7QsTnyEVt7W8Rw-Bd97AWMekb8DiGlnqzfphRqoWafyuZuSOMXkUyvRA57JekNzEyVDOQepl3aw",
+  "refreshToken" : "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NTQxNzAwNDV9.DFtS-_TkswF-mNovjwLiMtwNUA8quXdLEOrzHU0rOMFubq5mfDSFBL5awvOAgxnaja2n7brtXzXdcQWYC7xR6A"
+}' | http POST 'https://api.finpo.kr:8080/oauth/reissue' \
+    'Content-Type:application/json;charset=UTF-8'
+----
