@@ -64,7 +64,7 @@ export default function RegisterPopup() {
     });
 
     if (location.pathname.includes('register')) handleOpen();
-    setNickname(searchParams.get('name'));
+    setNickname(searchParams.get('nickname'));
     setEmail(searchParams.get('email'));
     setGender(searchParams.get('gender'));
   }, []);
@@ -139,7 +139,10 @@ export default function RegisterPopup() {
 
           <Button
             onClick={async () => {
+              handleClose();
+
               const formData = new FormData();
+
               if (profileImg) formData.append('profileImgFile', profileImg);
               formData.append('name', name);
               if (birth) formData.append('birth', birth);
@@ -161,7 +164,6 @@ export default function RegisterPopup() {
               );
               localStorage.setItem('accessToken', res.data.data.accessToken);
               localStorage.setItem('refreshToken', res.data.data.refreshToken);
-              handleClose();
               window.location.reload();
             }}
           >

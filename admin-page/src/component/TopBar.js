@@ -7,18 +7,16 @@ import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import SideBar from './SideBar';
 import Button from '@mui/material/Button';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { styled } from '@mui/material';
-import { yellow } from '@mui/material/colors';
-import { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
+import { grey, indigo, yellow } from '@mui/material/colors';
+import GoogleIcon from '@mui/icons-material/Google';
+import AppleIcon from '@mui/icons-material/Apple';
 
 export default function TopBar({ user, setUser }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -66,11 +64,29 @@ export default function TopBar({ user, setUser }) {
     </Menu>
   );
 
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+
   const KakakoButton = styled(Button)(({ theme }) => ({
     color: theme.palette.getContrastText(yellow[500]),
     backgroundColor: yellow[500],
     '&:hover': {
       backgroundColor: yellow[700],
+    },
+  }));
+
+  const AppleButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(grey[300]),
+    backgroundColor: grey[300],
+    '&:hover': {
+      backgroundColor: grey[700],
+    },
+  }));
+
+  const GoogleButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(indigo[500]),
+    backgroundColor: indigo[500],
+    '&:hover': {
+      backgroundColor: indigo[700],
     },
   }));
 
@@ -82,8 +98,65 @@ export default function TopBar({ user, setUser }) {
     window.location.reload();
   };
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const KakaoLogin = () => {
+    return (
+      <KakakoButton
+        sx={{ fontSize: 16 }}
+        variant='contained'
+        size='small'
+        startIcon={<RiKakaoTalkFill />}
+        onClick={() => {
+          user ? logout() : (window.location.href = process.env.REACT_APP_KAKAO_LOGIN_URL);
+        }}
+      >
+        {user ? `${user.nickname} (로그아웃)` : '카카오로 로그인'}
+      </KakakoButton>
+    );
+  };
+
+  const AppleLogin = () => {
+    return (
+      <AppleButton sx={{ fontSize: 16 }} variant='contained' size='small' startIcon={<AppleIcon />} onClick={() => {}}>
+        {'준비 중'}
+      </AppleButton>
+    );
+  };
+
+  const GoogleLogin = () => {
+    return (
+      <GoogleButton sx={{ fontSize: 16 }} variant='contained' size='small' startIcon={<GoogleIcon />} onClick={() => {}}>
+        {'준비 중'}
+      </GoogleButton>
+    );
+  };
+
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <KakaoLogin />
+      </MenuItem>
+      <MenuItem>
+        <AppleLogin />
+      </MenuItem>
+      <MenuItem>
+        <GoogleLogin />
+      </MenuItem>
+    </Menu>
+  );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -95,33 +168,12 @@ export default function TopBar({ user, setUser }) {
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {user ? (
-              <KakakoButton sx={{ fontSize: 16 }} variant='contained' size='small' startIcon={<RiKakaoTalkFill />} onClick={logout}>
-                {`${user.nickname} (로그아웃)`}
-              </KakakoButton>
-            ) : (
-              <KakakoButton
-                sx={{ fontSize: 16 }}
-                variant='contained'
-                size='small'
-                startIcon={<RiKakaoTalkFill />}
-                onClick={() => {
-                  window.location.href = process.env.REACT_APP_KAKAO_LOGIN_URL;
-                }}
-              >
-                카카오로 로그인
-              </KakakoButton>
-            )}
+          <Box sx={{ display: { xs: 'none', md: 'flex', gap: 10 } }}>
+            <KakaoLogin />
 
-            <IconButton size='large' color='inherit'>
-              <Badge badgeContent={17} color='error'>
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton size='large' edge='end' onClick={handleProfileMenuOpen} color='inherit'>
-              <AccountCircle />
-            </IconButton>
+            <AppleLogin />
+
+            <GoogleLogin />
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton size='large' onClick={handleMobileMenuOpen} color='inherit'>
@@ -129,6 +181,7 @@ export default function TopBar({ user, setUser }) {
             </IconButton>
           </Box>
         </Toolbar>
+        {renderMobileMenu}
         {renderMenu}
       </AppBar>
     </Box>
