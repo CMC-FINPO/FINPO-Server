@@ -47,28 +47,9 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
   const [regions2, setRegions2] = useState([]);
 
   useEffect(() => {
-    axiosInstance
-      .get('region')
-      .then((res) => {
-        setUsers([...res.data.data]);
-      })
-      .catch((res) => {
-        if (res.response.data.errorCode === '40001') {
-          axiosInstance
-            .post('oauth/reissue', {
-              accessToken: localStorage.getItem('accessToken'),
-              refreshToken: localStorage.getItem('refreshToken'),
-            })
-            .then((res) => {
-              localStorage.setItem('accessToken', res.data.data.accessToken);
-              localStorage.setItem('refreshToken', res.data.data.refreshToken);
-              alert('토큰이 만료되어 갱신합니다');
-              fetchData();
-            });
-        } else {
-          localStorage.clear();
-        }
-      });
+    axiosInstance.get('region').then((res) => {
+      setUsers([...res.data.data]);
+    });
   }, [fetch]);
 
   useEffect(() => {

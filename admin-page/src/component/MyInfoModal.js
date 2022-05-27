@@ -188,7 +188,7 @@ export default function MyInfoModal({ fetchData, fetch }) {
                   console.log(res);
                   if (profileImg)
                     axiosInstance
-                      .put(`/user/me/profile-img`, formData)
+                      .post(`/user/me/profile-img`, formData)
                       .then((res) => {
                         console.log(res);
                         handleClose();

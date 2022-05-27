@@ -39,28 +39,9 @@ export default function InterestRegionCard({ fetch, fetchData }) {
   const reloadTrigger = () => setReload(!reload);
 
   useEffect(() => {
-    axiosInstance
-      .get('region')
-      .then((res) => {
-        setUsers([...res.data.data]);
-      })
-      .catch((res) => {
-        if (res.response.data.errorCode === '40001') {
-          axiosInstance
-            .post('oauth/reissue', {
-              accessToken: localStorage.getItem('accessToken'),
-              refreshToken: localStorage.getItem('refreshToken'),
-            })
-            .then((res) => {
-              localStorage.setItem('accessToken', res.data.data.accessToken);
-              localStorage.setItem('refreshToken', res.data.data.refreshToken);
-              alert('토큰이 만료되어 갱신합니다');
-              window.location.reload();
-            });
-        } else {
-          localStorage.clear();
-        }
-      });
+    axiosInstance.get('region').then((res) => {
+      setUsers([...res.data.data]);
+    });
   }, [fetch]);
 
   return (

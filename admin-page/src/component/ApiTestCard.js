@@ -12,34 +12,13 @@ import Select from '@mui/material/Select';
 import { axiosInstance } from '../axiosInstance';
 import { Button } from '@mui/material';
 
-export default function UserCard() {
+export default function UserCard({ fetch, fetchData }) {
   const [method, setMethod] = useState('get');
-  const [reqUrl, setReqUrl] = useState('user/me');
+  const [reqUrl, setReqUrl] = useState('/user/me');
   const [reqBody, setReqBody] = useState('{}');
   const [resBody, setResBody] = useState();
 
-  useEffect(() => {
-    axiosInstance
-      .get('user')
-      .then((res) => {})
-      .catch((res) => {
-        if (res.response.data.errorCode === '40001') {
-          axiosInstance
-            .post('oauth/reissue', {
-              accessToken: localStorage.getItem('accessToken'),
-              refreshToken: localStorage.getItem('refreshToken'),
-            })
-            .then((res) => {
-              localStorage.setItem('accessToken', res.data.data.accessToken);
-              localStorage.setItem('refreshToken', res.data.data.refreshToken);
-              alert('토큰이 만료되어 갱신합니다');
-              window.location.reload();
-            });
-        } else {
-          localStorage.clear();
-        }
-      });
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -73,29 +52,12 @@ export default function UserCard() {
                 onClick={() => {
                   axiosInstance
                     .request({
-                      url: reqUrl,
+                      url: reqUrl.slice(1),
                       method,
                       data: JSON.parse(reqBody),
                     })
                     .then((res) => {
                       setResBody(JSON.stringify(res.data));
-                    })
-                    .catch((res) => {
-                      if (res.response.data.errorCode === '40001') {
-                        axiosInstance
-                          .post('oauth/reissue', {
-                            accessToken: localStorage.getItem('accessToken'),
-                            refreshToken: localStorage.getItem('refreshToken'),
-                          })
-                          .then((res) => {
-                            localStorage.setItem('accessToken', res.data.data.accessToken);
-                            localStorage.setItem('refreshToken', res.data.data.refreshToken);
-                            alert('토큰이 만료되어 갱신합니다');
-                            window.location.reload();
-                          });
-                      } else {
-                        setResBody(JSON.stringify(res.response.data));
-                      }
                     });
                 }}
               >

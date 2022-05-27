@@ -45,28 +45,9 @@ export default function UserCard({ fetch, fetchData }) {
   const [myInfoOpen, setMyInfoOpen] = useState(false);
 
   useEffect(() => {
-    axiosInstance
-      .get('user')
-      .then((res) => {
-        setUsers([...res.data.data]);
-      })
-      .catch((res) => {
-        if (res.response.data.errorCode === '40001') {
-          axiosInstance
-            .post('oauth/reissue', {
-              accessToken: localStorage.getItem('accessToken'),
-              refreshToken: localStorage.getItem('refreshToken'),
-            })
-            .then((res) => {
-              localStorage.setItem('accessToken', res.data.data.accessToken);
-              localStorage.setItem('refreshToken', res.data.data.refreshToken);
-              alert('토큰이 만료되어 갱신합니다');
-              fetchData();
-            });
-        } else {
-          localStorage.clear();
-        }
-      });
+    axiosInstance.get('user').then((res) => {
+      setUsers([...res.data.data]);
+    });
   }, [fetch]);
 
   return (

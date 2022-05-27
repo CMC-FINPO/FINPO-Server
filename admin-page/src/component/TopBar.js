@@ -21,6 +21,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import { axiosInstance } from '../axiosInstance';
 import jwt_decode from 'jwt-decode';
+import axios from 'axios';
 
 export default function TopBar({ user, setUser, fetch, fetchData }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -42,9 +43,27 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
           setUser(jwt_decode(res.data.data.accessToken));
         });
 
-    axiosInstance.get('user/me').then((e) => {
-      if (e.data.data === null) setUser(null);
-    });
+    axiosInstance
+      .get('user/me')
+      .then((e) => {
+        if (e.data.data === null) setUser(null);
+      })
+      .catch((res) => {
+        if (res.response.data.errorCode === '40001') {
+          axiosInstance
+            .post('oauth/reissue', {
+              accessToken: localStorage.getItem('accessToken'),
+              refreshToken: localStorage.getItem('refreshToken'),
+            })
+            .then((res) => {
+              localStorage.setItem('accessToken', res.data.data.accessToken);
+              localStorage.setItem('refreshToken', res.data.data.refreshToken);
+              alert('토큰이 만료되어 갱신합니다');
+            });
+        } else {
+          localStorage.clear();
+        }
+      });
   }, [fetch]);
 
   const handleProfileMenuOpen = (event) => {
