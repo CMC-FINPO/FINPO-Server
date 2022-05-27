@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface KakaoAccountRepository extends JpaRepository<KakaoAccount, String> {
-
+  Long deleteByUserId(Long id);
 }
 
