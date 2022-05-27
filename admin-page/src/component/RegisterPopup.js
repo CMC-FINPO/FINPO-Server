@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, InputLabel, Radio, RadioGroup, Select, TextField } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { axiosInstance } from '../axiosInstance';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const style = {
   position: 'absolute',
@@ -53,12 +54,15 @@ export default function RegisterPopup() {
   const [region2, setRegion2] = useState();
   const [interestPolicy, setInterestPolicy] = useState([]);
   const [profileImg, setProfileImg] = useState();
+  const [isNicknameDuplicate, setNicknameDuplicate] = useState(null);
 
   const [regions1, setRegions1] = useState([]);
   const [regions2, setRegions2] = useState([]);
 
+  const [isRegisterLoading, setRegisterLoading] = useState(false);
+
   useEffect(() => {
-    axiosInstance.get('region').then((res) => {
+    axiosInstance.get('region/name').then((res) => {
       console.log(res);
       setRegions1([...res.data.data]);
     });
@@ -70,7 +74,7 @@ export default function RegisterPopup() {
   }, []);
 
   useEffect(() => {
-    axiosInstance.get(`region?region1=${region1}`).then((res) => {
+    axiosInstance.get(`region/name?region1=${region1}`).then((res) => {
       setRegions2([...res.data.data]);
     });
   }, [region1]);
@@ -82,9 +86,35 @@ export default function RegisterPopup() {
           <Typography id='modal-modal-title' variant='h4' component='h2'>
             카카오로 회원가입
           </Typography>
-
           <TextField label='이름' variant='outlined' value={name} onChange={(e) => setName(e.target.value)} />
-          <TextField label='닉네임' variant='outlined' value={nickname} onChange={(e) => setNickname(e.target.value)} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+            <TextField
+              label='닉네임'
+              variant='outlined'
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              sx={{ flex: 1 }}
+              error={isNicknameDuplicate}
+              helperText={isNicknameDuplicate === true ? '닉네임이 중복됩니다' : isNicknameDuplicate === false ? '사용 가능합니다' : ''}
+            />
+            <Button
+              variant='contained'
+              size='small'
+              sx={{ height: '50px' }}
+              onClick={() => {
+                axiosInstance
+                  .get(`user/check-duplicate?nickname=${nickname}`)
+                  .then((res) => {
+                    setNicknameDuplicate(res.data.data);
+                  })
+                  .catch((res) => {
+                    console.log(res.response.data);
+                  });
+              }}
+            >
+              중복 확인
+            </Button>
+          </div>
           <TextField label='생년월일(yyyy-mm-dd)' variant='outlined' value={birth} onChange={(e) => setBirth(e.target.value)} />
           <TextField label='이메일' variant='outlined' value={email} onChange={(e) => setEmail(e.target.value)} />
           <FormControl>
@@ -95,7 +125,6 @@ export default function RegisterPopup() {
               <FormControlLabel value='PRIVATE' control={<Radio />} label='Private' />
             </RadioGroup>
           </FormControl>
-
           <FormControl fullWidth>
             <InputLabel id='demo-simple-select-label'>지역</InputLabel>
             <Select value={region1} onChange={(e) => setRegion1(e.target.value)}>
@@ -112,63 +141,62 @@ export default function RegisterPopup() {
               })}
             </Select>
           </FormControl>
-
-          <label htmlFor='contained-button-file'>
-            <Input
-              accept='image/*'
-              id='contained-button-file'
-              multiple
-              type='file'
-              onChange={(e) => {
-                console.log(e.target.files[0]);
-                setProfileImg(e.target.files[0]);
-              }}
-            />
-            <Button variant='contained' component='span'>
-              프로필사진 업로드
-            </Button>
-          </label>
-          {/*<FormControl>*/}
-          {/*    <FormLabel id="demo-row-radio-buttons-group-label">관심 분야</FormLabel>*/}
-          {/*    <FormGroup>*/}
-          {/*        <FormControlLabel control={<Checkbox/>} label="진로"/>*/}
-          {/*        <FormControlLabel control={<Checkbox/>} label="창업"/>*/}
-          {/*        ...*/}
-          {/*    </FormGroup>*/}
-          {/*</FormControl>*/}
-
-          <Button
-            onClick={async () => {
-              handleClose();
-
-              const formData = new FormData();
-
-              if (profileImg) formData.append('profileImgFile', profileImg);
-              formData.append('name', name);
-              if (birth) formData.append('birth', birth);
-              formData.append('email', email);
-              formData.append('gender', gender);
-              formData.append('region1', region1);
-              formData.append('region2', region2);
-              formData.append('nickname', nickname);
-
-              const res = await axiosInstance.post(
-                `/oauth/register/${location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)}`,
-                formData,
-                {
-                  headers: {
-                    Authorization: `Bearer ${searchParams.get('kakao-token')}`,
-                    'Content-Type': 'multipart/form-data',
-                  },
-                }
-              );
-              localStorage.setItem('accessToken', res.data.data.accessToken);
-              localStorage.setItem('refreshToken', res.data.data.refreshToken);
-              window.location.reload();
+          <input
+            accept='image/*'
+            id='contained-button-file'
+            multiple
+            type='file'
+            onChange={(e) => {
+              setProfileImg(e.target.files[0]);
             }}
-          >
-            가입하기
-          </Button>
+          />
+
+          {isRegisterLoading ? (
+            <LoadingButton variant='outlined' loading>
+              Loading...
+            </LoadingButton>
+          ) : (
+            <Button
+              variant='outlined'
+              loading
+              onClick={() => {
+                setRegisterLoading(true);
+
+                const formData = new FormData();
+
+                if (profileImg) formData.append('profileImgFile', profileImg);
+                if (name) formData.append('name', name);
+                if (birth) formData.append('birth', birth);
+                if (email) formData.append('email', email);
+                if (gender) formData.append('gender', gender);
+                if (region2) formData.append('region1', region1);
+                if (region2) formData.append('region2', region2);
+                if (nickname) formData.append('nickname', nickname);
+
+                axiosInstance
+                  .post(`/oauth/register/${location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)}`, formData, {
+                    headers: {
+                      Authorization: `Bearer ${searchParams.get('kakao-token')}`,
+                      'Content-Type': 'multipart/form-data',
+                    },
+                  })
+                  .then((res) => {
+                    localStorage.setItem('accessToken', res.data.data.accessToken);
+                    localStorage.setItem('refreshToken', res.data.data.refreshToken);
+                    handleClose();
+                    window.location.reload();
+                  })
+                  .catch((res) => {
+                    alert(res.response.data.message);
+                  })
+                  .finally(() => {
+                    setRegisterLoading(false);
+                  });
+              }}
+            >
+              가입하기
+            </Button>
+          )}
         </Box>
       </Modal>
     </div>
