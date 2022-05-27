@@ -1,0 +1,14 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "id" : 20,
+    "region1" : "서울",
+    "region2" : "강동",
+    "isDefault" : true
+  }
+}
+----

@@ -1,0 +1,8 @@
+[source,http,options="nowrap"]
+----
+GET /region/my-default HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMSIsIm5pY2tuYW1lIjoi66mU7J207IqoIiwicHJvZmlsZUltZyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC91cGxvYWQvcHJvZmlsZS9jMTZmOTgyNS1iMTU0LTRiYTEtOGQ3OC1jNzBkN2YxNzU5OGZpbWFnZWZpbGUuanBlZyIsInJlZ2lvbjEiOiLshJzsmrgiLCJyZWdpb24yIjoi6rCV64-ZIiwib0F1dGhUeXBlIjoiS0FLQU8iLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjUzNjcwNDM3fQ.aKcPbhXah1rYotZo1iMiPPzuk2E8ZwcsJ6GNMfHQdxsYpoLPbeaqX2jVDHslFLzEBIwuBlwQ2esAAUfCXeQIsQ
+Host: dev.finpo.kr
+
+----

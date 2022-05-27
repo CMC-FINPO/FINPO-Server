@@ -1,5 +1,5 @@
 [source,bash]
 ----
-$ http GET 'http://localhost:8080/region' \
+$ http GET 'https://dev.finpo.kr/region/name' \
     'Content-Type:application/json;charset=UTF-8'
 ----

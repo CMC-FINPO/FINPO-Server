@@ -1,0 +1,8 @@
+.+/region/{id}+
+|===
+|Parameter|Description
+
+|`+id+`
+|삭제할 지역 id
+
+|===

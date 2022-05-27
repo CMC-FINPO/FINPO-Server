@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ http DELETE 'https://api.finpo.kr:8080/region/4' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzI2NDkyMzVjLWVmZmItNDRkOS1hMTgyLTI5NjFiOTM0ZWU4YmltYWdlZmlsZS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM2Njk1OTJ9.srH1rVXE4RwzcsDGvfvpNoWCYUzUiI_oAVM0okTZAadGNn3dCZM3YFYs69mHB3pOLmjGXDcfsMTnwm8X16AUZw'
+----

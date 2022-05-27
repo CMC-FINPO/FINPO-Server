@@ -1,5 +1,5 @@
 [source,bash]
 ----
-$ curl 'http://localhost:8080/region?region1=%EB%B6%80%EC%82%B0' -i -X GET \
+$ curl 'https://dev.finpo.kr/region/name?region1=%EB%B6%80%EC%82%B0' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8'
 ----

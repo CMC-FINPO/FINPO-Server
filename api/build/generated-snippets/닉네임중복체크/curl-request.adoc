@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ curl 'https://dev.finpo.kr/user/check-duplicate?nickname=%EB%A9%94%EC%9D%B4%EC%8A%A8' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8'
+----

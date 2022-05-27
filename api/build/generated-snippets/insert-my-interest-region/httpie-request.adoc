@@ -1,0 +1,9 @@
+[source,bash]
+----
+$ echo '{
+  "region1" : "서울",
+  "region2" : "중랑"
+}' | http POST 'https://dev.finpo.kr/region/me' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlL2MyMDdlNWYxLTIwZWUtNDBhMC05ZTllLWYxMDJlYWZiMjljOWltYWdlZmlsZS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM2NzA1Njl9.tWD3tfEtwLab4M0QT37f4E9LvmKX-X_-CYnohztGC3zLFJWWoVREbtU44udlRczt85fxDi9SWwUGXDa9XxZjhA'
+----

@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("Controller - OAuth")
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(uriScheme = "https", uriHost = "api.finpo.kr")
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "dev.finpo.kr", uriPort = 443)
 @WithMockUser
 @SpringBootTest
 class OAuthControllerTest {
@@ -104,7 +104,7 @@ class OAuthControllerTest {
 
   @Test
   void loginWithKakaoTokenSuccess() throws Exception {
-    registerByKakao();
+    registerByKakaoTest();
 
     mockMvc.perform(get("/oauth/login/kakao")
             .contentType(MediaType.APPLICATION_JSON)
@@ -137,10 +137,10 @@ class OAuthControllerTest {
   }
 
   @Test
-  MvcResult registerByKakao() throws Exception {
+  void registerByKakaoTest() throws Exception {
     MockMultipartFile image = new MockMultipartFile("profileImgFile", "imagefile.jpeg", "image/jpeg", new FileInputStream(System.getProperty("user.dir") + "/" + "test.png"));
 
-    return mockMvc.perform(RestDocumentationRequestBuilders.fileUpload("/oauth/register/kakao")
+    mockMvc.perform(RestDocumentationRequestBuilders.fileUpload("/oauth/register/kakao")
             .file(image)
             .param("name", "김명승")
             .param("nickname", "메이슨")
@@ -188,7 +188,7 @@ class OAuthControllerTest {
                     fieldWithPath("data.accessTokenExpiresIn").description("Access Token 만료시각")
                 )
             )
-        ).andReturn()
+        )
         ;
   }
 
@@ -197,11 +197,8 @@ class OAuthControllerTest {
   @Test
   void reissueTokens() throws Exception {
 
-    MvcResult res = registerByKakao();
-    JSONParser parser = new JSONParser();
-    JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
-    json = (JSONObject) parser.parse(json.get("data").toString());
-    String accessToken = json.get("accessToken").toString(), refreshToken = json.get("refreshToken").toString();
+    HashMap<String, String> map = registerAndGetToken(mockMvc);
+    String accessToken = map.get("accessToken"), refreshToken = map.get("refreshToken");
 
 
     HashMap<String, Object> body = new HashMap<>();
@@ -237,7 +234,40 @@ class OAuthControllerTest {
             )
         )
     ;
+  }
 
+  public HashMap<String, String> registerAndGetToken(MockMvc mockMvc) throws Exception {
+    MockMultipartFile image = new MockMultipartFile("profileImgFile", "imagefile.jpeg", "image/jpeg", new FileInputStream(System.getProperty("user.dir") + "/" + "test.png"));
 
+    MvcResult res = mockMvc.perform(RestDocumentationRequestBuilders.fileUpload("/oauth/register/kakao")
+            .file(image)
+            .param("name", "김명승")
+            .param("nickname", "메이슨")
+            .param("birth", "1999-01-01")
+            .param("gender", Gender.MALE.toString())
+            .param("email", "mskim9967@gmail.com")
+            .param("region1", "서울")
+            .param("region2", "강동")
+
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .header("Authorization", "Bearer " + kakaoToken)
+        )
+
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.grantType").value("bearer"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andReturn()
+        ;
+
+    JSONParser parser = new JSONParser();
+    JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
+    json = (JSONObject) parser.parse(json.get("data").toString());
+    String accessToken = json.get("accessToken").toString(), refreshToken = json.get("refreshToken").toString();
+    return new HashMap<String, String>(){{
+      put("accessToken", accessToken);
+      put("refreshToken", refreshToken);
+    }};
   }
 }

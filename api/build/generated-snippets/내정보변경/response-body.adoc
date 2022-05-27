@@ -1,0 +1,20 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "id" : 2,
+    "name" : "김명승",
+    "nickname" : "mason",
+    "birth" : "1999-01-01",
+    "gender" : "MALE",
+    "email" : "mskim9967@gmail.com",
+    "profileImg" : "http://localhost:8080/upload/profile/86fd88aa-f448-4988-bc91-2a21be2cec2a.jpeg",
+    "oAuthType" : "KAKAO",
+    "region1" : "서울",
+    "region2" : "송파"
+  }
+}
+----

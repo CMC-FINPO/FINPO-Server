@@ -1,0 +1,10 @@
+[source,bash]
+----
+$ curl 'https://api.finpo.kr:8080/region/my-default' -i -X PUT \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzQ4NzE3MGM5LTY5YmQtNDMyZC1hZTZjLWZlNGRmZjc1MzZjN2ltYWdlZmlsZS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM2NjgwNDV9.DmMYkvkg_sWKQRuxsOQ8_wuJnj8nHIs6O4p0LtusO8XLypjRxw75v0vmqVbSnxU1pa1uFFzuwx0yrfMi-CDNhQ' \
+    -d '{
+  "region1" : "경기",
+  "region2" : "판교"
+}'
+----

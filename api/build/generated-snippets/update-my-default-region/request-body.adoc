@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "region1" : "경기",
+  "region2" : "판교"
+}
+----

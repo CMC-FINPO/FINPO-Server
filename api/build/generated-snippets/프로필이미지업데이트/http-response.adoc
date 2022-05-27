@@ -1,0 +1,34 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 416
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "id" : 2,
+    "name" : "김명승",
+    "nickname" : "메이슨",
+    "birth" : "1999-01-01",
+    "gender" : "MALE",
+    "email" : "mskim9967@gmail.com",
+    "profileImg" : "http://localhost:8080/upload/profile/f7b5607d-3cda-43ee-970e-5f56bf6c5c9d.jpeg",
+    "oAuthType" : "KAKAO",
+    "region1" : "서울",
+    "region2" : "강동"
+  }
+}
+----

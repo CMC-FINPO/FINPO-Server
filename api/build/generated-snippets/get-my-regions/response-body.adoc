@@ -1,0 +1,24 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 9,
+    "region1" : "서울",
+    "region2" : "강동",
+    "isDefault" : true
+  }, {
+    "id" : 12,
+    "region1" : "서울",
+    "region2" : "용산",
+    "isDefault" : false
+  }, {
+    "id" : 13,
+    "region1" : "서울",
+    "region2" : "강남",
+    "isDefault" : false
+  } ]
+}
+----

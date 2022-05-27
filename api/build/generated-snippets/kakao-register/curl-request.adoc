@@ -1,8 +1,8 @@
 [source,bash]
 ----
-$ curl 'https://api.finpo.kr:8080/oauth/register/kakao' -i -X POST \
+$ curl 'https://dev.finpo.kr/oauth/register/kakao' -i -X POST \
     -H 'Content-Type: application/x-www-form-urlencoded;charset=UTF-8' \
-    -H 'Authorization: Bearer q6X77R1iD6JFVT1vDgFPtCxYOqqBOe5OyMlqYC_bCilwngAAAYD_x0UI' \
+    -H 'Authorization: Bearer k8A2A1To_L8BxzhseLjykutHMI8ZHDy2Vp8JGA2HCj10lwAAAYEGCFVV' \
     -F 'profileImgFile=@imagefile.jpeg;type=image/jpeg' \
     -F 'name=김명승' \
     -F 'nickname=메이슨' \

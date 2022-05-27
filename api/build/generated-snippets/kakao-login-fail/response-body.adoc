@@ -5,10 +5,8 @@
   "errorCode" : 0,
   "message" : "need register",
   "data" : {
-    "name" : "김명승",
-    "nickname" : "김명승",
-    "gender" : "MALE",
-    "email" : "mskim9967@kakao.com",
+    "nickname" : "mskim",
+    "email" : "mskim9967@gmail.com",
     "oAuthType" : "KAKAO"
   }
 }

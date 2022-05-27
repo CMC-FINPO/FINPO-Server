@@ -1,0 +1,7 @@
+[source,http,options="nowrap"]
+----
+GET /user/check-duplicate?nickname=%EB%A9%94%EC%9D%B4%EC%8A%A8 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Host: dev.finpo.kr
+
+----

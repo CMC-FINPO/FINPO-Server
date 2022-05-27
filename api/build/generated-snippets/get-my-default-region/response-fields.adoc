@@ -1,0 +1,32 @@
+|===
+|필드명|타입|필수여부|설명
+|`+success+`
+|`+Boolean+`
+|true
+|성공 여부
+|`+errorCode+`
+|`+Number+`
+|true
+|응답 코드
+|`+message+`
+|`+String+`
+|true
+|응답 메시지
+|`+data.id+`
+|`+Number+`
+|true
+|거주 지역 id
+|`+data.region1+`
+|`+String+`
+|true
+|거주 지역 이름
+|`+data.region2+`
+|`+String+`
+|true
+|상세 거주 지역 이름
+|`+data.isDefault+`
+|`+Boolean+`
+|true
+|거주지역이면 true
+관심지역이면 false
+|===

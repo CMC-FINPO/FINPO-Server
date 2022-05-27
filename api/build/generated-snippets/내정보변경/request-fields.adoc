@@ -1,0 +1,39 @@
+|===
+|필드명|타입|필수여부|제약조건|설명
+|`+name+`
+|`+String+`
+|false
+|
+|이름
+|`+nickname+`
+|`+String+`
+|false
+|
+|닉네임
+|`+birth+`
+|`+String+`
+|false
+|
+|생년월일(YYYY-MM-DD)
+|`+gender+`
+|`+String+`
+|false
+|
+|성별
+[MALE/FEMALE/PRIVATE]
+|`+email+`
+|`+String+`
+|false
+|
+|이메일 주소
+|`+region1+`
+|`+String+`
+|false
+|
+|거주 지역
+|`+region2+`
+|`+String+`
+|false
+|
+|세부 거주 지역
+|===
