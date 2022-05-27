@@ -1,9 +1,11 @@
 package kr.finpo.api.service;
 
+import com.amazonaws.services.ec2.model.PrincipalType;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.KakaoAccount;
 import kr.finpo.api.domain.RefreshToken;
+import kr.finpo.api.domain.Region;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.dto.KakaoTokenDto;
 import kr.finpo.api.dto.KakaoAccountDto;
@@ -13,6 +15,7 @@ import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.jwt.TokenProvider;
 import kr.finpo.api.repository.KakaoAccountRepository;
 import kr.finpo.api.repository.RefreshTokenRepository;
+import kr.finpo.api.repository.RegionRepository;
 import kr.finpo.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +39,7 @@ public class OAuthService {
   private final KakaoAccountRepository kakaoAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final UserRepository userRepository;
+  private final RegionRepository regionRepository;
   private final S3Uploader s3Uploader;
 
 
@@ -104,7 +108,9 @@ public class OAuthService {
       TokenDto tokenDto = tokenProvider.generateTokenDto(user.get());
 
       refreshTokenRepository.findByUserId(user.get().getId())
-          .ifPresent(refreshToken->{refreshTokenRepository.delete(refreshToken);});
+          .ifPresent(refreshToken -> {
+            refreshTokenRepository.delete(refreshToken);
+          });
 
       RefreshToken refreshToken = RefreshToken.of(tokenDto.getRefreshToken());
       refreshToken.setUser(user.get());
@@ -120,17 +126,32 @@ public class OAuthService {
   public TokenDto registerByKakao(String kakaoAccessToken, UserDto dto) {
     try {
       String kakaoAccountId = getKakaoAccount(kakaoAccessToken).id();
-      if (kakaoAccountRepository.findById(kakaoAccountId).isPresent())
+
+      // kakao id duplication check
+      kakaoAccountRepository.findById(kakaoAccountId).ifPresent(s -> {
         throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
+      });
+
+      // nickname duplication check
+      userRepository.findByNickname(dto.nickname()).ifPresent(e -> {
+        throw new GeneralException(ErrorCode.NICKNAME_DUPLICATED);
+      });
 
       String profileImgUrl = null;
-      if(dto.profileImgFile() != null)
+      if (dto.profileImgFile() != null)
         profileImgUrl = uploadUrl + s3Uploader.uploadFile("profile", dto.profileImgFile());
+
+      Region defaultRegion = Region.of(dto.region1(), dto.region2(), true);
+      defaultRegion = regionRepository.save(defaultRegion);
 
       User user = dto.toEntity();
       user.setProfileImg(profileImgUrl);
       user.setOAuthType(OAuthType.KAKAO);
+      user.setDefaultRegion(defaultRegion);
       user = userRepository.save(user);
+
+      defaultRegion.setUser(user);
+      regionRepository.save(defaultRegion);
 
       KakaoAccount kakaoAccount = kakaoAccountRepository.save(KakaoAccount.of(kakaoAccountId));
       kakaoAccount.setUser(user);

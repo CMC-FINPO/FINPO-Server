@@ -22,17 +22,17 @@ public record UserDto(
     LocalDate birth,
     Gender gender,
     String email,
-    String region1,
-    String region2,
     String profileImg,
     OAuthType oAuthType,
-    MultipartFile profileImgFile
+    MultipartFile profileImgFile,
+    String region1,
+    String region2
 ) {
   public UserDto {
   }
 
   public User toEntity() {
-    return User.of(name, nickname, birth, gender, email, region1, region2, profileImg, oAuthType);
+    return User.of(name, nickname, birth, gender, email, profileImg, oAuthType);
   }
 
   public String toUrlParameter() {
@@ -58,14 +58,14 @@ public record UserDto(
     if (birth != null) user.setBirth(birth);
     if (gender != null) user.setGender(gender);
     if (email != null) user.setEmail(email);
-    if (region1 != null) user.setRegion1(region1);
-    if (region2 != null) user.setRegion2(region2);
+    if (region1 != null) user.getDefaultRegion().setRegion1(region1);
+    if (region2 != null) user.getDefaultRegion().setRegion2(region2);
     if (profileImg != null) user.setProfileImg(profileImg);
 
     return user;
   }
 
   public static UserDto info(User user) {
-    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getRegion1(), user.getRegion2(), user.getProfileImg(), user.getOAuthType(), null);
+    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getProfileImg(), user.getOAuthType(), null, user.getDefaultRegion().getRegion1(), user.getDefaultRegion().getRegion2());
   }
 }

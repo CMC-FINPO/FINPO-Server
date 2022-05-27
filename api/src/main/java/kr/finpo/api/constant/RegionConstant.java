@@ -2,7 +2,7 @@ package kr.finpo.api.constant;
 
 import java.util.HashMap;
 
-public class Region {
+public class RegionConstant {
 
   public static final String[] seoul = {"종로", "중구", "용산", "성동", "광진", "동대문", "중랑", "성북", "강북", "도봉", "노원", "은평", "서대문", "마포", "양천", "강서", "구로", "금천", "영등포", "동작", "관악", "서초", "강남", "송파", "강동"};
 

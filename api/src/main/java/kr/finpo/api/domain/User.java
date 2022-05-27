@@ -1,5 +1,6 @@
 package kr.finpo.api.domain;
 
+import com.sun.istack.NotNull;
 import kr.finpo.api.constant.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,45 +22,37 @@ public class User {
   private Long id;
 
   @Setter
-  @Column(nullable = true)
+  @Column(nullable = false)
   private String name;
 
   @Setter
-  @Column(nullable = true)
+  @Column(nullable = false)
   private String nickname;
 
   @Setter
-  @Column(nullable = true)
+  @Column(nullable = false)
   private LocalDate birth;
 
   @Setter
-  @Column(nullable = true)
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private Gender gender;
 
   @Setter
-  @Column(nullable = true)
+  @Column(nullable = false)
   private String email;
-
-  @Setter
-  @Column(nullable = true)
-  private String region1;
-
-  @Setter
-  @Column(nullable = true)
-  private String region2;
 
   @Setter
   @Column(nullable = true)
   private String profileImg;
 
   @Setter
-  @Column(nullable = true)
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private OAuthType oAuthType;
 
   @Setter
-  @Column(nullable = true)
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private Role role = Role.ROLE_USER;
 
@@ -74,20 +67,18 @@ public class User {
   protected User() {
   }
 
-  protected User(String name, String nickname, LocalDate birth, Gender gender, String email, String region1, String region2, String profileImg, OAuthType oAuthType) {
+  protected User(String name, String nickname, LocalDate birth, Gender gender, String email, String profileImg, OAuthType oAuthType) {
     this.name = name;
     this.nickname = nickname;
     this.birth = birth;
     this.gender = gender;
     this.email = email;
-    this.region1 = region1;
-    this.region2 = region2;
     this.profileImg = profileImg;
     this.oAuthType = oAuthType;
   }
 
-  public static User of(String name, String nickname, LocalDate birth, Gender gender, String email, String region1, String region2, String profileImg, OAuthType oAuthType) {
-    return new User(name, nickname, birth, gender, email, region1, region2, profileImg, oAuthType);
+  public static User of(String name, String nickname, LocalDate birth, Gender gender, String email, String profileImg, OAuthType oAuthType) {
+    return new User(name, nickname, birth, gender, email, profileImg, oAuthType);
   }
 
   @OneToOne(mappedBy = "user")
@@ -95,4 +86,10 @@ public class User {
 
   @OneToOne(mappedBy = "user")
   private KakaoAccount kakaoAccount;
+
+  @Setter
+  @OneToOne
+  @NotNull
+  @JoinColumn(name = "default_region_id")
+  private Region defaultRegion;
 }

@@ -26,7 +26,7 @@ public class TokenProvider {
 
   private static final String AUTHORITIES_KEY = "auth";
   private static final String BEARER_TYPE = "bearer";
-  private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 1;            // 30분
+  private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
   private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
   private final Key key;
@@ -45,8 +45,8 @@ public class TokenProvider {
         .setSubject(user.getId().toString())
         .claim("nickname", user.getNickname())
         .claim("profileImg", user.getProfileImg())
-        .claim("region1", user.getRegion1())
-        .claim("region2", user.getRegion2())
+        .claim("region1", user.getDefaultRegion().getRegion1())
+        .claim("region2", user.getDefaultRegion().getRegion2())
         .claim("oAuthType", user.getOAuthType())
         .claim(AUTHORITIES_KEY, user.getRole())
         .setExpiration(accessTokenExpiresIn)

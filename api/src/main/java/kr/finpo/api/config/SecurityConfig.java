@@ -54,7 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
         .antMatchers("/oauth/**").permitAll()
-        .antMatchers("/region/**").permitAll()
+        .antMatchers("/user/check-duplicate").permitAll()
+        .antMatchers("/region/name/**").permitAll()
         .antMatchers("/upload/**").permitAll()
         .antMatchers("/docs/**").permitAll()
         .antMatchers("/static/**").permitAll()
@@ -70,7 +71,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    // - (3)
     configuration.addAllowedOriginPattern("*");
     configuration.addAllowedMethod("*");
     configuration.addAllowedHeader("*");
