@@ -32,7 +32,7 @@ const Input = styled('input')({
   display: 'none',
 });
 
-export default function MyInfoModal() {
+export default function MyInfoModal({ fetchData, fetch }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -108,7 +108,6 @@ export default function MyInfoModal() {
             size='small'
             sx={{ height: '50px' }}
             onClick={() => {
-              console.log(defaultNickname + ' ' + nickname);
               axiosInstance.get(`user/check-duplicate?nickname=${nickname}&before=${defaultNickname}`).then((res) => {
                 setNicknameDuplicate(res.data.data);
               });
@@ -187,17 +186,21 @@ export default function MyInfoModal() {
                 })
                 .then((res) => {
                   console.log(res);
-                  window.location.reload();
-                  handleClose();
                   if (profileImg)
                     axiosInstance
                       .put(`/user/me/profile-img`, formData)
                       .then((res) => {
                         console.log(res);
+                        handleClose();
+                        fetchData();
                       })
                       .catch((res) => {
                         alert(res.response.data.message);
                       });
+                  else {
+                    handleClose();
+                    fetchData();
+                  }
                 })
                 .catch((res) => {
                   alert(res.response.data.message);

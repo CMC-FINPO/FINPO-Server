@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,13 +19,33 @@ import { styled } from '@mui/material';
 import { grey, indigo, yellow } from '@mui/material/colors';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
+import { axiosInstance } from '../axiosInstance';
+import jwt_decode from 'jwt-decode';
 
-export default function TopBar({ user, setUser }) {
+export default function TopBar({ user, setUser, fetch, fetchData }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  useEffect(() => {
+    if (localStorage.getItem('accessToken'))
+      axiosInstance
+        .post('oauth/reissue', {
+          accessToken: localStorage.getItem('accessToken'),
+          refreshToken: localStorage.getItem('refreshToken'),
+        })
+        .then((res) => {
+          localStorage.setItem('accessToken', res.data.data.accessToken);
+          localStorage.setItem('refreshToken', res.data.data.refreshToken);
+          setUser(jwt_decode(res.data.data.accessToken));
+        });
+
+    axiosInstance.get('user/me').then((e) => {
+      if (e.data.data === null) setUser(null);
+    });
+  }, [fetch]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -94,8 +116,7 @@ export default function TopBar({ user, setUser }) {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setUser(null);
-
-    window.location.reload();
+    fetchData();
   };
 
   const KakaoLogin = () => {

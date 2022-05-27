@@ -30,7 +30,7 @@ const style = {
   maxWidth: '95vw',
 };
 
-export default function MyInterestRegionCard() {
+export default function MyInterestRegionCard({ fetchData, fetch }) {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -63,13 +63,13 @@ export default function MyInterestRegionCard() {
               localStorage.setItem('accessToken', res.data.data.accessToken);
               localStorage.setItem('refreshToken', res.data.data.refreshToken);
               alert('토큰이 만료되어 갱신합니다');
-              window.location.reload();
+              fetchData();
             });
         } else {
           localStorage.clear();
         }
       });
-  }, [reload]);
+  }, [fetch]);
 
   useEffect(() => {
     axiosInstance.get('region/name').then((res) => {
@@ -135,7 +135,7 @@ export default function MyInterestRegionCard() {
                           axiosInstance
                             .delete(`region/${user.id}`)
                             .then(() => {
-                              reloadTrigger();
+                              fetchData();
                             })
                             .catch((res) => {
                               alert(res.response.data.message);
@@ -182,7 +182,7 @@ export default function MyInterestRegionCard() {
                       region2,
                     })
                     .then(() => {
-                      reloadTrigger();
+                      fetchData();
                     })
                     .catch((res) => {
                       alert(res.response.data.message);
@@ -202,7 +202,7 @@ export default function MyInterestRegionCard() {
                       region2,
                     })
                     .then(() => {
-                      reloadTrigger();
+                      fetchData();
                     })
                     .catch((res) => {
                       alert(res.response.data.message);

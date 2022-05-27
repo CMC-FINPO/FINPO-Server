@@ -21,11 +21,14 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
-
+  maxWidth: '95vw',
+  height: '85vh',
+  overflow: 'auto',
   display: 'flex',
   flexDirection: 'column',
   gap: 3,
   justifyContent: 'center',
+  paddingTop: 10,
 };
 
 const Input = styled('input')({

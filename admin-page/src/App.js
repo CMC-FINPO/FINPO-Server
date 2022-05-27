@@ -8,6 +8,7 @@ import jwt_decode from 'jwt-decode';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import UserCard from './component/UserCard';
+import { axiosInstance } from './axiosInstance';
 
 const themeLight = createTheme({
   palette: {
@@ -32,19 +33,15 @@ function App() {
   const [user, setUser] = useState();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    let accessToken = localStorage.getItem('accessToken');
-    if (accessToken) setUser(jwt_decode(accessToken));
-    else setUser(null);
-  }, []);
+  const [fetch, setFetch] = useState(false);
+  const fetchData = () => setFetch(!fetch);
 
   useEffect(() => {
     if (searchParams.get('access-token') && searchParams.get('refresh-token')) {
       localStorage.setItem('accessToken', searchParams.get('access-token'));
       localStorage.setItem('refreshToken', searchParams.get('refresh-token'));
       navigate('/');
-      window.location.reload();
+      fetchData();
     }
   }, []);
 
@@ -52,9 +49,9 @@ function App() {
     <ThemeProvider theme={true ? themeLight : themeDark}>
       <CssBaseline />
       <div className='App' style={{}}>
-        <TopBar user={user} setUser={setUser} />
+        <TopBar user={user} setUser={setUser} fetch={fetch} fetchData={fetchData} />
         <Routes>
-          <Route path='/' element={<MainScreen user={user} setUser={setUser} />}></Route>
+          <Route path='/' element={<MainScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
           <Route path='/register/*' element={<RegisterPopup />}></Route>
         </Routes>
       </div>

@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import InterestRegionCard from '../component/InterestRegionCard';
 import MyInterestRegionCard from '../component/MyInterestRegionCard';
 
-export default function MainScreen({ user, setUser }) {
+export default function MainScreen({ user, setUser, fetch, fetchData }) {
   return (
     <div style={{ padding: 40 }}>
       {!user ? (
@@ -15,17 +15,16 @@ export default function MainScreen({ user, setUser }) {
       ) : (
         <Grid container spacing={3}>
           <Grid item xs='auto'>
-            <UserCard />
+            <UserCard fetch={fetch} fetchData={fetchData} />
           </Grid>
           <Grid item xs='auto'>
-            <InterestRegionCard />
+            <InterestRegionCard fetch={fetch} fetchData={fetchData} />
           </Grid>
           <Grid item xs='auto'>
-            <MyInterestRegionCard />
+            <MyInterestRegionCard fetch={fetch} fetchData={fetchData} />
           </Grid>
-
           <Grid item xs='auto'>
-            <ApiTestCard />
+            <ApiTestCard fetch={fetch} fetchData={fetchData} />
           </Grid>
         </Grid>
       )}

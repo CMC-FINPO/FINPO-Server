@@ -30,7 +30,7 @@ const style = {
   maxWidth: '95vw',
 };
 
-export default function InterestRegionCard() {
+export default function InterestRegionCard({ fetch, fetchData }) {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -61,7 +61,7 @@ export default function InterestRegionCard() {
           localStorage.clear();
         }
       });
-  }, [reload]);
+  }, [fetch]);
 
   return (
     <>
