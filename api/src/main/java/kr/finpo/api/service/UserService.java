@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -63,19 +62,16 @@ public class UserService {
   }
 
 
-  public UserDto updateMe(UserDto dto, String before) {
-    // nickname duplication check
-    if (!before.equals(dto.nickname()))
-      userRepository.findByNickname(dto.nickname()).ifPresent(e -> {
-        throw new GeneralException(ErrorCode.NICKNAME_DUPLICATED);
-      });
-
+  public UserDto updateMe(UserDto dto) {
     return update(SecurityUtil.getCurrentUserId(), dto);
   }
 
 
   public UserDto update(Long id, UserDto dto) {
     try {
+      if (isNicknameDuplicated(dto.nickname()))
+        throw new GeneralException(ErrorCode.NICKNAME_DUPLICATED);
+
       return UserDto.info(userRepository.save(dto.updateEntity(userRepository.findById(id).get())));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
@@ -97,6 +93,10 @@ public class UserService {
     }
   }
 
+  public Boolean deleteMe() {
+    return delete(SecurityUtil.getCurrentUserId());
+  }
+
   public Boolean delete(Long id) {
     try {
       regionRepository.deleteByUserId(id);
@@ -110,7 +110,7 @@ public class UserService {
   }
 
 
-  public Boolean checkDuplicate(String nickname) {
+  public Boolean isNicknameDuplicated(String nickname) {
     try {
       if (!userRepository.findByNickname(nickname).isPresent())
         return false;

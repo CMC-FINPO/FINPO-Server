@@ -6,9 +6,6 @@ import kr.finpo.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -45,18 +42,22 @@ public class UserController {
 
 
   @PutMapping("/me")
-  public DataResponse<Object> update(
-      @RequestBody UserDto body,
-      @RequestParam("before") String before
+  public DataResponse<Object> updateMe(
+      @RequestBody UserDto body
   ) {
-    return DataResponse.of(userService.updateMe(body, before));
+    return DataResponse.of(userService.updateMe(body));
   }
 
-  @PutMapping("/me/profile-img")
+  @PostMapping("/me/profile-img")
   public DataResponse<Object> updateMyProfileimg(
       @ModelAttribute UserDto body
   ) {
     return DataResponse.of(userService.updateMyProfileImg(body));
+  }
+
+  @DeleteMapping("/me")
+  public DataResponse<Object> deleteMe() {
+    return DataResponse.of(userService.deleteMe());
   }
 
   @DeleteMapping("/{id}")
@@ -66,7 +67,7 @@ public class UserController {
 
 
   @GetMapping("/check-duplicate")
-  public DataResponse<Object> checkDuplicate(@RequestParam("nickname") String nickname) {
-    return DataResponse.of(userService.checkDuplicate(nickname));
+  public DataResponse<Object> checkNicknameDuplicate(@RequestParam("nickname") String nickname) {
+    return DataResponse.of(userService.isNicknameDuplicated(nickname));
   }
 }

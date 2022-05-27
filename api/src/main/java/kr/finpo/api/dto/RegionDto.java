@@ -19,6 +19,6 @@ public record RegionDto(
   }
 
   public static RegionDto result(Region region) {
-    return new RegionDto(region.getId(), region.getRegion1(), region.getRegion2(), region.getIsDefault(), region.getUser().getId());
+    return new RegionDto(region.getId(), region.getRegion1(), region.getRegion2(), region.getIsDefault(), null);
   }
 }

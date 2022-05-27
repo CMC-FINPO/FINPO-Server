@@ -37,6 +37,7 @@ public class RegionController {
     return DataResponse.of(regionService.getAll());
   }
 
+
   @GetMapping("/me")
   public DataResponse<Object> getMyRegions() {
     return DataResponse.of(regionService.getMyRegions());
@@ -48,15 +49,18 @@ public class RegionController {
     return DataResponse.of(regionService.getMyDefaultRegion());
   }
 
+
   @PostMapping("/me")
   public DataResponse<Object> insertRegion(@RequestBody RegionDto body) {
     return DataResponse.of(regionService.insertRegion(body));
   }
 
-  @PostMapping("/my-default")
+
+  @PutMapping("/my-default")
   public DataResponse<Object> upsertMyDefaultRegion(@RequestBody RegionDto body) {
     return DataResponse.of(regionService.upsertMyDefaultRegion(body));
   }
+
 
   @DeleteMapping("/{id}")
   public DataResponse<Object> delete(@PathVariable Long id) {

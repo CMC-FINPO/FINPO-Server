@@ -48,10 +48,12 @@ public class S3Uploader {
   }
 
   private String upload(String filePath, File uploadFile) {
-    String fileName = filePath + "/" + UUID.randomUUID() + uploadFile.getName();
-    String uploadImageUrl = putS3(uploadFile, fileName);
+    String fileName = uploadFile.getName();
+    String newFileName = filePath + "/" + UUID.randomUUID() + fileName.substring(fileName.lastIndexOf('.'));
+
+    String uploadImageUrl = putS3(uploadFile, newFileName);
     removeNewFile(uploadFile);
-    return fileName;
+    return newFileName;
   }
 
   private String putS3(File uploadFile, String fileName) {
@@ -73,18 +75,14 @@ public class S3Uploader {
     return Optional.of(convertFile);
   }
 
-  // 이미지 크기 줄이기
   private File resizeImageFile(MultipartFile file, String filePath, String formatName) throws Exception {
-    // 이미지 읽어 오기
     BufferedImage inputImage = ImageIO.read(file.getInputStream());
-    // 이미지 세로 가로 측정
     int originWidth = inputImage.getWidth();
     int originHeight = inputImage.getHeight();
-    // 변경할 가로 길이
     int newWidth = 500;
 
     int newHeight = (originHeight * newWidth) / originWidth;
-    Image resizeImage = inputImage.getScaledInstance(newWidth, newHeight, Image.SCALE_FAST);
+    Image resizeImage = inputImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
     BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
     Graphics graphics = newImage.getGraphics();
     graphics.drawImage(resizeImage, 0, 0, null);
