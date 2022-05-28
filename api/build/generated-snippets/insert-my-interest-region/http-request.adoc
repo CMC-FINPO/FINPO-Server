@@ -2,12 +2,18 @@
 ----
 POST /region/me HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlL2MyMDdlNWYxLTIwZWUtNDBhMC05ZTllLWYxMDJlYWZiMjljOWltYWdlZmlsZS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM2NzA1Njl9.tWD3tfEtwLab4M0QT37f4E9LvmKX-X_-CYnohztGC3zLFJWWoVREbtU44udlRczt85fxDi9SWwUGXDa9XxZjhA
-Content-Length: 50
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlL2U5YmE2ZTE2LTEwOWMtNDE1ZC1iZGIzLTYyNjJhMzAzZjVmMS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM3MjE1OTd9._ni5ncls4iBRi0dFNYrMZ0rrqJ7H_9Nw782_J-HNPuZi7WHMu5R4UItTjGeOmf1h0pkhQlNHhLHlzMe7dbeQdA
+Content-Length: 158
 Host: dev.finpo.kr
 
-{
+[ {
   "region1" : "서울",
-  "region2" : "중랑"
-}
+  "region2" : "양천"
+}, {
+  "region1" : "서울",
+  "region2" : "목동"
+}, {
+  "region1" : "서울",
+  "region2" : "목동"
+} ]
 ----

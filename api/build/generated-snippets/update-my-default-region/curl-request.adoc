@@ -2,7 +2,7 @@
 ----
 $ curl 'https://dev.finpo.kr/region/my-default' -i -X PUT \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzZjNzlhOGJjLWI0M2MtNDdkOS1hNTlhLTBlNTBmMzhmMDBkYS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM2NzMwMzF9._aDHEwpVnNVD8S_lESNTNqQ6rxjrVFKGPzlwQunQEbjuodn-R9ejVZRsg8xcMIf25AmF3UqGmB0c5DvdFsdVFg' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyNyIsIm5pY2tuYW1lIjoi66mU7J207IqoIiwicHJvZmlsZUltZyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC91cGxvYWQvcHJvZmlsZS9mODY5ZGE3OS02OWE2LTQ0NWMtYTgyMC1mM2U4NzY2NzI2YWEuanBlZyIsInJlZ2lvbjEiOiLshJzsmrgiLCJyZWdpb24yIjoi6rCV64-ZIiwib0F1dGhUeXBlIjoiS0FLQU8iLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjUzNzE5ODk0fQ.42_k0zgJcuWl88ghl1BaHFo97vC9Ms4BT2SWvwh-lLJo7PKhnTDYQ1z5UMM5Y7L4Jna2Jz6svBV39SXTxKtplg' \
     -d '{
   "region1" : "경기",
   "region2" : "판교"

@@ -1,7 +1,13 @@
 [source,options="nowrap"]
 ----
-{
+[ {
   "region1" : "서울",
-  "region2" : "중랑"
-}
+  "region2" : "양천"
+}, {
+  "region1" : "서울",
+  "region2" : "목동"
+}, {
+  "region1" : "서울",
+  "region2" : "목동"
+} ]
 ----

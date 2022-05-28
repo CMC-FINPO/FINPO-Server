@@ -54,7 +54,8 @@ class OAuthControllerTest {
   private UserService userService;
 
 
-  private final String kakaoToken = "";
+  private final String kakaoToken = "qfpyvLQU96MC2gFScy0fglinXkHkRHdQEjIHdiarCinJXgAAAYELJAWx";
+  private final String googleToken ="ya29.a0ARrdaM8EQIT0qaDmtmLjLU9ecCimKAfTD4S4EuBjXpgwTSqBsBLGJwHWrCmps98x1qmC5gk88-opf0EpLm-z9Q3BzmzaS67NNQQKVdAvVDtb40-sVO0RzsYB7T1oYIixx4BZs8CP2UoJms9PEUe6cwuBFR-Q";
 
   @BeforeEach
   void setUp() throws Exception {
@@ -136,6 +137,80 @@ class OAuthControllerTest {
     ;
   }
 
+
+
+  @Test
+  void loginWithGoogleTokenFail() throws Exception {
+    mockMvc.perform(get("/oauth/login/google")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + googleToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message").value("need register"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("구글로그인실패",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Google Access Token")
+                ),
+                responseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("로그인 성공 여부\n회원가입 하지 않았다면 [need register]"),
+                    fieldWithPath("data.name").description("이름").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.nickname").description("닉네임").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.birth").description("생년월일(YYYY-MM-DD)").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.gender").description("성별\n(MALE, FEMALE, PRIVATE)").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.email").description("메일주소").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.region1").description("지역1").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.region2").description("지역2").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.profileImg").description("프로필 이미지 url").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.oAuthType").description("소셜 로그인 타입\nKAKAO/GOOGLE/APPLE").optional().type(JsonFieldType.STRING)
+                )
+            )
+        )
+    ;
+  }
+
+  @Test
+  void loginWithGoogleTokenSuccess() throws Exception {
+    registerByGoogleTest();
+
+    mockMvc.perform(get("/oauth/login/google")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + googleToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message").value("Ok"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("구글로그인성공",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Google Access Token")
+                ),
+                responseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.grantType").description("Authorization Header 타입"),
+                    fieldWithPath("data.accessToken").description("Access Token"),
+                    fieldWithPath("data.refreshToken").description("Refresh Token"),
+                    fieldWithPath("data.accessTokenExpiresIn").description("Access Token 만료시각")
+                )
+            )
+        )
+    ;
+  }
+
+
   @Test
   void registerByKakaoTest() throws Exception {
     MockMultipartFile image = new MockMultipartFile("profileImgFile", "imagefile.jpeg", "image/jpeg", new FileInputStream(System.getProperty("user.dir") + "/" + "test.png"));
@@ -174,9 +249,10 @@ class OAuthControllerTest {
                     , parameterWithName("email").description("메일주소")
                     , parameterWithName("region1").description("지역1")
                     , parameterWithName("region2").description("지역2")
+                    , parameterWithName("profileImg").description("프로필 이미지 url").optional()
                 )
                 , requestParts(
-                    partWithName("profileImgFile").description("프로필 이미지 파일")
+                    partWithName("profileImgFile").description("프로필 이미지 파일").optional()
                 ),
                 responseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -191,6 +267,65 @@ class OAuthControllerTest {
         )
         ;
   }
+
+  @Test
+  void registerByGoogleTest() throws Exception {
+    MockMultipartFile image = new MockMultipartFile("profileImgFile", "imagefile.jpeg", "image/jpeg", new FileInputStream(System.getProperty("user.dir") + "/" + "test.png"));
+
+    mockMvc.perform(RestDocumentationRequestBuilders.fileUpload("/oauth/register/google")
+            .file(image)
+            .param("name", "김명승")
+            .param("nickname", "메이슨")
+            .param("birth", "1999-01-01")
+            .param("gender", Gender.MALE.toString())
+            .param("email", "mskim9967@gmail.com")
+            .param("region1", "서울")
+            .param("region2", "강동")
+            .param("profileImg", "https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100")
+
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .header("Authorization", "Bearer " + googleToken)
+        )
+
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.grantType").value("bearer"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("구글회원가입",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Google Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("name").description("이름")
+                    , parameterWithName("nickname").description("닉네임")
+                    , parameterWithName("birth").description("생년월일(YYYY-MM-DD)")
+                    , parameterWithName("gender").description("성별\n(MALE, FEMALE, PRIVATE)")
+                    , parameterWithName("email").description("메일주소")
+                    , parameterWithName("region1").description("지역1")
+                    , parameterWithName("region2").description("지역2")
+                    , parameterWithName("profileImg").description("프로필 이미지 url").optional()
+                )
+                , requestParts(
+                    partWithName("profileImgFile").description("프로필 이미지 파일").optional()
+                ),
+                responseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.grantType").description("Authorization Header 타입"),
+                    fieldWithPath("data.accessToken").description("Access Token"),
+                    fieldWithPath("data.refreshToken").description("Refresh Token"),
+                    fieldWithPath("data.accessTokenExpiresIn").description("Access Token 만료시각")
+                )
+            )
+        )
+    ;
+  }
+
 
 
 

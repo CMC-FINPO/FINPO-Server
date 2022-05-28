@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ http GET 'https://dev.finpo.kr/oauth/login/google' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer ya29.a0ARrdaM8EQIT0qaDmtmLjLU9ecCimKAfTD4S4EuBjXpgwTSqBsBLGJwHWrCmps98x1qmC5gk88-opf0EpLm-z9Q3BzmzaS67NNQQKVdAvVDtb40-sVO0RzsYB7T1oYIixx4BZs8CP2UoJms9PEUe6cwuBFR-Q'
+----

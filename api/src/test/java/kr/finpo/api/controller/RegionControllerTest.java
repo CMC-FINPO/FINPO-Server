@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -195,21 +196,31 @@ class RegionControllerTest {
   }
 
   void insertRegion(String name) throws Exception {
-    HashMap<String, Object> body = new HashMap<>();
     ObjectMapper objectMapper = new ObjectMapper();
+    HashMap<String, Object> body = new HashMap<>();
     body.put("region1", "서울");
     body.put("region2", name);
+
+    HashMap<String, Object> body2 = new HashMap<>();
+    body2.put("region1", "서울");
+    body2.put("region2", "목동");
+
+    ArrayList<Object> arr = new ArrayList<>(){{
+      add(body);
+      add(body2);
+      add(body2);
+    }};
 
     mockMvc.perform(post("/region/me")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
-            .content(objectMapper.writeValueAsString(body))
+            .content(objectMapper.writeValueAsString(arr))
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.data.region1").value("서울"))
-        .andExpect(jsonPath("$.data.region2").value(name))
-        .andExpect(jsonPath("$.data.isDefault").value(false))
+        .andExpect(jsonPath("$.data[0].region1").value("서울"))
+        .andExpect(jsonPath("$.data[0].region2").value(name))
+        .andExpect(jsonPath("$.data[0].isDefault").value(false))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(
@@ -220,17 +231,17 @@ class RegionControllerTest {
                     headerWithName("Authorization").description("Access Token")
                 ),
                 requestFields(
-                    fieldWithPath("region1").description("갱신할 거주 지역 이름"),
-                    fieldWithPath("region2").description("갱신할 상세 거주 지역 이름")
+                    fieldWithPath("[].region1").description("갱신할 거주 지역 이름"),
+                    fieldWithPath("[].region2").description("갱신할 상세 거주 지역 이름")
                 ),
                 responseFields(
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
-                    fieldWithPath("data.id").description("관심 지역 id"),
-                    fieldWithPath("data.region1").description("추가된 관심 지역 이름"),
-                    fieldWithPath("data.region2").description("추가된 상세 관심 지역 이름"),
-                    fieldWithPath("data.isDefault").description("거주지역이면 true\n관심지역이면 false")
+                    fieldWithPath("data.[].id").description("관심 지역 id"),
+                    fieldWithPath("data.[].region1").description("추가된 관심 지역 이름"),
+                    fieldWithPath("data.[].region2").description("추가된 상세 관심 지역 이름"),
+                    fieldWithPath("data.[].isDefault").description("거주지역이면 true\n관심지역이면 false")
                 )
             )
         );
@@ -257,6 +268,39 @@ class RegionControllerTest {
                 ),
                 pathParameters(
                     parameterWithName("id").description("삭제할 지역 id")
+                ),
+                responseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data").description("삭제 성공 여부")
+                )
+            )
+        );
+  }
+
+  @Test
+  void deleteRegions() throws Exception {
+    insertRegion("서초");
+    insertRegion("양천");
+
+    mockMvc.perform(RestDocumentationRequestBuilders.delete("/region?id=4&id=6")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("관심지역들삭제",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("id").description("삭제할 지역 id들(여러개 가능)")
                 ),
                 responseFields(
                     fieldWithPath("success").description("성공 여부"),

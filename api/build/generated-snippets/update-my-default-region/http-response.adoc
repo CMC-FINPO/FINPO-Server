@@ -12,14 +12,14 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 168
+Content-Length: 169
 
 {
   "success" : true,
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 1,
+    "id" : 26,
     "region1" : "경기",
     "region2" : "판교",
     "isDefault" : true

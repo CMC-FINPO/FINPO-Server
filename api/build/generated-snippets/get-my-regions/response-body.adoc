@@ -5,17 +5,22 @@
   "errorCode" : 0,
   "message" : "Ok",
   "data" : [ {
-    "id" : 9,
+    "id" : 11,
     "region1" : "서울",
     "region2" : "강동",
     "isDefault" : true
   }, {
-    "id" : 12,
+    "id" : 14,
     "region1" : "서울",
     "region2" : "용산",
     "isDefault" : false
   }, {
-    "id" : 13,
+    "id" : 15,
+    "region1" : "서울",
+    "region2" : "목동",
+    "isDefault" : false
+  }, {
+    "id" : 16,
     "region1" : "서울",
     "region2" : "강남",
     "isDefault" : false

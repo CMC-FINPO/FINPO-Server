@@ -1,0 +1,16 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "need register",
+  "data" : {
+    "name" : "Mason Kim",
+    "birth" : "1999-06-07",
+    "gender" : "MALE",
+    "email" : "mskim9967@gmail.com",
+    "profileImg" : "https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100",
+    "oAuthType" : "GOOGLE"
+  }
+}
+----

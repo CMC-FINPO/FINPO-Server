@@ -230,6 +230,31 @@ class UserControllerTest {
   }
 
   @Test
+  void checkEmailDuplicate() throws Exception {
+    mockMvc.perform(get("/user/check-duplicate?email=mskim9967@gmail.com").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data").value(true))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("이메일중복체크",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestParameters(
+                    parameterWithName("email").description("중복 체크 할 이메일")
+                ),
+                responseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data").description("중복이면 true 중복아니면 false")
+                )
+            )
+        );
+  }
+
+  @Test
   void deleteMe() throws Exception {
     getMyInfo();
 

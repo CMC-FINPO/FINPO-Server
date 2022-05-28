@@ -12,19 +12,19 @@
 |`+String+`
 |true
 |응답 메시지
-|`+data.id+`
+|`+data.[].id+`
 |`+Number+`
 |true
 |관심 지역 id
-|`+data.region1+`
+|`+data.[].region1+`
 |`+String+`
 |true
 |추가된 관심 지역 이름
-|`+data.region2+`
+|`+data.[].region2+`
 |`+String+`
 |true
 |추가된 상세 관심 지역 이름
-|`+data.isDefault+`
+|`+data.[].isDefault+`
 |`+Boolean+`
 |true
 |거주지역이면 true

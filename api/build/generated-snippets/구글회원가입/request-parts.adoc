@@ -1,0 +1,7 @@
+|===
+|Part|Description
+
+|`+profileImgFile+`
+|프로필 이미지 파일
+
+|===

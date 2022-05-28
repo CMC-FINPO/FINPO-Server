@@ -4,11 +4,11 @@
   "success" : true,
   "errorCode" : 0,
   "message" : "Ok",
-  "data" : {
-    "id" : 4,
+  "data" : [ {
+    "id" : 6,
     "region1" : "서울",
-    "region2" : "중랑",
+    "region2" : "양천",
     "isDefault" : false
-  }
+  } ]
 }
 ----

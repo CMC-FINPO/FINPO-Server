@@ -5,7 +5,7 @@
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 20,
+    "id" : 23,
     "region1" : "서울",
     "region2" : "강동",
     "isDefault" : true
