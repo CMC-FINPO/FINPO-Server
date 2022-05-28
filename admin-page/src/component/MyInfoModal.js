@@ -24,7 +24,7 @@ const style = {
 
   display: 'flex',
   flexDirection: 'column',
-  gap: 3,
+  gap: 2,
   justifyContent: 'center',
 };
 
@@ -91,9 +91,10 @@ export default function MyInfoModal({ fetchData, fetch }) {
         <Typography id='modal-modal-title' variant='h4' component='h2'>
           회원 정보 변경
         </Typography>
-        <TextField label='이름' variant='outlined' value={name} onChange={(e) => setName(e.target.value)} />
+        <TextField size='small' label='이름' variant='outlined' value={name} onChange={(e) => setName(e.target.value)} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
           <TextField
+            size='small'
             label='닉네임'
             variant='outlined'
             value={nickname}
@@ -116,8 +117,8 @@ export default function MyInfoModal({ fetchData, fetch }) {
             중복 확인
           </Button>
         </div>
-        <TextField label='생년월일(yyyy-mm-dd)' variant='outlined' value={birth} onChange={(e) => setBirth(e.target.value)} />
-        <TextField label='이메일' variant='outlined' value={email} onChange={(e) => setEmail(e.target.value)} />
+        <TextField size='small' label='생년월일(yyyy-mm-dd)' variant='outlined' value={birth} onChange={(e) => setBirth(e.target.value)} />
+        <TextField size='small' label='이메일' variant='outlined' value={email} onChange={(e) => setEmail(e.target.value)} />
         <FormControl>
           <FormLabel id='demo-row-radio-buttons-group-label'>성별</FormLabel>
           <RadioGroup row value={gender} onChange={(e) => setGender(e.target.value)}>
@@ -128,7 +129,7 @@ export default function MyInfoModal({ fetchData, fetch }) {
         </FormControl>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>지역</InputLabel>
-          <Select value={region1} onChange={(e) => setRegion1(e.target.value)}>
+          <Select size='small' value={region1} onChange={(e) => setRegion1(e.target.value)}>
             {regions1.map((region, idx) => {
               return <MenuItem value={region}>{region}</MenuItem>;
             })}
@@ -136,7 +137,7 @@ export default function MyInfoModal({ fetchData, fetch }) {
         </FormControl>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>상세 지역</InputLabel>
-          <Select value={region2} onChange={(e) => setRegion2(e.target.value)}>
+          <Select size='small' value={region2} onChange={(e) => setRegion2(e.target.value)}>
             {regions2.map((region, idx) => {
               return <MenuItem value={region}>{region}</MenuItem>;
             })}

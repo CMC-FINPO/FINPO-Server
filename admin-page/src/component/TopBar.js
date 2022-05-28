@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
+
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -16,7 +17,7 @@ import SideBar from './SideBar';
 import Button from '@mui/material/Button';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { styled } from '@mui/material';
-import { grey, indigo, yellow } from '@mui/material/colors';
+import { green, grey, indigo, yellow } from '@mui/material/colors';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import { axiosInstance } from '../axiosInstance';
@@ -29,42 +30,6 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  useEffect(() => {
-    if (localStorage.getItem('accessToken'))
-      axiosInstance
-        .post('oauth/reissue', {
-          accessToken: localStorage.getItem('accessToken'),
-          refreshToken: localStorage.getItem('refreshToken'),
-        })
-        .then((res) => {
-          localStorage.setItem('accessToken', res.data.data.accessToken);
-          localStorage.setItem('refreshToken', res.data.data.refreshToken);
-          setUser(jwt_decode(res.data.data.accessToken));
-        });
-
-    axiosInstance
-      .get('user/me')
-      .then((e) => {
-        if (e.data.data === null) setUser(null);
-      })
-      .catch((res) => {
-        if (res.response.data.errorCode === '40001') {
-          axiosInstance
-            .post('oauth/reissue', {
-              accessToken: localStorage.getItem('accessToken'),
-              refreshToken: localStorage.getItem('refreshToken'),
-            })
-            .then((res) => {
-              localStorage.setItem('accessToken', res.data.data.accessToken);
-              localStorage.setItem('refreshToken', res.data.data.refreshToken);
-              alert('토큰이 만료되어 갱신합니다');
-            });
-        } else {
-          localStorage.clear();
-        }
-      });
-  }, [fetch]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -131,6 +96,14 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
     },
   }));
 
+  const ReloadButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(green[500]),
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  }));
+
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
@@ -164,8 +137,16 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
 
   const GoogleLogin = () => {
     return (
-      <GoogleButton sx={{ fontSize: 16 }} variant='contained' size='small' startIcon={<GoogleIcon />} onClick={() => {}}>
-        {'준비 중'}
+      <GoogleButton
+        sx={{ fontSize: 16 }}
+        variant='contained'
+        size='small'
+        startIcon={<GoogleIcon />}
+        onClick={() => {
+          user ? logout() : (window.location.href = axiosInstance.defaults.baseURL + '/oauth/googleloginurl');
+        }}
+      >
+        {user ? `${user.nickname} (로그아웃)` : '구글로 로그인'}
       </GoogleButton>
     );
   };
@@ -209,11 +190,11 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex', gap: 10 } }}>
-            <KakaoLogin />
+            <ReloadButton onClick={() => fetchData()}>새로고침</ReloadButton>
 
-            <AppleLogin />
-
-            <GoogleLogin />
+            {(!user || user?.oAuthType === 'KAKAO') && <KakaoLogin />}
+            {(!user || user?.oAuthType === 'GOOGLE') && <GoogleLogin />}
+            {(!user || user?.oAuthType === 'APPLE') && <AppleLogin />}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton size='large' onClick={handleMobileMenuOpen} color='inherit'>

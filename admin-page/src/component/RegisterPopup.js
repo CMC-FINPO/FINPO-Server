@@ -22,13 +22,11 @@ const style = {
   boxShadow: 24,
   p: 4,
   maxWidth: '95vw',
-  height: '85vh',
   overflow: 'auto',
   display: 'flex',
   flexDirection: 'column',
-  gap: 3,
+  gap: 2,
   justifyContent: 'center',
-  paddingTop: 10,
 };
 
 const Input = styled('input')({
@@ -57,6 +55,7 @@ export default function RegisterPopup() {
   const [region2, setRegion2] = useState();
   const [interestPolicy, setInterestPolicy] = useState([]);
   const [profileImg, setProfileImg] = useState();
+  const [profileImgUrl, setProfileImgUrl] = useState();
   const [isNicknameDuplicate, setNicknameDuplicate] = useState(null);
 
   const [regions1, setRegions1] = useState([]);
@@ -74,6 +73,9 @@ export default function RegisterPopup() {
     setNickname(searchParams.get('nickname'));
     setEmail(searchParams.get('email'));
     setGender(searchParams.get('gender'));
+    setName(searchParams.get('name'));
+    setBirth(searchParams.get('birth'));
+    setProfileImgUrl(searchParams.get('profileImg'));
   }, []);
 
   useEffect(() => {
@@ -87,11 +89,12 @@ export default function RegisterPopup() {
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Typography id='modal-modal-title' variant='h4' component='h2'>
-            카카오로 회원가입
+            {location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)}로 회원가입
           </Typography>
-          <TextField label='이름' variant='outlined' value={name} onChange={(e) => setName(e.target.value)} />
+          <TextField size='small' label='이름' variant='outlined' value={name} onChange={(e) => setName(e.target.value)} />
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
             <TextField
+              size='small'
               label='닉네임'
               variant='outlined'
               value={nickname}
@@ -118,8 +121,8 @@ export default function RegisterPopup() {
               중복 확인
             </Button>
           </div>
-          <TextField label='생년월일(yyyy-mm-dd)' variant='outlined' value={birth} onChange={(e) => setBirth(e.target.value)} />
-          <TextField label='이메일' variant='outlined' value={email} onChange={(e) => setEmail(e.target.value)} />
+          <TextField size='small' label='생년월일(yyyy-mm-dd)' variant='outlined' value={birth} onChange={(e) => setBirth(e.target.value)} />
+          <TextField size='small' label='이메일' variant='outlined' value={email} onChange={(e) => setEmail(e.target.value)} />
           <FormControl>
             <FormLabel id='demo-row-radio-buttons-group-label'>성별</FormLabel>
             <RadioGroup row value={gender} onChange={(e) => setGender(e.target.value)}>
@@ -130,7 +133,7 @@ export default function RegisterPopup() {
           </FormControl>
           <FormControl fullWidth>
             <InputLabel id='demo-simple-select-label'>지역</InputLabel>
-            <Select value={region1} onChange={(e) => setRegion1(e.target.value)}>
+            <Select size='small' value={region1} onChange={(e) => setRegion1(e.target.value)}>
               {regions1.map((region, idx) => {
                 return <MenuItem value={region}>{region}</MenuItem>;
               })}
@@ -138,7 +141,7 @@ export default function RegisterPopup() {
           </FormControl>
           <FormControl fullWidth>
             <InputLabel id='demo-simple-select-label'>상세 지역</InputLabel>
-            <Select value={region2} onChange={(e) => setRegion2(e.target.value)}>
+            <Select size='small' value={region2} onChange={(e) => setRegion2(e.target.value)}>
               {regions2.map((region, idx) => {
                 return <MenuItem value={region}>{region}</MenuItem>;
               })}
@@ -175,11 +178,12 @@ export default function RegisterPopup() {
                 if (region2) formData.append('region1', region1);
                 if (region2) formData.append('region2', region2);
                 if (nickname) formData.append('nickname', nickname);
+                if (profileImgUrl) formData.append('profileImg', profileImgUrl);
 
                 axiosInstance
-                  .post(`/oauth/register/${location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)}`, formData, {
+                  .post(`oauth/register/${location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length)}`, formData, {
                     headers: {
-                      Authorization: `Bearer ${searchParams.get('kakao-token')}`,
+                      Authorization: `Bearer ${searchParams.get('token')}`,
                       'Content-Type': 'multipart/form-data',
                     },
                   })

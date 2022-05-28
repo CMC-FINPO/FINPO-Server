@@ -47,7 +47,7 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
   const [regions2, setRegions2] = useState([]);
 
   useEffect(() => {
-    axiosInstance.get('region').then((res) => {
+    axiosInstance.get('region/me').then((res) => {
       setUsers([...res.data.data]);
     });
   }, [fetch]);
@@ -158,10 +158,7 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
                 onClick={(e) => {
                   e.stopPropagation();
                   axiosInstance
-                    .post(`region/me`, {
-                      region1,
-                      region2,
-                    })
+                    .post(`region/me`, [{ region1, region2 }])
                     .then(() => {
                       fetchData();
                     })
@@ -178,7 +175,7 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
                 onClick={(e) => {
                   e.stopPropagation();
                   axiosInstance
-                    .post(`region/my-default`, {
+                    .put(`region/my-default`, {
                       region1,
                       region2,
                     })

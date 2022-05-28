@@ -41,9 +41,24 @@ function App() {
       localStorage.setItem('accessToken', searchParams.get('access-token'));
       localStorage.setItem('refreshToken', searchParams.get('refresh-token'));
       navigate('/');
-      fetchData();
     }
-  }, []);
+
+    if (localStorage.getItem('accessToken')) setUser(jwt_decode(localStorage.getItem('accessToken')));
+
+    if (localStorage.getItem('accessToken')) {
+      console.log('called');
+      axiosInstance
+        .post('oauth/reissue', {
+          accessToken: localStorage.getItem('accessToken'),
+          refreshToken: localStorage.getItem('refreshToken'),
+        })
+        .then((res) => {
+          localStorage.setItem('accessToken', res.data.data.accessToken);
+          localStorage.setItem('refreshToken', res.data.data.refreshToken);
+          setUser(jwt_decode(res.data.data.accessToken));
+        });
+    }
+  }, [fetch]);
 
   return (
     <ThemeProvider theme={true ? themeLight : themeDark}>
