@@ -69,7 +69,9 @@ public class UserService {
   public UserDto update(Long id, UserDto dto) {
     try {
       if (isNicknameDuplicated(dto.nickname()))
-        throw new GeneralException(ErrorCode.NICKNAME_DUPLICATED);
+        throw new GeneralException(ErrorCode.VALIDATION_ERROR, "nickname duplicated");
+      if (isEmailDuplicated(dto.email()))
+        throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
 
       return UserDto.info(userRepository.save(dto.updateEntity(userRepository.findById(id).get())));
     } catch (Exception e) {

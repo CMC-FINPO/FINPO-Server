@@ -197,8 +197,17 @@ public class OAuthService {
 
       // nickname duplication check
       userRepository.findByNickname(dto.nickname()).ifPresent(e -> {
-        throw new GeneralException(ErrorCode.NICKNAME_DUPLICATED);
+        throw new GeneralException(ErrorCode.VALIDATION_ERROR, "nickname duplicated");
       });
+
+      // email duplication check
+      userRepository.findByEmail(dto.email()).ifPresent(e -> {
+        throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
+      });
+
+      // email format check
+      if(!dto.email().matches("^(.+)@(\\S+)$"))
+        throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email format error");
 
       String profileImgUrl = dto.profileImg();
       if (dto.profileImgFile() != null)
