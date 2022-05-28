@@ -46,7 +46,7 @@ public record UserDto(
         sb.append("&");
       }
       sb.deleteCharAt(sb.length() - 1);
-      return sb.toString();
+      return sb.toString().replaceAll(" ", "%20");
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

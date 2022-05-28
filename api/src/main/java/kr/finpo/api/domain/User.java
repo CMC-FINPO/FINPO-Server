@@ -87,6 +87,9 @@ public class User {
   @OneToOne(mappedBy = "user")
   private KakaoAccount kakaoAccount;
 
+  @OneToOne(mappedBy = "user")
+  private GoogleAccount googleAccount;
+
   @Setter
   @OneToOne
   @NotNull

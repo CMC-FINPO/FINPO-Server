@@ -1,9 +1,7 @@
 package kr.finpo.api.controller;
 
-import kr.finpo.api.dto.DataResponse;
-import kr.finpo.api.dto.KakaoTokenDto;
-import kr.finpo.api.dto.TokenDto;
-import kr.finpo.api.dto.UserDto;
+import kr.finpo.api.constant.OAuthType;
+import kr.finpo.api.dto.*;
 import kr.finpo.api.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +10,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,18 +31,15 @@ public class OAuthController {
       @Value("${admin-page.url}") String url
   ) throws URISyntaxException {
 
-    KakaoTokenDto kakaoToken = oAuthService.getKakaoAccessToken(code);
+    KakaoTokenDto kakaoToken = oAuthService.getKakaoToken(code);
     log.debug("카카오 tokens:" + kakaoToken.toString());
-    Object loginRes = oAuthService.loginWithKakaoToken(kakaoToken.access_token());
-
+    Object loginRes = oAuthService.loginWithOAuthToken(kakaoToken.access_token(), "kakao");
 
     HttpHeaders headers = new HttpHeaders();
     if (loginRes.getClass() == UserDto.class) { // not registered
       UserDto userDto = (UserDto) loginRes;
-      headers.set("KakaoToken", kakaoToken.access_token());
-      headers.setLocation(new URI(String.format("%s/register/kakao?%s&kakao-token=%s",url, userDto.toUrlParameter(), kakaoToken.access_token())));
-    }
-    else {
+      headers.setLocation(new URI(String.format("%s/register/kakao?%s&token=%s", url, userDto.toUrlParameter(), kakaoToken.access_token())));
+    } else {
       TokenDto tokenDto = (TokenDto) loginRes;
       headers.setLocation(new URI(String.format("%s?access-token=%s&refresh-token=%s", url, tokenDto.getAccessToken(), tokenDto.getRefreshToken())));
     }
@@ -50,10 +47,47 @@ public class OAuthController {
   }
 
 
-  @GetMapping("/login/kakao")
-  public DataResponse<Object> loginWithKakaoToken(@RequestHeader("Authorization") String kakaoAccessToken) {
+  @GetMapping(path = "/googleloginurl")
+  public ResponseEntity<Object> temp(
+      @Value("${oauth.google.redirect-uri}") String googleRedirectUrl,
+      @Value("${oauth.google.client-id}") String googleClientId,
+      @Value("${oauth.google.auth-scope}") String googleScopes
+  ) throws URISyntaxException {
+    HttpHeaders headers = new HttpHeaders();
+    Map<String, String> params = new HashMap<>();
+    params.put("client_id", googleClientId);
+    params.put("redirect_uri", googleRedirectUrl);
+    params.put("scope", googleScopes.replaceAll(",", "%20"));
+    String paramStr = params.entrySet().stream().map(param -> param.getKey() + "=" + param.getValue()).collect(Collectors.joining("&"));
+    headers.setLocation(new URI("https://accounts.google.com/o/oauth2/v2/auth?" + paramStr + "&response_type=code"));
+    return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER); // redirect
+  }
 
-    Object loginRes = oAuthService.loginWithKakaoToken(kakaoAccessToken);
+  @GetMapping(path = "/login/google", params = "code")
+  public ResponseEntity<Object> loginWithGoogleId(
+      @RequestParam String code,
+      @Value("${admin-page.url}") String url
+  ) throws URISyntaxException {
+    GoogleTokenDto googleTokenDto = oAuthService.getGoogleToken(code);
+    log.debug("구글 tokens:" + googleTokenDto.toString());
+    Object loginRes = oAuthService.loginWithOAuthToken(googleTokenDto.access_token(), "google");
+
+    HttpHeaders headers = new HttpHeaders();
+    if (loginRes.getClass() == UserDto.class) { // not registered
+      UserDto userDto = (UserDto) loginRes;
+      headers.setLocation(new URI(String.format("%s/register/google?%s&token=%s", url, userDto.toUrlParameter(), googleTokenDto.access_token())));
+    } else {
+      TokenDto tokenDto = (TokenDto) loginRes;
+      headers.setLocation(new URI(String.format("%s?access-token=%s&refresh-token=%s", url, tokenDto.getAccessToken(), tokenDto.getRefreshToken())));
+    }
+    return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER); // redirect
+  }
+
+
+  @GetMapping("/login/{oAuthType}")
+  public DataResponse<Object> loginWithOAuthToken(@RequestHeader("Authorization") String kakaoAccessToken, @PathVariable String oAuthType) {
+
+    Object loginRes = oAuthService.loginWithOAuthToken(kakaoAccessToken, oAuthType);
     if (loginRes.getClass() == UserDto.class) // not registered
       return DataResponse.of(loginRes, "need register");
     return DataResponse.of(loginRes);
@@ -61,11 +95,19 @@ public class OAuthController {
 
 
   @PostMapping("/register/kakao")
-  public DataResponse<Object> registerByKakao(
-      @RequestHeader("Authorization") String kakaoAccessToken,
+  public DataResponse<Object> registerWithKakao(
+      @RequestHeader("Authorization") String oAuthAccessToken,
       @ModelAttribute UserDto body
   ) {
-    return DataResponse.of(oAuthService.registerByKakao(kakaoAccessToken, body));
+    return DataResponse.of(oAuthService.register(oAuthAccessToken, "kakao", body));
+  }
+
+  @PostMapping("/register/google")
+  public DataResponse<Object> registerWithGoogle(
+      @RequestHeader("Authorization") String oAuthAccessToken,
+      @ModelAttribute UserDto body
+      ) {
+    return DataResponse.of(oAuthService.register(oAuthAccessToken, "google", body));
   }
 
 
