@@ -6,6 +6,8 @@ import kr.finpo.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -67,7 +69,12 @@ public class UserController {
 
 
   @GetMapping("/check-duplicate")
-  public DataResponse<Object> checkNicknameDuplicate(@RequestParam("nickname") String nickname) {
-    return DataResponse.of(userService.isNicknameDuplicated(nickname));
+  public DataResponse<Object> checkNicknameDuplicate(@RequestParam Map<String, String> params) {
+    Boolean res = false;
+    if(params.containsKey("nickname"))
+      res = userService.isNicknameDuplicated(params.get("nickname"));
+    else if(params.containsKey("email"))
+      res = userService.isEmailDuplicated(params.get("email"));
+    return DataResponse.of(res);
   }
 }

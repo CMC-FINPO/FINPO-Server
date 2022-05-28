@@ -2,13 +2,11 @@ package kr.finpo.api.service;
 
 
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.domain.GoogleAccount;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.dto.UserDto;
 import kr.finpo.api.exception.GeneralException;
-import kr.finpo.api.repository.KakaoAccountRepository;
-import kr.finpo.api.repository.RefreshTokenRepository;
-import kr.finpo.api.repository.RegionRepository;
-import kr.finpo.api.repository.UserRepository;
+import kr.finpo.api.repository.*;
 import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +27,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final RegionRepository regionRepository;
   private final KakaoAccountRepository kakaoAccountRepository;
+  private final GoogleAccountRepository googleAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final S3Uploader s3Uploader;
 
@@ -101,6 +100,7 @@ public class UserService {
     try {
       regionRepository.deleteByUserId(id);
       kakaoAccountRepository.deleteByUserId(id);
+      googleAccountRepository.deleteByUserId(id);
       refreshTokenRepository.deleteByUserId(id);
       userRepository.deleteById(id);
       return true;
@@ -116,8 +116,23 @@ public class UserService {
         return false;
 
       if (SecurityUtil.isUserLogin())
-          if (nickname.equals(userRepository.findById(SecurityUtil. getCurrentUserId()).get().getNickname()))
+          if (nickname.equals(userRepository.findById(SecurityUtil.getCurrentUserId()).get().getNickname()))
             return false;
+
+      return true;
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public Boolean isEmailDuplicated(String email) {
+    try {
+      if (!userRepository.findByEmail(email).isPresent())
+        return false;
+
+      if (SecurityUtil.isUserLogin())
+        if (email.equals(userRepository.findById(SecurityUtil.getCurrentUserId()).get().getEmail()))
+          return false;
 
       return true;
     } catch (Exception e) {
