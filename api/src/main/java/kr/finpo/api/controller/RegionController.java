@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -51,8 +51,8 @@ public class RegionController {
 
 
   @PostMapping("/me")
-  public DataResponse<Object> insertRegion(@RequestBody RegionDto body) {
-    return DataResponse.of(regionService.insertRegion(body));
+  public DataResponse<Object> insertRegion(@RequestBody List<RegionDto> body) {
+    return DataResponse.of(regionService.insertRegions(body));
   }
 
 
@@ -65,5 +65,11 @@ public class RegionController {
   @DeleteMapping("/{id}")
   public DataResponse<Object> delete(@PathVariable Long id) {
     return DataResponse.of(regionService.delete(id));
+  }
+
+
+  @DeleteMapping("")
+  public DataResponse<Object> deleteByParams(@RequestParam(name="id") List<Long> ids) {
+    return DataResponse.of(regionService.deleteByParams(ids));
   }
 }

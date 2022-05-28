@@ -12,9 +12,9 @@ import java.util.Optional;
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Long> {
   public List<Region> findByUserId(Long id);
-  Long deleteByUserId(Long id);
+  public Long deleteByUserId(Long id);
 
-
-  public Optional<Region> findOneByUserIdAndIsDefault(Long id, Boolean isDefault);
+  public Optional<Region> findOneByUserIdAndIsDefault(Long userId, Boolean isDefault);
+  public Optional<Region> findOneByUserIdAndRegion1AndRegion2(Long userId, String region1, String region2);
 }
 

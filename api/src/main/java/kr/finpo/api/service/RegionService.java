@@ -3,6 +3,7 @@ package kr.finpo.api.service;
 
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.Region;
+import kr.finpo.api.domain.User;
 import kr.finpo.api.dto.RegionDto;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.RegionRepository;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -44,11 +46,21 @@ public class RegionService {
   }
 
 
-  public RegionDto insertRegion(RegionDto dto) {
+  public List<RegionDto> insertRegions(List<RegionDto> dtos) {
     try {
-      Region region = dto.toEntity();
-      region.setUser(userRepository.findById(SecurityUtil.getCurrentUserId()).get());
-      return RegionDto.result(regionRepository.save(region));
+      ArrayList<RegionDto> res = new ArrayList<RegionDto>();
+      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
+
+      dtos.stream().forEach(dto -> {
+        if (regionRepository.findOneByUserIdAndRegion1AndRegion2(SecurityUtil.getCurrentUserId(), dto.region1(), dto.region2()).isPresent())
+          return;
+        Region region = dto.toEntity();
+        region.setUser(user);
+        region = regionRepository.save(region);
+        res.add(RegionDto.result(region));
+      });
+
+      return res;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -59,14 +71,24 @@ public class RegionService {
     try {
       Region region = regionRepository.findById(id).get();
 
-      if(region.getUser().getId() != SecurityUtil.getCurrentUserId())
+      if (region.getUser().getId() != SecurityUtil.getCurrentUserId())
         throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
 
-      if(region.getIsDefault())
+      if (region.getIsDefault())
         throw new GeneralException(ErrorCode.BAD_REQUEST, "You cannot delete default region");
 
-
       regionRepository.deleteById(id);
+      return true;
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public Boolean deleteByParams(List<Long> ids) {
+    try {
+      ids.stream().forEach(id->{
+        delete(id);
+      });
       return true;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
