@@ -2,7 +2,7 @@
 ----
 GET /oauth/login/google HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer ya29.a0ARrdaM8EQIT0qaDmtmLjLU9ecCimKAfTD4S4EuBjXpgwTSqBsBLGJwHWrCmps98x1qmC5gk88-opf0EpLm-z9Q3BzmzaS67NNQQKVdAvVDtb40-sVO0RzsYB7T1oYIixx4BZs8CP2UoJms9PEUe6cwuBFR-Q
+Authorization: Bearer ya29.a0ARrdaM8ExzuYkzslGPXGZAECAdOZDyAy1zYyON9PNOOR8rzifcRNlF3niap4iCAEzBrtL7HLNmaDi40o6u35V5eX5vH5MogXIPrfhk1oLQhUmlu0g7omB_12YbdYmAbIhmGoU-BYdU8KkB6DM_irqsxR2Oym
 Host: dev.finpo.kr
 
 ----

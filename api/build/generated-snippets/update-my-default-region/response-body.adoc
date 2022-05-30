@@ -5,9 +5,9 @@
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 26,
+    "id" : 1,
     "region1" : "경기",
-    "region2" : "판교",
+    "region2" : "이천",
     "isDefault" : true
   }
 }

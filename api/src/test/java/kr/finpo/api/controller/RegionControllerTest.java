@@ -152,7 +152,7 @@ class RegionControllerTest {
     HashMap<String, Object> body = new HashMap<>();
     ObjectMapper objectMapper = new ObjectMapper();
     body.put("region1", "경기");
-    body.put("region2", "판교");
+    body.put("region2", "이천");
 
     mockMvc.perform(put("/region/my-default")
             .contentType(MediaType.APPLICATION_JSON)
@@ -162,7 +162,7 @@ class RegionControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.data.region1").value("경기"))
-        .andExpect(jsonPath("$.data.region2").value("판교"))
+        .andExpect(jsonPath("$.data.region2").value("이천"))
         .andExpect(jsonPath("$.data.isDefault").value(true))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
@@ -192,7 +192,7 @@ class RegionControllerTest {
 
   @Test
   void insertRegionTest() throws Exception{
-    insertRegion("중랑");
+    insertRegion("서초");
   }
 
   void insertRegion(String name) throws Exception {
@@ -203,7 +203,7 @@ class RegionControllerTest {
 
     HashMap<String, Object> body2 = new HashMap<>();
     body2.put("region1", "서울");
-    body2.put("region2", "목동");
+    body2.put("region2", "은평");
 
     ArrayList<Object> arr = new ArrayList<>(){{
       add(body);

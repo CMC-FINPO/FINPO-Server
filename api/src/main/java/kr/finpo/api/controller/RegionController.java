@@ -22,7 +22,7 @@ public class RegionController {
 
   @GetMapping(path = "/name", params = "region1")
   public DataResponse<Object> getRegion2(@RequestParam String region1) {
-    return DataResponse.of(region.regions2.get(region1));
+    return DataResponse.of(region.getRegions2(region1));
   }
 
 

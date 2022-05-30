@@ -37,6 +37,10 @@
 |`+String+`
 |true
 |이메일 주소
+|`+data.status+`
+|`+String+`
+|true
+|현재 상태
 |`+data.profileImg+`
 |`+String+`
 |true

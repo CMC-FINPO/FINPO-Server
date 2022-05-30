@@ -5,11 +5,11 @@
   "errorCode" : 0,
   "message" : "need register",
   "data" : {
-    "name" : "Mason Kim",
-    "birth" : "1999-06-07",
+    "name" : "MS",
+    "birth" : "1996-06-07",
     "gender" : "MALE",
-    "email" : "mskim9967@gmail.com",
-    "profileImg" : "https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100",
+    "email" : "pico4041@gmail.com",
+    "profileImg" : "https://lh3.googleusercontent.com/a/AATXAJw3NKoBNloyax2ET2W4rsPG9sOj-0WvjPOhww3Z_g=s100",
     "oAuthType" : "GOOGLE"
   }
 }

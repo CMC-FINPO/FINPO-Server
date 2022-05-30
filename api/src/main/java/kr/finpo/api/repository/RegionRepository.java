@@ -15,6 +15,6 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
   public Long deleteByUserId(Long id);
 
   public Optional<Region> findOneByUserIdAndIsDefault(Long userId, Boolean isDefault);
-  public Optional<Region> findOneByUserIdAndRegion1AndRegion2(Long userId, String region1, String region2);
+  public Optional<Region> findOneByUserIdAndRegionKey(Long userId, Long regionKey);
 }
 

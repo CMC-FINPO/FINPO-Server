@@ -26,6 +26,7 @@ public record KakaoAccountDto(
         "male".equals(kakao_account.gender) ? Gender.MALE : "female".equals(kakao_account.gender) ? Gender.FEMALE : null,
         kakao_account.email,
         null,
+        null,
         OAuthType.KAKAO,
         null,
         null,

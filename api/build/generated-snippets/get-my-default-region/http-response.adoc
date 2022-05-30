@@ -19,7 +19,7 @@ Content-Length: 169
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 23,
+    "id" : 29,
     "region1" : "서울",
     "region2" : "강동",
     "isDefault" : true

@@ -2,6 +2,7 @@ package kr.finpo.api.service;
 
 
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.constant.RegionConstant;
 import kr.finpo.api.domain.Region;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.dto.RegionDto;
@@ -52,11 +53,17 @@ public class RegionService {
       User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
 
       dtos.stream().forEach(dto -> {
-        if (regionRepository.findOneByUserIdAndRegion1AndRegion2(SecurityUtil.getCurrentUserId(), dto.region1(), dto.region2()).isPresent())
+        Long regionKey = RegionConstant.getKey(dto.region1(), dto.region2());
+        log.debug("삽입할 지역" + " " + dto.region1() + " " +dto.region2() + " " + regionKey.toString());
+        if(RegionConstant.getRegion2(regionKey).isEmpty())
+          throw new GeneralException(ErrorCode.BAD_REQUEST, "Region2 isn't valid");
+
+        if (regionRepository.findOneByUserIdAndRegionKey(SecurityUtil.getCurrentUserId(), regionKey).isPresent())
           return;
         Region region = dto.toEntity();
         region.setUser(user);
         region = regionRepository.save(region);
+
         res.add(RegionDto.result(region));
       });
 
@@ -117,8 +124,7 @@ public class RegionService {
   public RegionDto upsertMyDefaultRegion(RegionDto dto) {
     try {
       Region region = regionRepository.findOneByUserIdAndIsDefault(SecurityUtil.getCurrentUserId(), true).orElse(Region.of());
-      region.setRegion1(dto.region1());
-      region.setRegion2(dto.region2());
+      region.update(dto.region1(), dto.region2());
       region.setIsDefault(true);
       return RegionDto.result(regionRepository.save(region));
     } catch (Exception e) {

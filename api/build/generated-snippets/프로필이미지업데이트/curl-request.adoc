@@ -2,6 +2,6 @@
 ----
 $ curl 'https://dev.finpo.kr/user/me/profile-img' -i -X POST \
     -H 'Content-Type: application/x-www-form-urlencoded;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzJhZDBjOWRkLTNmNTctNGU1NS05NTg2LTQzMTRhZDU0OGU1Ni5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM2NzMyOTV9.aq4K6cDHEucXmGhY7P3WPGS-MZECFEypkHgTOw9dxgiamYgA2Nj_QTB1g3VgRrWW8hgucy5MQNR7UPMP44lHYg' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzdlODBiMzY3LWIzODYtNDVhNy04ZjAzLTU2YjEwZDZmMzIxYi5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM5MDE5Mzd9.yzyeI9EKbNxGqpR_rW9sJU265hrh0ADSUVLQo2nJ1wBwGnz8ou7jIpH_8o88MZj23Kh9_uYjj5AFdmyXgF0knw' \
     -F 'profileImgFile=@imagefile.jpeg;type=image/jpeg'
 ----

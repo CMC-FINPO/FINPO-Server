@@ -22,6 +22,9 @@
 |`+region2+`
 |true
 |지역2
+|`+status+`
+|true
+|현재 상태
 |`+profileImg+`
 |false
 |프로필 이미지 url

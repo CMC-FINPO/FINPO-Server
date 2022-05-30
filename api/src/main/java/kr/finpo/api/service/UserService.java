@@ -3,6 +3,7 @@ package kr.finpo.api.service;
 
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.GoogleAccount;
+import kr.finpo.api.domain.Region;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.dto.UserDto;
 import kr.finpo.api.exception.GeneralException;
@@ -73,7 +74,13 @@ public class UserService {
       if (isEmailDuplicated(dto.email()))
         throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
 
-      return UserDto.info(userRepository.save(dto.updateEntity(userRepository.findById(id).get())));
+      User user = dto.updateEntity(userRepository.findById(id).get());
+
+      Region region = regionRepository.findOneByUserIdAndIsDefault(user.getId(), true).get();
+      region.update(dto.region1(), dto.region2());
+      regionRepository.save(region);
+
+      return UserDto.info(userRepository.save(user));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -118,8 +125,8 @@ public class UserService {
         return false;
 
       if (SecurityUtil.isUserLogin())
-          if (nickname.equals(userRepository.findById(SecurityUtil.getCurrentUserId()).get().getNickname()))
-            return false;
+        if (nickname.equals(userRepository.findById(SecurityUtil.getCurrentUserId()).get().getNickname()))
+          return false;
 
       return true;
     } catch (Exception e) {

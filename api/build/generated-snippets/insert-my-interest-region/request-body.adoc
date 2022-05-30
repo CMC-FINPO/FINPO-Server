@@ -5,9 +5,9 @@
   "region2" : "양천"
 }, {
   "region1" : "서울",
-  "region2" : "목동"
+  "region2" : "은평"
 }, {
   "region1" : "서울",
-  "region2" : "목동"
+  "region2" : "은평"
 } ]
 ----

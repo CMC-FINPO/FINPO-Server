@@ -31,7 +31,7 @@ Content-Length: 467
   }, {
     "id" : 15,
     "region1" : "서울",
-    "region2" : "목동",
+    "region2" : "은평",
     "isDefault" : false
   }, {
     "id" : 16,

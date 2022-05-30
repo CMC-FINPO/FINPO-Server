@@ -42,6 +42,10 @@
 |`+String+`
 |false
 |지역2
+|`+data.status+`
+|`+String+`
+|false
+|현재 상태
 |`+data.profileImg+`
 |`+String+`
 |false

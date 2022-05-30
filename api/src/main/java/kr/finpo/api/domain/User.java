@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class User {
+public class User{
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,6 +44,10 @@ public class User {
 
   @Setter
   @Column(nullable = true)
+  private String status;
+
+  @Setter
+  @Column(nullable = true)
   private String profileImg;
 
   @Setter
@@ -67,19 +71,21 @@ public class User {
   protected User() {
   }
 
-  protected User(String name, String nickname, LocalDate birth, Gender gender, String email, String profileImg, OAuthType oAuthType) {
+  protected User(String name, String nickname, LocalDate birth, Gender gender, String email, String status, String profileImg, OAuthType oAuthType) {
     this.name = name;
     this.nickname = nickname;
     this.birth = birth;
     this.gender = gender;
     this.email = email;
+    this.status = status;
     this.profileImg = profileImg;
     this.oAuthType = oAuthType;
   }
 
-  public static User of(String name, String nickname, LocalDate birth, Gender gender, String email, String profileImg, OAuthType oAuthType) {
-    return new User(name, nickname, birth, gender, email, profileImg, oAuthType);
+  public static User of(String name, String nickname, LocalDate birth, Gender gender, String email, String status, String profileImg, OAuthType oAuthType) {
+    return new User(name, nickname, birth, gender, email, status, profileImg, oAuthType);
   }
+
 
   @OneToOne(mappedBy = "user")
   private RefreshToken refreshToken;

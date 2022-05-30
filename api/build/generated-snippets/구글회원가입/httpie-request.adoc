@@ -3,7 +3,7 @@
 $ http --multipart POST 'https://dev.finpo.kr/oauth/register/google' \
     'profileImgFile'@'imagefile.jpeg' \
     'Content-Type:application/x-www-form-urlencoded;charset=UTF-8' \
-    'Authorization:Bearer ya29.a0ARrdaM8EQIT0qaDmtmLjLU9ecCimKAfTD4S4EuBjXpgwTSqBsBLGJwHWrCmps98x1qmC5gk88-opf0EpLm-z9Q3BzmzaS67NNQQKVdAvVDtb40-sVO0RzsYB7T1oYIixx4BZs8CP2UoJms9PEUe6cwuBFR-Q' \
+    'Authorization:Bearer ya29.a0ARrdaM8ExzuYkzslGPXGZAECAdOZDyAy1zYyON9PNOOR8rzifcRNlF3niap4iCAEzBrtL7HLNmaDi40o6u35V5eX5vH5MogXIPrfhk1oLQhUmlu0g7omB_12YbdYmAbIhmGoU-BYdU8KkB6DM_irqsxR2Oym' \
     'name=김명승' \
     'nickname=메이슨' \
     'birth=1999-01-01' \
@@ -11,5 +11,6 @@ $ http --multipart POST 'https://dev.finpo.kr/oauth/register/google' \
     'email=mskim9967@gmail.com' \
     'region1=서울' \
     'region2=강동' \
+    'status=현재 상태' \
     'profileImg=https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100'
 ----

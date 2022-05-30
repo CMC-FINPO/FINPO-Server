@@ -98,6 +98,7 @@ class UserControllerTest {
                     fieldWithPath("data.birth").description("생년월일"),
                     fieldWithPath("data.gender").description("성별\n[MALE/FEMALE/PRIVATE]"),
                     fieldWithPath("data.email").description("이메일 주소"),
+                    fieldWithPath("data.status").description("현재 상태"),
                     fieldWithPath("data.profileImg").description("프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
                     fieldWithPath("data.region1").description("거주 지역"),
@@ -112,6 +113,7 @@ class UserControllerTest {
     HashMap<String, Object> body = new HashMap<>();
     ObjectMapper objectMapper = new ObjectMapper();
     body.put("nickname", "mason");
+    body.put("region1", "서울");
     body.put("region2", "송파");
 
     mockMvc.perform(put("/user/me")
@@ -139,7 +141,8 @@ class UserControllerTest {
                     fieldWithPath("gender").description("성별\n[MALE/FEMALE/PRIVATE]").optional().type(JsonFieldType.STRING),
                     fieldWithPath("email").description("이메일 주소").optional().type(JsonFieldType.STRING),
                     fieldWithPath("region1").description("거주 지역").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("region2").description("세부 거주 지역").optional().type(JsonFieldType.STRING)
+                    fieldWithPath("region2").description("세부 거주 지역").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("status").description("갱신할 상태").optional().type(JsonFieldType.STRING)
                 ),
                 responseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -151,6 +154,7 @@ class UserControllerTest {
                     fieldWithPath("data.birth").description("갱신된 생년월일"),
                     fieldWithPath("data.gender").description("갱신된 성별\n[MALE/FEMALE/PRIVATE]"),
                     fieldWithPath("data.email").description("갱신된 이메일 주소"),
+                    fieldWithPath("data.status").description("갱신될 상태"),
                     fieldWithPath("data.profileImg").description("프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
                     fieldWithPath("data.region1").description("갱신된 거주 지역"),
@@ -194,6 +198,7 @@ class UserControllerTest {
                     fieldWithPath("data.birth").description("생년월일"),
                     fieldWithPath("data.gender").description("성별\n[MALE/FEMALE/PRIVATE]"),
                     fieldWithPath("data.email").description("이메일 주소"),
+                    fieldWithPath("data.status").description("현재 상태"),
                     fieldWithPath("data.profileImg").description("갱신된 프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
                     fieldWithPath("data.region1").description("거주 지역"),

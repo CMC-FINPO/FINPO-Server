@@ -2,7 +2,7 @@
 ----
 GET /oauth/login/kakao HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer k8A2A1To_L8BxzhseLjykutHMI8ZHDy2Vp8JGA2HCj10lwAAAYEGCFVV
+Authorization: Bearer w4ukxlAYVrn4Y8A0ielj7OZMU08U37f9_ZUA2naSCj10aQAAAYETjwTS
 Host: dev.finpo.kr
 
 ----

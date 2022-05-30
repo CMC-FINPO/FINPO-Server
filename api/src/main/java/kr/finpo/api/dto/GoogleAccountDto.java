@@ -87,6 +87,7 @@ public record GoogleAccountDto(
         birth,
         "male".equals(gender) ? kr.finpo.api.constant.Gender.MALE : "female".equals(gender) ? kr.finpo.api.constant.Gender.FEMALE : null,
         email,
+        null,
         photo,
         OAuthType.GOOGLE,
         null,

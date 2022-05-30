@@ -54,9 +54,6 @@ class OAuthControllerTest {
   private UserService userService;
 
 
-  private final String kakaoToken = "qfpyvLQU96MC2gFScy0fglinXkHkRHdQEjIHdiarCinJXgAAAYELJAWx";
-  private final String googleToken ="ya29.a0ARrdaM8EQIT0qaDmtmLjLU9ecCimKAfTD4S4EuBjXpgwTSqBsBLGJwHWrCmps98x1qmC5gk88-opf0EpLm-z9Q3BzmzaS67NNQQKVdAvVDtb40-sVO0RzsYB7T1oYIixx4BZs8CP2UoJms9PEUe6cwuBFR-Q";
-
   @BeforeEach
   void setUp() throws Exception {
 
@@ -94,6 +91,7 @@ class OAuthControllerTest {
                     , fieldWithPath("data.birth").description("생년월일(YYYY-MM-DD)").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.gender").description("성별\n(MALE, FEMALE, PRIVATE)").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.email").description("메일주소").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.status").description("현재 상태").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.region1").description("지역1").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.region2").description("지역2").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.oAuthType").description("소셜 로그인 타입\nKAKAO/GOOGLE/APPLE").optional().type(JsonFieldType.STRING)
@@ -168,6 +166,7 @@ class OAuthControllerTest {
                     , fieldWithPath("data.email").description("메일주소").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.region1").description("지역1").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.region2").description("지역2").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.status").description("현재 상태").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.profileImg").description("프로필 이미지 url").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.oAuthType").description("소셜 로그인 타입\nKAKAO/GOOGLE/APPLE").optional().type(JsonFieldType.STRING)
                 )
@@ -224,7 +223,7 @@ class OAuthControllerTest {
             .param("email", "mskim9967@gmail.com")
             .param("region1", "서울")
             .param("region2", "강동")
-
+            .param("status", "대학교 재학 중")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .header("Authorization", "Bearer " + kakaoToken)
         )
@@ -249,6 +248,7 @@ class OAuthControllerTest {
                     , parameterWithName("email").description("메일주소")
                     , parameterWithName("region1").description("지역1")
                     , parameterWithName("region2").description("지역2")
+                    , parameterWithName("status").description("현재 상태")
                     , parameterWithName("profileImg").description("프로필 이미지 url").optional()
                 )
                 , requestParts(
@@ -281,6 +281,7 @@ class OAuthControllerTest {
             .param("email", "mskim9967@gmail.com")
             .param("region1", "서울")
             .param("region2", "강동")
+            .param("status", "대학교 재학 중")
             .param("profileImg", "https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100")
 
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -307,6 +308,7 @@ class OAuthControllerTest {
                     , parameterWithName("email").description("메일주소")
                     , parameterWithName("region1").description("지역1")
                     , parameterWithName("region2").description("지역2")
+                    , parameterWithName("status").description("현재 상태")
                     , parameterWithName("profileImg").description("프로필 이미지 url").optional()
                 )
                 , requestParts(
@@ -383,6 +385,7 @@ class OAuthControllerTest {
             .param("email", "mskim9967@gmail.com")
             .param("region1", "서울")
             .param("region2", "강동")
+            .param("status", "대학교 재학 중")
 
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .header("Authorization", "Bearer " + kakaoToken)

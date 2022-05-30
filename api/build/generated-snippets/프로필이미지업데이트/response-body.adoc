@@ -11,7 +11,8 @@
     "birth" : "1999-01-01",
     "gender" : "MALE",
     "email" : "mskim9967@gmail.com",
-    "profileImg" : "http://localhost:8080/upload/profile/f7b5607d-3cda-43ee-970e-5f56bf6c5c9d.jpeg",
+    "status" : "대학교 재학 중",
+    "profileImg" : "http://localhost:8080/upload/profile/880d1081-0711-4dc1-a671-1d85dd5ff51d.jpeg",
     "oAuthType" : "KAKAO",
     "region1" : "서울",
     "region2" : "강동"
