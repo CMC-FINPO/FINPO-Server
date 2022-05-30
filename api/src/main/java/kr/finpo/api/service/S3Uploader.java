@@ -6,6 +6,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.util.IOUtils;
+import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.exception.GeneralException;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.context.annotation.Bean;
@@ -41,10 +43,13 @@ public class S3Uploader {
     return resource;
   }
 
-  public String uploadFile(String filePath, MultipartFile multipartFile) throws Exception {
-    File uploadFile = convert(multipartFile)
-        .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-    return upload(filePath, uploadFile);
+  public String uploadFile(String filePath, MultipartFile multipartFile) {
+    try {
+      File uploadFile = convert(multipartFile).get();
+      return upload(filePath, uploadFile);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.IMAGE_UPLOAD_ERROR, e);
+    }
   }
 
   private String upload(String filePath, File uploadFile) {
@@ -65,47 +70,59 @@ public class S3Uploader {
     if (targetFile.delete()) return;
   }
 
-  private Optional<File> convert(MultipartFile file) throws Exception {
+  private Optional<File> convert(MultipartFile file) {
 //    File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
 //    convertFile.createNewFile();
 //    try (FileOutputStream fos = new FileOutputStream(convertFile)) {
 //      fos.write(file.getBytes());
 //    }
-    File convertFile = resizeImageFile(file, System.getProperty("user.dir") + "/" + file.getOriginalFilename(), "png");
-    return Optional.of(convertFile);
+    try {
+      File convertFile = resizeImageFile(file, System.getProperty("user.dir") + "/" + file.getOriginalFilename(), "png");
+      return Optional.of(convertFile);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.IMAGE_UPLOAD_ERROR, e);
+    }
   }
 
-  private File resizeImageFile(MultipartFile file, String filePath, String formatName) throws Exception {
+  private File resizeImageFile(MultipartFile file, String filePath, String formatName) {
+    try {
 //    BufferedImage inputImage = ImageIO.read(file.getInputStream());
-    BufferedImage inputImage = getBufferedImage(file);
-    int originWidth = inputImage.getWidth();
-    int originHeight = inputImage.getHeight();
-    int newWidth = 500;
+      BufferedImage inputImage = getBufferedImage(file);
+      int originWidth = inputImage.getWidth();
+      int originHeight = inputImage.getHeight();
+      int newWidth = 500;
 
-    int newHeight = (originHeight * newWidth) / originWidth;
-    Image resizeImage = inputImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-    BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-    Graphics graphics = newImage.getGraphics();
-    graphics.drawImage(resizeImage, 0, 0, null);
-    graphics.dispose();
-    // 이미지 저장
-    File newFile = new File(filePath);
-    ImageIO.write(newImage, formatName, newFile);
-    return newFile;
+      int newHeight = (originHeight * newWidth) / originWidth;
+      Image resizeImage = inputImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+      BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+      Graphics graphics = newImage.getGraphics();
+      graphics.drawImage(resizeImage, 0, 0, null);
+      graphics.dispose();
+      // 이미지 저장
+      File newFile = new File(filePath);
+      ImageIO.write(newImage, formatName, newFile);
+      return newFile;
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.IMAGE_UPLOAD_ERROR, e);
+    }
   }
 
-  private BufferedImage getBufferedImage(MultipartFile file) throws InterruptedException, IOException {
-    final java.awt.Image image = Toolkit.getDefaultToolkit().createImage(file.getBytes());
+  private BufferedImage getBufferedImage(MultipartFile file) {
+    try {
+      final java.awt.Image image = Toolkit.getDefaultToolkit().createImage(file.getBytes());
 
-    final int[] RGB_MASKS = {0xFF0000, 0xFF00, 0xFF};
-    final ColorModel RGB_OPAQUE =
-        new DirectColorModel(32, RGB_MASKS[0], RGB_MASKS[1], RGB_MASKS[2]);
+      final int[] RGB_MASKS = {0xFF0000, 0xFF00, 0xFF};
+      final ColorModel RGB_OPAQUE =
+          new DirectColorModel(32, RGB_MASKS[0], RGB_MASKS[1], RGB_MASKS[2]);
 
-    PixelGrabber pg = new PixelGrabber(image, 0, 0, -1, -1, true);
-    pg.grabPixels();
-    int width = pg.getWidth(), height = pg.getHeight();
-    DataBuffer buffer = new DataBufferInt((int[]) pg.getPixels(), pg.getWidth() * pg.getHeight());
-    WritableRaster raster = Raster.createPackedRaster(buffer, width, height, width, RGB_MASKS, null);
-    return new BufferedImage(RGB_OPAQUE, raster, false, null);
+      PixelGrabber pg = new PixelGrabber(image, 0, 0, -1, -1, true);
+      pg.grabPixels();
+      int width = pg.getWidth(), height = pg.getHeight();
+      DataBuffer buffer = new DataBufferInt((int[]) pg.getPixels(), pg.getWidth() * pg.getHeight());
+      WritableRaster raster = Raster.createPackedRaster(buffer, width, height, width, RGB_MASKS, null);
+      return new BufferedImage(RGB_OPAQUE, raster, false, null);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.IMAGE_UPLOAD_ERROR, e);
+    }
   }
 }

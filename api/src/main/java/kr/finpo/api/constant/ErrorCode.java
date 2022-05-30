@@ -26,6 +26,7 @@ public enum ErrorCode {
   INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
   SPRING_INTERNAL_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Spring-detected internal error"),
   DATA_ACCESS_ERROR(20002, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error"),
+  IMAGE_UPLOAD_ERROR(20003, HttpStatus.INTERNAL_SERVER_ERROR, "Image upload error"),
 
 
   PROVIDER_TOKEN_NOT_FOUND(30002, HttpStatus.BAD_REQUEST, "Auth provider token not found"),
@@ -36,8 +37,6 @@ public enum ErrorCode {
   ACCESS_TOKEN_EXPIRATION(40001, HttpStatus.UNAUTHORIZED, "Expired access token. Send me refresh token"),
   INVALID_REFRESH_TOKEN(40002, HttpStatus.BAD_REQUEST, "Your refresh token isn't valid"),
   REFRESH_TOKEN_NOT_FOUND(40003, HttpStatus.UNAUTHORIZED, "No refresh token exist. It seemed you've already logout");
-
-
 
 
   private final Integer code;
