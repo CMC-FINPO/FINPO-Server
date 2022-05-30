@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -76,7 +76,8 @@ public class S3Uploader {
   }
 
   private File resizeImageFile(MultipartFile file, String filePath, String formatName) throws Exception {
-    BufferedImage inputImage = ImageIO.read(file.getInputStream());
+//    BufferedImage inputImage = ImageIO.read(file.getInputStream());
+    BufferedImage inputImage = getBufferedImage(file);
     int originWidth = inputImage.getWidth();
     int originHeight = inputImage.getHeight();
     int newWidth = 500;
@@ -91,5 +92,20 @@ public class S3Uploader {
     File newFile = new File(filePath);
     ImageIO.write(newImage, formatName, newFile);
     return newFile;
+  }
+
+  private BufferedImage getBufferedImage(MultipartFile file) throws InterruptedException, IOException {
+    final java.awt.Image image = Toolkit.getDefaultToolkit().createImage(file.getBytes());
+
+    final int[] RGB_MASKS = {0xFF0000, 0xFF00, 0xFF};
+    final ColorModel RGB_OPAQUE =
+        new DirectColorModel(32, RGB_MASKS[0], RGB_MASKS[1], RGB_MASKS[2]);
+
+    PixelGrabber pg = new PixelGrabber(image, 0, 0, -1, -1, true);
+    pg.grabPixels();
+    int width = pg.getWidth(), height = pg.getHeight();
+    DataBuffer buffer = new DataBufferInt((int[]) pg.getPixels(), pg.getWidth() * pg.getHeight());
+    WritableRaster raster = Raster.createPackedRaster(buffer, width, height, width, RGB_MASKS, null);
+    return new BufferedImage(RGB_OPAQUE, raster, false, null);
   }
 }
