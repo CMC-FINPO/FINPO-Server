@@ -31,7 +31,7 @@ public class CategoryController {
 
   @GetMapping("/me")
   public DataResponse<Object> getMy() {
-    return DataResponse.of(categoryService.getMy());
+    return DataResponse.of(categoryService.getMyInterests());
   }
 
   @GetMapping("/{id}")

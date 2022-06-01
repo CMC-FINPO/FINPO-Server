@@ -6,7 +6,6 @@ import kr.finpo.api.domain.Category;
 import kr.finpo.api.domain.InterestCategory;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.dto.InterestCategoryDto;
-import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.CategoryRepository;
 import kr.finpo.api.repository.InterestCategoryRepository;
@@ -14,8 +13,6 @@ import kr.finpo.api.repository.UserRepository;
 import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +31,6 @@ public class CategoryService {
   private final CategoryRepository categoryRepository;
   private final InterestCategoryRepository interestCategoryRepository;
   private final UserRepository userRepository;
-
 
   public void initialize() {
     List<String> firsts = Arrays.asList("일자리", "생활안정", "교육문화", "참여공간");
@@ -76,7 +72,7 @@ public class CategoryService {
     }
   }
 
-  public List<InterestCategoryDto> getMy() {
+  public List<InterestCategoryDto> getMyInterests() {
     try {
       return StreamSupport.stream(interestCategoryRepository.findByUserId(SecurityUtil.getCurrentUserId()).spliterator(), false).map(InterestCategoryDto::response).toList();
     } catch (Exception e) {
