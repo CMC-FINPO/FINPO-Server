@@ -190,7 +190,7 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex', gap: 10 } }}>
-            <ReloadButton onClick={() => fetchData()}>새로고침</ReloadButton>
+            <ReloadButton onClick={() => window.location.reload()}>새로고침</ReloadButton>
 
             {(!user || user?.oAuthType === 'KAKAO') && <KakaoLogin />}
             {(!user || user?.oAuthType === 'GOOGLE') && <GoogleLogin />}

@@ -6,6 +6,7 @@ import ApiTestCard from '../component/ApiTestCard';
 import Grid from '@mui/material/Grid';
 import InterestRegionCard from '../component/InterestRegionCard';
 import MyInterestRegionCard from '../component/MyInterestRegionCard';
+import MyInterestCategoryCard from '../component/MyInterestCategoryCard';
 
 export default function MainScreen({ user, setUser, fetch, fetchData }) {
   return (
@@ -22,6 +23,9 @@ export default function MainScreen({ user, setUser, fetch, fetchData }) {
           </Grid>
           <Grid item xs='auto'>
             <MyInterestRegionCard fetch={fetch} fetchData={fetchData} />
+          </Grid>
+          <Grid item xs='auto'>
+            <MyInterestCategoryCard fetch={fetch} fetchData={fetchData} />
           </Grid>
           <Grid item xs='auto'>
             <ApiTestCard fetch={fetch} fetchData={fetchData} />

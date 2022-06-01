@@ -74,8 +74,8 @@ export default function MyInfoModal({ fetchData, fetch }) {
       setBirth(res.data.data.birth);
       setGender(res.data.data.gender);
       setEmail(res.data.data.email);
-      setRegion1(res.data.data.region1);
-      setRegion2(res.data.data.region2);
+      setRegion1(res.data.data.region.parent.name);
+      setRegion2(res.data.data.region.name);
     });
   }, []);
 

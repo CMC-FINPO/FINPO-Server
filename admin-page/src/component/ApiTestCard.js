@@ -14,7 +14,7 @@ import { Button } from '@mui/material';
 
 export default function UserCard({ fetch, fetchData }) {
   const [method, setMethod] = useState('get');
-  const [reqUrl, setReqUrl] = useState('/user/me');
+  const [reqUrl, setReqUrl] = useState('/policy/me');
   const [reqBody, setReqBody] = useState('{}');
   const [resBody, setResBody] = useState();
 

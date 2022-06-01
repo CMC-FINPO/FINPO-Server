@@ -16,8 +16,7 @@ import Paper from '@mui/material/Paper';
 import { axiosInstance } from '../axiosInstance';
 
 import Modal from '@mui/material/Modal';
-import { Avatar } from '@mui/material';
-import MyInfoModal from './MyInfoModal';
+import { Avatar, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 const style = {
   position: 'absolute',
@@ -31,7 +30,7 @@ const style = {
   maxWidth: '95vw',
 };
 
-export default function UserCard({ fetch, fetchData }) {
+export default function MyInterestCategoryCard({ fetchData, fetch }) {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -42,26 +41,41 @@ export default function UserCard({ fetch, fetchData }) {
   const [detailOpen, setDetailOpen] = useState(false);
   const [userDetail, setUserDetail] = useState();
 
-  const [myInfoOpen, setMyInfoOpen] = useState(false);
+  const [region1, setRegion1] = useState();
+  const [region2, setRegion2] = useState();
+  const [regions1, setRegions1] = useState([]);
+  const [regions2, setRegions2] = useState([]);
 
   useEffect(() => {
-    axiosInstance.get('user').then((res) => {
+    axiosInstance.get('policy/category/me').then((res) => {
       setUsers([...res.data.data]);
     });
   }, [fetch]);
+
+  useEffect(() => {
+    axiosInstance.get('policy/category/name').then((res) => {
+      console.log(res);
+      setRegions1([...res.data.data]);
+    });
+  }, []);
+  useEffect(() => {
+    axiosInstance.get(`policy/category/name?parentId=${region1}`).then((res) => {
+      setRegions2([...res.data.data]);
+    });
+  }, [region1]);
 
   return (
     <>
       <Card sx={{ minWidth: 200, padding: 1 }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
-            가입한 회원
+            나의 관심카테고리
           </Typography>
           <Typography variant='h4' component='div'>
             {users.length}
           </Typography>
           <Typography sx={{}} color='text.secondary'>
-            명
+            개
           </Typography>
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -73,44 +87,22 @@ export default function UserCard({ fetch, fetchData }) {
       <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
         <Box sx={style}>
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: '600px' }} aria-label='simple table'>
+            <Table sx={{ minWidth: '500px' }} aria-label='simple table'>
               <TableHead>
                 <TableRow>
                   <TableCell align='center'>ID</TableCell>
-                  <TableCell align='center'>이름</TableCell>
-                  <TableCell align='center'>닉네임</TableCell>
-                  <TableCell align='center'>기본지역</TableCell>
-                  <TableCell align='center'>프로필</TableCell>
-                  <TableCell align='center'>소셜타입</TableCell>
+                  <TableCell align='center'>상위카테고리</TableCell>
+                  <TableCell align='center'>하위카테고리</TableCell>
                   <TableCell align='center'></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {users.map((user, idx) => (
-                  <TableRow
-                    key={idx}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDetailOpen(true);
-                      setUserDetail(user);
-                    }}
-                  >
+                  <TableRow key={idx} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell align='center'>{user.id}</TableCell>
-                    <TableCell align='center'>{user.name}</TableCell>
-                    <TableCell align='center'>{user.nickname}</TableCell>
-                    {/* <TableCell align='center'>{user.gender}</TableCell>
-                    <TableCell align='center'>{user.birth}</TableCell>
+                    <TableCell align='center'>{user.category?.parent?.name}</TableCell>
+                    <TableCell align='center'>{user.category?.name}</TableCell>
                     <TableCell align='center'>
-                      <div>{user.email.substring(0, 10)}</div>
-                      <div>{user.email.substring(10)}</div>
-                    </TableCell> */}
-                    <TableCell align='center'>{user.defaultRegion?.parent?.name + ' ' + user.defaultRegion?.name}</TableCell>
-                    <TableCell align='center'>
-                      <Avatar src={user.profileImg} />
-                    </TableCell>
-                    <TableCell align='center'>{user.oAuthType}</TableCell>
-                    <TableCell align='center' width={'20px'}>
                       <Button
                         size='small'
                         variant='contained'
@@ -120,7 +112,7 @@ export default function UserCard({ fetch, fetchData }) {
                           if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
                           axiosInstance
-                            .delete(`user/${user.id}`)
+                            .delete(`policy/category?id=${user.id}`)
                             .then(() => {
                               fetchData();
                             })
@@ -137,35 +129,48 @@ export default function UserCard({ fetch, fetchData }) {
               </TableBody>
             </Table>
           </TableContainer>
-          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, marginTop: 20 }}>
-            <Button
-              variant='contained'
-              sx={{ marginBottom: 0.5 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setMyInfoOpen(true);
-              }}
-            >
-              내 정보 수정
-            </Button>
+
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, marginTop: 30 }}>
+            <div style={{ width: '40%', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <FormControl>
+                <InputLabel id='demo-simple-select-label'>상위카테고리</InputLabel>
+                <Select value={region1} onChange={(e) => setRegion1(e.target.value)}>
+                  {regions1.map((region, idx) => {
+                    return <MenuItem value={region.id}>{region.name}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel id='demo-simple-select-label'>하위카테고리</InputLabel>
+                <Select value={region2} onChange={(e) => setRegion2(e.target.value)}>
+                  {regions2.map((region, idx) => {
+                    return <MenuItem value={region.id}>{region.name}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
+            </div>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: 20 }}>
+              <Button
+                variant='contained'
+                sx={{ marginBottom: 0.5 }}
+                onClick={(e) => {
+                  console.log(region2);
+                  e.stopPropagation();
+                  axiosInstance
+                    .post(`policy/category/me`, [{ categoryId: region2 }])
+                    .then(() => {
+                      fetchData();
+                    })
+                    .catch((res) => {
+                      alert(res.response.data.message);
+                    });
+                }}
+              >
+                관심카테고리 추가
+              </Button>
+            </div>
           </div>
         </Box>
-      </Modal>
-
-      <Modal open={detailOpen} onClose={() => setDetailOpen(false)}>
-        <Box sx={{ ...style }}>
-          {userDetail &&
-            Object.entries(userDetail).map(([key, value]) => (
-              <div>
-                {key}:{value}
-              </div>
-            ))}
-          <Avatar src={userDetail?.profileImg} />
-        </Box>
-      </Modal>
-
-      <Modal open={myInfoOpen} onClose={() => setMyInfoOpen(false)}>
-        <MyInfoModal fetchData={fetchData} fetch={fetch} />
       </Modal>
     </>
   );

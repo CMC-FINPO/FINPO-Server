@@ -59,7 +59,7 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
     });
   }, []);
   useEffect(() => {
-    axiosInstance.get(`region/name?region1=${region1}`).then((res) => {
+    axiosInstance.get(`region/name?parentId=${region1}`).then((res) => {
       setRegions2([...res.data.data]);
     });
   }, [region1]);
@@ -102,8 +102,8 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
                   <TableRow key={idx} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell align='center'>{user.id}</TableCell>
                     <TableCell align='center'>{user.isDefault ? 'O' : 'X'}</TableCell>
-                    <TableCell align='center'>{user.region1}</TableCell>
-                    <TableCell align='center'>{user.region2}</TableCell>
+                    <TableCell align='center'>{user.region.parent.name}</TableCell>
+                    <TableCell align='center'>{user.region.name}</TableCell>
                     <TableCell align='center'>
                       <Button
                         size='small'
@@ -114,7 +114,7 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
                           if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
                           axiosInstance
-                            .delete(`region/${user.id}`)
+                            .delete(`region?id=${user.id}`)
                             .then(() => {
                               fetchData();
                             })
@@ -138,7 +138,7 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
                 <InputLabel id='demo-simple-select-label'>지역</InputLabel>
                 <Select value={region1} onChange={(e) => setRegion1(e.target.value)}>
                   {regions1.map((region, idx) => {
-                    return <MenuItem value={region}>{region}</MenuItem>;
+                    return <MenuItem value={region.id}>{region.name}</MenuItem>;
                   })}
                 </Select>
               </FormControl>
@@ -146,7 +146,7 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
                 <InputLabel id='demo-simple-select-label'>상세 지역</InputLabel>
                 <Select value={region2} onChange={(e) => setRegion2(e.target.value)}>
                   {regions2.map((region, idx) => {
-                    return <MenuItem value={region}>{region}</MenuItem>;
+                    return <MenuItem value={region.id}>{region.name}</MenuItem>;
                   })}
                 </Select>
               </FormControl>
@@ -156,9 +156,10 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
                 variant='contained'
                 sx={{ marginBottom: 0.5 }}
                 onClick={(e) => {
+                  console.log(region2);
                   e.stopPropagation();
                   axiosInstance
-                    .post(`region/me`, [{ region1, region2 }])
+                    .post(`region/me`, [{ regionId: region2 }])
                     .then(() => {
                       fetchData();
                     })
@@ -176,8 +177,7 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
                   e.stopPropagation();
                   axiosInstance
                     .put(`region/my-default`, {
-                      region1,
-                      region2,
+                      regionId: region2,
                     })
                     .then(() => {
                       fetchData();

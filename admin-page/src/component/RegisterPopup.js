@@ -79,7 +79,7 @@ export default function RegisterPopup() {
   }, []);
 
   useEffect(() => {
-    axiosInstance.get(`region/name?region1=${region1}`).then((res) => {
+    axiosInstance.get(`region/name?parentId=${region1}`).then((res) => {
       setRegions2([...res.data.data]);
     });
   }, [region1]);
@@ -135,7 +135,7 @@ export default function RegisterPopup() {
             <InputLabel id='demo-simple-select-label'>지역</InputLabel>
             <Select size='small' value={region1} onChange={(e) => setRegion1(e.target.value)}>
               {regions1.map((region, idx) => {
-                return <MenuItem value={region}>{region}</MenuItem>;
+                return <MenuItem value={region.id}>{region.name}</MenuItem>;
               })}
             </Select>
           </FormControl>
@@ -143,7 +143,7 @@ export default function RegisterPopup() {
             <InputLabel id='demo-simple-select-label'>상세 지역</InputLabel>
             <Select size='small' value={region2} onChange={(e) => setRegion2(e.target.value)}>
               {regions2.map((region, idx) => {
-                return <MenuItem value={region}>{region}</MenuItem>;
+                return <MenuItem value={region.id}>{region.name}</MenuItem>;
               })}
             </Select>
           </FormControl>
@@ -175,8 +175,7 @@ export default function RegisterPopup() {
                 if (birth) formData.append('birth', birth);
                 if (email) formData.append('email', email);
                 if (gender) formData.append('gender', gender);
-                if (region2) formData.append('region1', region1);
-                if (region2) formData.append('region2', region2);
+                if (region2) formData.append('regionId', region2);
                 if (nickname) formData.append('nickname', nickname);
                 if (profileImgUrl) formData.append('profileImg', profileImgUrl);
 
