@@ -21,6 +21,7 @@ public enum ErrorCode {
   NOT_FOUND(10003, HttpStatus.NOT_FOUND, "Requested resource is not found"),
   USER_ALREADY_REGISTERED(10004, HttpStatus.BAD_REQUEST, "You're already registered"),
   USER_NOT_EQUAL(10005, HttpStatus.UNAUTHORIZED, "You're not the owner"),
+  USER_UNAUTHORIZED(10006, HttpStatus.UNAUTHORIZED, "User not found"),
 
 
   INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),

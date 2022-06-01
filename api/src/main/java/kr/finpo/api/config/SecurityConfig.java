@@ -56,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/oauth/**").permitAll()
         .antMatchers("/user/check-duplicate").permitAll()
         .antMatchers("/region/name/**").permitAll()
+        .antMatchers("/policy/category/name/**").permitAll()
         .antMatchers("/upload/**").permitAll()
         .antMatchers("/docs/**").permitAll()
         .antMatchers("/static/**").permitAll()
