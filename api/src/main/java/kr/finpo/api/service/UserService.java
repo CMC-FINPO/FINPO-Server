@@ -2,7 +2,7 @@ package kr.finpo.api.service;
 
 
 import kr.finpo.api.constant.ErrorCode;
-import kr.finpo.api.domain.GoogleAccount;
+import kr.finpo.api.domain.InterestRegion;
 import kr.finpo.api.domain.Region;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.dto.UserDto;
@@ -26,6 +26,7 @@ import java.util.stream.StreamSupport;
 public class UserService {
 
   private final UserRepository userRepository;
+  private final InterestRegionRepository interestRegionRepository;
   private final RegionRepository regionRepository;
   private final KakaoAccountRepository kakaoAccountRepository;
   private final GoogleAccountRepository googleAccountRepository;
@@ -37,7 +38,7 @@ public class UserService {
 
   public List<UserDto> getAll() {
     try {
-      return StreamSupport.stream(userRepository.findAll().spliterator(), false).map(UserDto::info).toList();
+      return StreamSupport.stream(userRepository.findAll().spliterator(), false).map(UserDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -46,7 +47,7 @@ public class UserService {
 
   public Optional<UserDto> getById(Long id) {
     try {
-      return userRepository.findById(id).map(UserDto::info);
+      return userRepository.findById(id).map(UserDto::response);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -55,7 +56,7 @@ public class UserService {
 
   public Optional<UserDto> getMyInfo() {
     try {
-      return userRepository.findById(SecurityUtil.getCurrentUserId()).map(UserDto::info);
+      return userRepository.findById(SecurityUtil.getCurrentUserId()).map(UserDto::response);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -76,11 +77,20 @@ public class UserService {
 
       User user = dto.updateEntity(userRepository.findById(id).get());
 
-      Region region = regionRepository.findOneByUserIdAndIsDefault(user.getId(), true).get();
-      region.update(dto.region1(), dto.region2());
-      regionRepository.save(region);
+      if(dto.regionId() != null) {
 
-      return UserDto.info(userRepository.save(user));
+        InterestRegion defaultRegion = interestRegionRepository.findOneByUserIdAndIsDefault(id, true).get();
+
+        Region newRegion = regionRepository.findById(dto.regionId()).orElseThrow(
+            () -> new GeneralException(ErrorCode.BAD_REQUEST, "region id not valid")
+        );
+
+        defaultRegion.updateDefault(newRegion);
+        interestRegionRepository.save(defaultRegion);
+        user.setDefaultRegion(defaultRegion);
+      }
+
+      return UserDto.response(userRepository.save(user));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -95,7 +105,7 @@ public class UserService {
       user.setProfileImg(profileImgUrl);
       userRepository.save(user);
 
-      return UserDto.info(user);
+      return UserDto.response(user);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -107,7 +117,7 @@ public class UserService {
 
   public Boolean delete(Long id) {
     try {
-      regionRepository.deleteByUserId(id);
+      interestRegionRepository.deleteByUserId(id);
       kakaoAccountRepository.deleteByUserId(id);
       googleAccountRepository.deleteByUserId(id);
       refreshTokenRepository.deleteByUserId(id);

@@ -1,8 +1,7 @@
 package kr.finpo.api.controller;
 
-import kr.finpo.api.constant.RegionConstant;
 import kr.finpo.api.dto.DataResponse;
-import kr.finpo.api.dto.RegionDto;
+import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.service.RegionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,48 +16,46 @@ import java.util.List;
 public class RegionController {
 
   private final RegionService regionService;
-  private final RegionConstant region = new RegionConstant();
 
 
-  @GetMapping(path = "/name", params = "region1")
-  public DataResponse<Object> getRegion2(@RequestParam String region1) {
-    return DataResponse.of(region.getRegions2(region1));
+  @GetMapping(path = "/name")
+  public DataResponse<Object> getByParentId(@RequestParam(value = "parentId", required = false) Long parentId) {
+    return DataResponse.of(regionService.getByParentId(parentId));
   }
 
 
-  @GetMapping("/name")
-  public DataResponse<Object> getRegion1() {
-    return DataResponse.of(region.regions1);
+  @GetMapping(path = "/name", params = "depth")
+  public DataResponse<Object> getByDepth(@RequestParam(value = "depth", required = false) Long depth) {
+    return DataResponse.of(regionService.getByDepth(depth));
   }
-
 
   @GetMapping("")
   public DataResponse<Object> getAll() {
-    return DataResponse.of(regionService.getAll());
+    return DataResponse.of(regionService.getAllInterest());
   }
 
 
   @GetMapping("/me")
   public DataResponse<Object> getMyRegions() {
-    return DataResponse.of(regionService.getMyRegions());
+    return DataResponse.of(regionService.getMyInterests());
   }
 
 
   @GetMapping("/my-default")
   public DataResponse<Object> getMyDefaultRegion() {
-    return DataResponse.of(regionService.getMyDefaultRegion());
+    return DataResponse.of(regionService.getMyDefault());
   }
 
 
   @PostMapping("/me")
-  public DataResponse<Object> insertRegion(@RequestBody List<RegionDto> body) {
-    return DataResponse.of(regionService.insertRegions(body));
+  public DataResponse<Object> insertMyRegions(@RequestBody List<InterestRegionDto> body) {
+    return DataResponse.of(regionService.insertMyInterests(body));
   }
 
 
   @PutMapping("/my-default")
-  public DataResponse<Object> upsertMyDefaultRegion(@RequestBody RegionDto body) {
-    return DataResponse.of(regionService.upsertMyDefaultRegion(body));
+  public DataResponse<Object> upsertMyDefaultRegion(@RequestBody InterestRegionDto body) {
+    return DataResponse.of(regionService.updateMyDefault(body));
   }
 
 

@@ -100,5 +100,5 @@ public class User{
   @OneToOne
   @NotNull
   @JoinColumn(name = "default_region_id")
-  private Region defaultRegion;
+  private InterestRegion defaultRegion;
 }

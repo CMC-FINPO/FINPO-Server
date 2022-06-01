@@ -29,6 +29,7 @@ public class OAuthService {
   private final GoogleAccountRepository googleAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final UserRepository userRepository;
+  private final InterestRegionRepository interestRegionRepository;
   private final RegionRepository regionRepository;
   private final S3Uploader s3Uploader;
 
@@ -206,23 +207,28 @@ public class OAuthService {
       });
 
       // email format check
-      if(!dto.email().matches("^(.+)@(\\S+)$"))
+      if (!dto.email().matches("^(.+)@(\\S+)$"))
         throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email format error");
+      // region check
 
       String profileImgUrl = dto.profileImg();
       if (dto.profileImgFile() != null)
         profileImgUrl = uploadUrl + s3Uploader.uploadFile("profile", dto.profileImgFile());
 
-      Region defaultRegion = Region.of(dto.region1(), dto.region2(), true);
-      defaultRegion = regionRepository.save(defaultRegion);
+      Region region = regionRepository.findById(dto.regionId()).orElseThrow(
+          () -> new GeneralException(ErrorCode.BAD_REQUEST, "region id not valid")
+      );
       User user = dto.toEntity();
       user.setProfileImg(profileImgUrl);
-      user.setOAuthType(oAuthType.equals("kakao")? OAuthType.KAKAO : oAuthType.equals("google")? OAuthType.GOOGLE : OAuthType.APPLE);
+      user.setOAuthType(oAuthType.equals("kakao") ? OAuthType.KAKAO : oAuthType.equals("google") ? OAuthType.GOOGLE : OAuthType.APPLE);
+
+      InterestRegion defaultRegion = InterestRegion.of(null, region,true);
+      defaultRegion = interestRegionRepository.save(defaultRegion);
       user.setDefaultRegion(defaultRegion);
       user = userRepository.save(user);
 
       defaultRegion.setUser(user);
-      regionRepository.save(defaultRegion);
+      interestRegionRepository.save(defaultRegion);
 
       if (oAuthType.equals("kakao")) {
         KakaoAccount kakaoAccount = kakaoAccountRepository.save(KakaoAccount.of(oAuthAccountId));

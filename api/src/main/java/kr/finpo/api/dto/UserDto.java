@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.Gender;
 import kr.finpo.api.constant.OAuthType;
+import kr.finpo.api.domain.Region;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.exception.GeneralException;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Field;
@@ -26,8 +26,8 @@ public record UserDto(
     String profileImg,
     OAuthType oAuthType,
     MultipartFile profileImgFile,
-    String region1,
-    String region2
+    Long regionId,
+    Region defaultRegion
 ) {
   public UserDto {
   }
@@ -65,7 +65,7 @@ public record UserDto(
     return user;
   }
 
-  public static UserDto info(User user) {
-    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatus(), user.getProfileImg(), user.getOAuthType(), null, user.getDefaultRegion().getRegion1(), user.getDefaultRegion().getRegion2());
+  public static UserDto response(User user) {
+    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatus(), user.getProfileImg(), user.getOAuthType(), null, null, user.getDefaultRegion().getRegion());
   }
 }
