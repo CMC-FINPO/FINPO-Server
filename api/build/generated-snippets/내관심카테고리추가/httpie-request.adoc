@@ -1,0 +1,14 @@
+[source,bash]
+----
+$ echo '[ {
+  "categoryId" : 5
+}, {
+  "categoryId" : 6
+}, {
+  "categoryId" : 6
+}, {
+  "categoryId" : 11
+} ]' | http POST 'https://dev.finpo.kr/policy/category/me' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNzQ2Iiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzQ3ZDI2ODQwLTM1NzktNGUzMy1hNWMzLWIzYWUyMGI4MmU4MS5qcGVnIiwiZGVmYXVsdFJlZ2lvbiI6eyJpZCI6MTQsIm5hbWUiOiLrp4jtj6wiLCJkZXB0aCI6MiwicGFyZW50Ijp7ImlkIjowLCJuYW1lIjoi7ISc7Jq4IiwiZGVwdGgiOjEsInBhcmVudCI6bnVsbH19LCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTQxMTAzNDB9.6_YtBx8ulupdlJgdBjdwgX_Ei4lHKL18J2VnzsrZgzY2_6pwfWyB_B7XOGljQ6_WxNmtm07gJUAlhAXF-N2R8A'
+----

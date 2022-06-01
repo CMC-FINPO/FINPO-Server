@@ -12,31 +12,67 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 467
+Content-Length: 1079
 
 {
   "success" : true,
   "errorCode" : 0,
   "message" : "Ok",
   "data" : [ {
-    "id" : 11,
-    "region1" : "서울",
-    "region2" : "강동",
+    "id" : 833,
+    "region" : {
+      "id" : 14,
+      "name" : "마포",
+      "depth" : 2,
+      "parent" : {
+        "id" : 0,
+        "name" : "서울",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
     "isDefault" : true
   }, {
-    "id" : 14,
-    "region1" : "서울",
-    "region2" : "용산",
+    "id" : 836,
+    "region" : {
+      "id" : 6,
+      "name" : "동대문",
+      "depth" : 2,
+      "parent" : {
+        "id" : 0,
+        "name" : "서울",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
     "isDefault" : false
   }, {
-    "id" : 15,
-    "region1" : "서울",
-    "region2" : "은평",
+    "id" : 837,
+    "region" : {
+      "id" : 203,
+      "name" : "동구",
+      "depth" : 2,
+      "parent" : {
+        "id" : 200,
+        "name" : "부산",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
     "isDefault" : false
   }, {
-    "id" : 16,
-    "region1" : "서울",
-    "region2" : "강남",
+    "id" : 838,
+    "region" : {
+      "id" : 202,
+      "name" : "서구",
+      "depth" : 2,
+      "parent" : {
+        "id" : 200,
+        "name" : "부산",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
     "isDefault" : false
   } ]
 }

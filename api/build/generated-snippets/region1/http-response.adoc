@@ -12,12 +12,27 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 106
+Content-Length: 323
 
 {
   "success" : true,
   "errorCode" : 0,
   "message" : "Ok",
-  "data" : [ "서울", "경기", "부산" ]
+  "data" : [ {
+    "id" : 0,
+    "name" : "서울",
+    "depth" : 1,
+    "parent" : null
+  }, {
+    "id" : 100,
+    "name" : "경기",
+    "depth" : 1,
+    "parent" : null
+  }, {
+    "id" : 200,
+    "name" : "부산",
+    "depth" : 1,
+    "parent" : null
+  } ]
 }
 ----

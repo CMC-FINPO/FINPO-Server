@@ -1,0 +1,29 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 1,
+    "name" : "일자리",
+    "depth" : 1,
+    "parent" : null
+  }, {
+    "id" : 2,
+    "name" : "생활안정",
+    "depth" : 1,
+    "parent" : null
+  }, {
+    "id" : 3,
+    "name" : "교육문화",
+    "depth" : 1,
+    "parent" : null
+  }, {
+    "id" : 4,
+    "name" : "참여공간",
+    "depth" : 1,
+    "parent" : null
+  } ]
+}
+----

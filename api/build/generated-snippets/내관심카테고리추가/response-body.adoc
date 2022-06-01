@@ -1,0 +1,48 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 1751,
+    "category" : {
+      "id" : 5,
+      "name" : "진로",
+      "depth" : 2,
+      "parent" : {
+        "id" : 1,
+        "name" : "일자리",
+        "depth" : 1,
+        "parent" : null
+      }
+    }
+  }, {
+    "id" : 1752,
+    "category" : {
+      "id" : 6,
+      "name" : "취업",
+      "depth" : 2,
+      "parent" : {
+        "id" : 1,
+        "name" : "일자리",
+        "depth" : 1,
+        "parent" : null
+      }
+    }
+  }, {
+    "id" : 1753,
+    "category" : {
+      "id" : 11,
+      "name" : "문화/예술",
+      "depth" : 2,
+      "parent" : {
+        "id" : 3,
+        "name" : "교육문화",
+        "depth" : 1,
+        "parent" : null
+      }
+    }
+  } ]
+}
+----

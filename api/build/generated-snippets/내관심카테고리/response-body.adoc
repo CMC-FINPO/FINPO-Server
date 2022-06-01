@@ -1,0 +1,48 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 822,
+    "category" : {
+      "id" : 5,
+      "name" : "진로",
+      "depth" : 2,
+      "parent" : {
+        "id" : 1,
+        "name" : "일자리",
+        "depth" : 1,
+        "parent" : null
+      }
+    }
+  }, {
+    "id" : 823,
+    "category" : {
+      "id" : 6,
+      "name" : "취업",
+      "depth" : 2,
+      "parent" : {
+        "id" : 1,
+        "name" : "일자리",
+        "depth" : 1,
+        "parent" : null
+      }
+    }
+  }, {
+    "id" : 824,
+    "category" : {
+      "id" : 7,
+      "name" : "창업",
+      "depth" : 2,
+      "parent" : {
+        "id" : 1,
+        "name" : "일자리",
+        "depth" : 1,
+        "parent" : null
+      }
+    }
+  } ]
+}
+----

@@ -37,6 +37,10 @@
 |`+String+`
 |true
 |갱신된 이메일 주소
+|`+data.status+`
+|`+String+`
+|true
+|갱신될 상태
 |`+data.profileImg+`
 |`+String+`
 |true
@@ -45,12 +49,8 @@
 |`+String+`
 |true
 |소셜로그인 타입
-|`+data.region1+`
-|`+String+`
+|`+data.defaultRegion+`
+|`+Object+`
 |true
 |갱신된 거주 지역
-|`+data.region2+`
-|`+String+`
-|true
-|갱신된 세부 거주 지역
 |===

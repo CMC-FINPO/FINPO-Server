@@ -2,5 +2,5 @@
 ----
 $ http GET 'https://dev.finpo.kr/oauth/login/kakao' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer k8A2A1To_L8BxzhseLjykutHMI8ZHDy2Vp8JGA2HCj10lwAAAYEGCFVV'
+    'Authorization:Bearer zxQ0U_scchvK89uI-a8Ys_fjJICaQHeHPV4CilMbCilwngAAAYEeF_58'
 ----

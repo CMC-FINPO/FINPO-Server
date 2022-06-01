@@ -34,18 +34,6 @@
 |`+String+`
 |false
 |메일주소
-|`+data.region1+`
-|`+String+`
-|false
-|지역1
-|`+data.region2+`
-|`+String+`
-|false
-|지역2
-|`+data.status+`
-|`+String+`
-|false
-|현재 상태
 |`+data.profileImg+`
 |`+String+`
 |false

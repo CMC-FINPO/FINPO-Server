@@ -1,7 +1,6 @@
 [source,options="nowrap"]
 ----
 {
-  "region1" : "경기",
-  "region2" : "이천"
+  "regionId" : 103
 }
 ----

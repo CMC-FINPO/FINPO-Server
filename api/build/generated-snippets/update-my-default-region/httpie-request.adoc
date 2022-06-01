@@ -1,9 +1,8 @@
 [source,bash]
 ----
 $ echo '{
-  "region1" : "경기",
-  "region2" : "이천"
+  "regionId" : 103
 }' | http PUT 'https://dev.finpo.kr/region/my-default' \
     'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlL2RkYmRkZTNjLTQzMmUtNDZlZC1hOGJjLWVmMmNmOTUyN2E0MC5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM5MDExMjZ9.27n5s8B5pIveC5jo9wZAXtp4McdN74wD3WSFcN9lBQ73x2OCBKxfrzPl2t-y5-AhTlQboYr6KJZtiOWEkt8CIQ'
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4MzEiLCJuaWNrbmFtZSI6IuuplOydtOyKqCIsInByb2ZpbGVJbWciOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXBsb2FkL3Byb2ZpbGUvYWQ0ZTcwMGItYjFhMy00YmU0LTk3NWEtMjEyNTQxYzU3MGM3LmpwZWciLCJkZWZhdWx0UmVnaW9uIjp7ImlkIjoxNCwibmFtZSI6IuuniO2PrCIsImRlcHRoIjoyLCJwYXJlbnQiOnsiaWQiOjAsIm5hbWUiOiLshJzsmrgiLCJkZXB0aCI6MSwicGFyZW50IjpudWxsfX0sIm9BdXRoVHlwZSI6IktBS0FPIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY1NDA5MjA5MH0.hx_ryUoePBKvddqconVbgk6Q-jZQvw2ezqPilCGwxcNE3Jv-C9fWYh97xZUAFpa3hVj0G5796XOrrfng2-Cbcg'
 ----

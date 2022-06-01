@@ -219,10 +219,17 @@ operation::region1[snippets='http-request,http-response,response-fields']
 
 &nbsp;
 
-==== 상세 지역이름
-operation::region2-seoul[snippets='http-request,http-response,response-fields']
-operation::region2-gyeonggi[snippets='response-body']
-operation::region2-busan[snippets='response-body']
+==== 상세 지역이름 (부모지역 id)
+operation::region2-busan[snippets='http-request,request-parameters,http-response,response-fields']
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 상세 지역이름 (전체)
+operation::자식지역조회[snippets='http-request,request-parameters,http-response,response-fields']
+
 
 &nbsp;
 
@@ -282,3 +289,87 @@ operation::관심지역들삭제[snippets='http-request,request-headers,request-
 
 &nbsp;
 
+
+
+
+
+
+
+
+== 카테고리
+=== 카테고리 조회
+==== 상위 카테고리
+operation::1차카테고리조회[snippets='http-request,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 하위 카테고리 (상위 카테고리 자식)
+operation::자식카테고리조회[snippets='http-request,request-parameters,http-response,response-fields']
+
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 하위 카테고리 (전체)
+operation::2차카테고리조회[snippets='http-request,request-parameters,http-response,response-fields']
+
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+=== 나의 관심카테고리
+==== 조회
+operation::내관심카테고리[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 추가
+
+서버에서 중복체크 하지만, 중복이 안오는게 베스트겠죠?
+
+operation::내관심카테고리추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+==== 삭제
+operation::내관심카테고리삭제[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+== 정책
+=== 나의 관심 정책
+==== 조회
+
+저장되어 있는 관심+기본지역, 관심정책 카테고리에 해당하는 정책들을 조회합니다.
+
+operation::내맞춤정책조회[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;

@@ -49,12 +49,8 @@
 |`+String+`
 |true
 |소셜로그인 타입
-|`+data.region1+`
-|`+String+`
+|`+data.defaultRegion+`
+|`+Object+`
 |true
 |거주 지역
-|`+data.region2+`
-|`+String+`
-|true
-|세부 거주 지역
 |===

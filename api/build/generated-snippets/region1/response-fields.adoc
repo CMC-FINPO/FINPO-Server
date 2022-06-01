@@ -12,8 +12,16 @@
 |`+String+`
 |true
 |응답 메시지
-|`+data.[]+`
-|`+Array+`
+|`+data.[].id+`
+|`+Number+`
+|true
+|지역 id
+|`+data.[].name+`
+|`+String+`
 |true
 |지역 이름
+|`+data.[].depth+`
+|`+Number+`
+|true
+|깊이 (카테고리 1)
 |===

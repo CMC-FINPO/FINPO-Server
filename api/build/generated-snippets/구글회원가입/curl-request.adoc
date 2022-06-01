@@ -2,15 +2,14 @@
 ----
 $ curl 'https://dev.finpo.kr/oauth/register/google' -i -X POST \
     -H 'Content-Type: application/x-www-form-urlencoded;charset=UTF-8' \
-    -H 'Authorization: Bearer ya29.a0ARrdaM8ExzuYkzslGPXGZAECAdOZDyAy1zYyON9PNOOR8rzifcRNlF3niap4iCAEzBrtL7HLNmaDi40o6u35V5eX5vH5MogXIPrfhk1oLQhUmlu0g7omB_12YbdYmAbIhmGoU-BYdU8KkB6DM_irqsxR2Oym' \
+    -H 'Authorization: Bearer ya29.a0ARrdaM-YvNiW46DJILb48qSqt7jlurzjUrHNhtA2II-qLGecZTvqXO5yv3SQ2KwuUuXjzTonKXD71RJ-8-KPUuef-lbt0_Lr20SoyAeVetBUFsACwAX7eLSlAGaEsZZBAuUg-IUkFlMI-FFeZWZj0awBGo3K' \
     -F 'profileImgFile=@imagefile.jpeg;type=image/jpeg' \
     -F 'name=김명승' \
-    -F 'nickname=메이슨' \
+    -F 'nickname=mason' \
     -F 'birth=1999-01-01' \
     -F 'gender=MALE' \
-    -F 'email=mskim9967@gmail.com' \
-    -F 'region1=서울' \
-    -F 'region2=강동' \
-    -F 'status=현재 상태' \
+    -F 'email=mskim9967@naver.com' \
+    -F 'regionId=8' \
+    -F 'status=대학교 재학 중' \
     -F 'profileImg=https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100'
 ----

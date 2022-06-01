@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,6 +55,7 @@ class OAuthControllerTest {
   private UserService userService;
 
 
+
   @BeforeEach
   void setUp() throws Exception {
 
@@ -92,8 +94,6 @@ class OAuthControllerTest {
                     , fieldWithPath("data.gender").description("성별\n(MALE, FEMALE, PRIVATE)").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.email").description("메일주소").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.status").description("현재 상태").optional().type(JsonFieldType.STRING)
-                    , fieldWithPath("data.region1").description("지역1").optional().type(JsonFieldType.STRING)
-                    , fieldWithPath("data.region2").description("지역2").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.oAuthType").description("소셜 로그인 타입\nKAKAO/GOOGLE/APPLE").optional().type(JsonFieldType.STRING)
                 )
             )
@@ -164,9 +164,6 @@ class OAuthControllerTest {
                     , fieldWithPath("data.birth").description("생년월일(YYYY-MM-DD)").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.gender").description("성별\n(MALE, FEMALE, PRIVATE)").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.email").description("메일주소").optional().type(JsonFieldType.STRING)
-                    , fieldWithPath("data.region1").description("지역1").optional().type(JsonFieldType.STRING)
-                    , fieldWithPath("data.region2").description("지역2").optional().type(JsonFieldType.STRING)
-                    , fieldWithPath("data.status").description("현재 상태").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.profileImg").description("프로필 이미지 url").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.oAuthType").description("소셜 로그인 타입\nKAKAO/GOOGLE/APPLE").optional().type(JsonFieldType.STRING)
                 )
@@ -221,8 +218,7 @@ class OAuthControllerTest {
             .param("birth", "1999-01-01")
             .param("gender", Gender.MALE.toString())
             .param("email", "mskim9967@gmail.com")
-            .param("region1", "서울")
-            .param("region2", "강동")
+            .param("regionId", "14")
             .param("status", "대학교 재학 중")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .header("Authorization", "Bearer " + kakaoToken)
@@ -246,15 +242,14 @@ class OAuthControllerTest {
                     , parameterWithName("birth").description("생년월일(YYYY-MM-DD)")
                     , parameterWithName("gender").description("성별\n(MALE, FEMALE, PRIVATE)")
                     , parameterWithName("email").description("메일주소")
-                    , parameterWithName("region1").description("지역1")
-                    , parameterWithName("region2").description("지역2")
+                    , parameterWithName("regionId").description("지역id")
                     , parameterWithName("status").description("현재 상태")
                     , parameterWithName("profileImg").description("프로필 이미지 url").optional()
                 )
                 , requestParts(
                     partWithName("profileImgFile").description("프로필 이미지 파일").optional()
                 ),
-                responseFields(
+                 responseFields(
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
@@ -275,12 +270,11 @@ class OAuthControllerTest {
     mockMvc.perform(RestDocumentationRequestBuilders.fileUpload("/oauth/register/google")
             .file(image)
             .param("name", "김명승")
-            .param("nickname", "메이슨")
+            .param("nickname", "mason")
             .param("birth", "1999-01-01")
             .param("gender", Gender.MALE.toString())
-            .param("email", "mskim9967@gmail.com")
-            .param("region1", "서울")
-            .param("region2", "강동")
+            .param("email", "mskim9967@naver.com")
+            .param("regionId", "8")
             .param("status", "대학교 재학 중")
             .param("profileImg", "https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100")
 
@@ -306,8 +300,7 @@ class OAuthControllerTest {
                     , parameterWithName("birth").description("생년월일(YYYY-MM-DD)")
                     , parameterWithName("gender").description("성별\n(MALE, FEMALE, PRIVATE)")
                     , parameterWithName("email").description("메일주소")
-                    , parameterWithName("region1").description("지역1")
-                    , parameterWithName("region2").description("지역2")
+                    , parameterWithName("regionId").description("지역id")
                     , parameterWithName("status").description("현재 상태")
                     , parameterWithName("profileImg").description("프로필 이미지 url").optional()
                 )
@@ -383,10 +376,8 @@ class OAuthControllerTest {
             .param("birth", "1999-01-01")
             .param("gender", Gender.MALE.toString())
             .param("email", "mskim9967@gmail.com")
-            .param("region1", "서울")
-            .param("region2", "강동")
+            .param("regionId", "14")
             .param("status", "대학교 재학 중")
-
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .header("Authorization", "Bearer " + kakaoToken)
         )

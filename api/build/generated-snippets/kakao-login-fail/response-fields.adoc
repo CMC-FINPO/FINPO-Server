@@ -38,14 +38,6 @@
 |`+String+`
 |false
 |현재 상태
-|`+data.region1+`
-|`+String+`
-|false
-|지역1
-|`+data.region2+`
-|`+String+`
-|false
-|지역2
 |`+data.oAuthType+`
 |`+String+`
 |false

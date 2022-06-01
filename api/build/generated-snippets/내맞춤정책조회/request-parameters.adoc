@@ -1,0 +1,15 @@
+|===
+|파라미터|필수여부|설명
+|`+page+`
+|true
+|페이지 위치 (0부터 시작)
+|`+size+`
+|true
+|한 페이지의 데이터 개수
+|`+sort+`
+|true
+|정렬 기준 (복수 정렬 가능)
+ title,asc:제목 오름차순
+modifiedAt:수정일 내림차순
+[title, institution, startDate, endDate, modifiedAt]
+|===

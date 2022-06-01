@@ -1,0 +1,39 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 12,
+    "name" : "사회참여",
+    "depth" : 2,
+    "parent" : {
+      "id" : 4,
+      "name" : "참여공간",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 13,
+    "name" : "공간",
+    "depth" : 2,
+    "parent" : {
+      "id" : 4,
+      "name" : "참여공간",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 14,
+    "name" : "대외활동",
+    "depth" : 2,
+    "parent" : {
+      "id" : 4,
+      "name" : "참여공간",
+      "depth" : 1,
+      "parent" : null
+    }
+  } ]
+}
+----

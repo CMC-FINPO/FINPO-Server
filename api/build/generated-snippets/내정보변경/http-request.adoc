@@ -2,12 +2,13 @@
 ----
 PUT /user/me HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlLzg2ZmQ4OGFhLWY0NDgtNDk4OC1iYzkxLTJhMjFiZTJjZWMyYS5qcGVnIiwicmVnaW9uMSI6IuyEnOyauCIsInJlZ2lvbjIiOiLqsJXrj5kiLCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTM2NzQ5MzV9.VTViEIZ4KipgyPz_LXU2WNrPoNfCMrWp54OyscnB5R_DfIPlYyF6tzAPVPRk5upGTwDkoFQHDdXTeQhIFNE7wA
-Content-Length: 50
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2MTciLCJuaWNrbmFtZSI6IuuplOydtOyKqCIsInByb2ZpbGVJbWciOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXBsb2FkL3Byb2ZpbGUvMzgwNGZhYjEtNDc3NS00YzBjLThlNjctMTE1MjkyZTUyMmEzLmpwZWciLCJkZWZhdWx0UmVnaW9uIjp7ImlkIjoxNCwibmFtZSI6IuuniO2PrCIsImRlcHRoIjoyLCJwYXJlbnQiOnsiaWQiOjAsIm5hbWUiOiLshJzsmrgiLCJkZXB0aCI6MSwicGFyZW50IjpudWxsfX0sIm9BdXRoVHlwZSI6IktBS0FPIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY1NDA4OTAxMX0.6MpaGySeNEQhAtClpHdqV6wnq7A7TAfpevHYz9ZTQ8Bg7LdZo6H9jsyNIexjhiYYQRxZYDw7hPplVOb1Zap0mA
+Content-Length: 70
 Host: dev.finpo.kr
 
 {
-  "region2" : "송파",
-  "nickname" : "mason"
+  "regionId" : 3,
+  "nickname" : "mason",
+  "birth" : "1999-12-12"
 }
 ----

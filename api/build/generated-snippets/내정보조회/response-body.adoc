@@ -5,17 +5,26 @@
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 8,
+    "id" : 584,
     "name" : "김명승",
     "nickname" : "메이슨",
     "birth" : "1999-01-01",
     "gender" : "MALE",
     "email" : "mskim9967@gmail.com",
     "status" : "대학교 재학 중",
-    "profileImg" : "http://localhost:8080/upload/profile/2ea756c4-62e0-4cdf-a610-267e39dca0b9.jpeg",
+    "profileImg" : "http://localhost:8080/upload/profile/05a4ef87-7949-45a5-a827-58b6cccb7c00.jpeg",
     "oAuthType" : "KAKAO",
-    "region1" : "서울",
-    "region2" : "강동"
+    "defaultRegion" : {
+      "id" : 14,
+      "name" : "마포",
+      "depth" : 2,
+      "parent" : {
+        "id" : 0,
+        "name" : "서울",
+        "depth" : 1,
+        "parent" : null
+      }
+    }
   }
 }
 ----

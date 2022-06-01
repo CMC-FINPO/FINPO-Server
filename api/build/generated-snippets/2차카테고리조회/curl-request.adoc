@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ curl 'https://dev.finpo.kr/policy/category/name?depth=2' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8'
+----

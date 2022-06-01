@@ -16,12 +16,9 @@
 |`+email+`
 |true
 |메일주소
-|`+region1+`
+|`+regionId+`
 |true
-|지역1
-|`+region2+`
-|true
-|지역2
+|지역id
 |`+status+`
 |true
 |현재 상태

@@ -5,9 +5,18 @@
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 29,
-    "region1" : "서울",
-    "region2" : "강동",
+    "id" : 851,
+    "region" : {
+      "id" : 14,
+      "name" : "마포",
+      "depth" : 2,
+      "parent" : {
+        "id" : 0,
+        "name" : "서울",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
     "isDefault" : true
   }
 }

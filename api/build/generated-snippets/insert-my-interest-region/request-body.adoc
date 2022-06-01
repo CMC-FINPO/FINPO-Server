@@ -1,13 +1,10 @@
 [source,options="nowrap"]
 ----
 [ {
-  "region1" : "서울",
-  "region2" : "양천"
+  "regionId" : 3
 }, {
-  "region1" : "서울",
-  "region2" : "은평"
+  "regionId" : 3
 }, {
-  "region1" : "서울",
-  "region2" : "은평"
+  "regionId" : 205
 } ]
 ----

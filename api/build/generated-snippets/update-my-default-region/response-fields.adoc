@@ -12,18 +12,22 @@
 |`+String+`
 |true
 |응답 메시지
-|`+data.id+`
+|`+data.region.id+`
 |`+Number+`
 |true
-|거주 지역 id
-|`+data.region1+`
+|갱신된 거주지역 id
+|`+data.region.name+`
 |`+String+`
 |true
-|갱신된 거주 지역 이름
-|`+data.region2+`
-|`+String+`
+|갱신된 거주지역 이름
+|`+data.region.depth+`
+|`+Number+`
 |true
-|갱신된 상세 거주 지역 이름
+|갱신된 지역 깊이
+|`+data.region.parent+`
+|`+Object+`
+|true
+|부모 지역
 |`+data.isDefault+`
 |`+Boolean+`
 |true

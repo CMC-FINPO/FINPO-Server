@@ -77,8 +77,6 @@ class UserControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.data.name").value("김명승"))
-        .andExpect(jsonPath("$.data.region1").value("서울"))
-        .andExpect(jsonPath("$.data.region2").value("강동"))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(
@@ -88,7 +86,7 @@ class UserControllerTest {
                 requestHeaders(
                     headerWithName("Authorization").description("Access Token")
                 ),
-                responseFields(
+                relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
@@ -101,8 +99,7 @@ class UserControllerTest {
                     fieldWithPath("data.status").description("현재 상태"),
                     fieldWithPath("data.profileImg").description("프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
-                    fieldWithPath("data.region1").description("거주 지역"),
-                    fieldWithPath("data.region2").description("세부 거주 지역")
+                    fieldWithPath("data.defaultRegion").description("거주 지역")
                 )
             )
         );
@@ -113,8 +110,8 @@ class UserControllerTest {
     HashMap<String, Object> body = new HashMap<>();
     ObjectMapper objectMapper = new ObjectMapper();
     body.put("nickname", "mason");
-    body.put("region1", "서울");
-    body.put("region2", "송파");
+    body.put("birth", "1999-12-12");
+    body.put("regionId", 3);
 
     mockMvc.perform(put("/user/me")
             .contentType(MediaType.APPLICATION_JSON)
@@ -124,7 +121,6 @@ class UserControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.data.nickname").value("mason"))
-        .andExpect(jsonPath("$.data.region2").value("송파"))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(
@@ -140,11 +136,11 @@ class UserControllerTest {
                     fieldWithPath("birth").description("생년월일(YYYY-MM-DD)").optional().type(JsonFieldType.STRING),
                     fieldWithPath("gender").description("성별\n[MALE/FEMALE/PRIVATE]").optional().type(JsonFieldType.STRING),
                     fieldWithPath("email").description("이메일 주소").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("region1").description("거주 지역").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("regionId").description("거주 지역 id").optional().type(JsonFieldType.NUMBER),
                     fieldWithPath("region2").description("세부 거주 지역").optional().type(JsonFieldType.STRING),
                     fieldWithPath("status").description("갱신할 상태").optional().type(JsonFieldType.STRING)
                 ),
-                responseFields(
+                relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
@@ -157,8 +153,7 @@ class UserControllerTest {
                     fieldWithPath("data.status").description("갱신될 상태"),
                     fieldWithPath("data.profileImg").description("프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
-                    fieldWithPath("data.region1").description("갱신된 거주 지역"),
-                    fieldWithPath("data.region2").description("갱신된 세부 거주 지역")
+                    fieldWithPath("data.defaultRegion").description("갱신된 거주 지역")
                 )
             )
         );

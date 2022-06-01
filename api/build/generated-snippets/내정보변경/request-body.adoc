@@ -1,7 +1,8 @@
 [source,options="nowrap"]
 ----
 {
-  "region2" : "송파",
-  "nickname" : "mason"
+  "regionId" : 3,
+  "nickname" : "mason",
+  "birth" : "1999-12-12"
 }
 ----

@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ http DELETE 'https://dev.finpo.kr/policy/category?id=758,759' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NTYiLCJuaWNrbmFtZSI6IuuplOydtOyKqCIsInByb2ZpbGVJbWciOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXBsb2FkL3Byb2ZpbGUvMDZhM2U3NmQtOTRlNi00OTliLTkxZTktNWEyOGI2MDE2OTVhLmpwZWciLCJyZWdpb24xIjoi7ISc7Jq4IiwicmVnaW9uMiI6IuqwleuPmSIsIm9BdXRoVHlwZSI6IktBS0FPIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY1NDA3NDMyMX0.dWrkVDVYgSRr5gpxdD5LpZMsZKggr7WITMCIsGIX-2EGEpWLnm37uMktoVO4lqALh3RaVqYHZ3Zkyidad_jwpQ'
+----

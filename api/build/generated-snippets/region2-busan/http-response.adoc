@@ -12,12 +12,172 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 235
+Content-Length: 2805
 
 {
   "success" : true,
   "errorCode" : 0,
   "message" : "Ok",
-  "data" : [ "중구", "서구", "동구", "영도", "부산진", "동래구", "남구", "북구", "해운대", "사하", "금정", "강서", "연제", "수영", "사상" ]
+  "data" : [ {
+    "id" : 201,
+    "name" : "중구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 202,
+    "name" : "서구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 203,
+    "name" : "동구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 204,
+    "name" : "영도",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 205,
+    "name" : "부산진",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 206,
+    "name" : "동래구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 207,
+    "name" : "남구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 208,
+    "name" : "북구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 209,
+    "name" : "해운대",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 210,
+    "name" : "사하",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 211,
+    "name" : "금정",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 212,
+    "name" : "강서",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 213,
+    "name" : "연제",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 214,
+    "name" : "수영",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 215,
+    "name" : "사상",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 216,
+    "name" : "기장",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  } ]
 }
 ----

@@ -26,14 +26,19 @@
 |false
 |
 |이메일 주소
-|`+region1+`
-|`+String+`
+|`+regionId+`
+|`+Number+`
 |false
 |
-|거주 지역
+|거주 지역 id
 |`+region2+`
 |`+String+`
 |false
 |
 |세부 거주 지역
+|`+status+`
+|`+String+`
+|false
+|
+|갱신할 상태
 |===

@@ -5,9 +5,18 @@
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 1,
-    "region1" : "경기",
-    "region2" : "이천",
+    "id" : 830,
+    "region" : {
+      "id" : 103,
+      "name" : "의정부",
+      "depth" : 2,
+      "parent" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
     "isDefault" : true
   }
 }

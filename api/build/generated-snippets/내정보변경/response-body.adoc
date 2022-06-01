@@ -5,16 +5,26 @@
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 2,
+    "id" : 617,
     "name" : "김명승",
     "nickname" : "mason",
-    "birth" : "1999-01-01",
+    "birth" : "1999-12-12",
     "gender" : "MALE",
     "email" : "mskim9967@gmail.com",
-    "profileImg" : "http://localhost:8080/upload/profile/86fd88aa-f448-4988-bc91-2a21be2cec2a.jpeg",
+    "status" : "대학교 재학 중",
+    "profileImg" : "http://localhost:8080/upload/profile/3804fab1-4775-4c0c-8e67-115292e522a3.jpeg",
     "oAuthType" : "KAKAO",
-    "region1" : "서울",
-    "region2" : "송파"
+    "defaultRegion" : {
+      "id" : 3,
+      "name" : "용산",
+      "depth" : 2,
+      "parent" : {
+        "id" : 0,
+        "name" : "서울",
+        "depth" : 1,
+        "parent" : null
+      }
+    }
   }
 }
 ----
