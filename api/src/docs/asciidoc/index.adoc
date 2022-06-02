@@ -373,3 +373,25 @@ operation::내맞춤정책조회[snippets='http-request,request-headers,request-
 &nbsp;
 
 &nbsp;
+
+=== 검색
+
+==== 예시 (제목으로 검색)
+
+operation::정책제목검색[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 예시 (시작날짜로 검색)
+
+operation::정책날짜검색[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;

@@ -1,0 +1,111 @@
+|===
+|필드명|타입|필수여부|설명
+|`+success+`
+|`+Boolean+`
+|true
+|성공 여부
+|`+errorCode+`
+|`+Number+`
+|true
+|응답 코드
+|`+message+`
+|`+String+`
+|true
+|응답 메시지
+|`+data.content.[].id+`
+|`+Number+`
+|true
+|정책 id
+|`+data.content.[].title+`
+|`+String+`
+|false
+|정책 제목
+|`+data.content.[].content+`
+|`+String+`
+|false
+|정책 내용
+|`+data.content.[].institution+`
+|`+String+`
+|false
+|주관 기관
+|`+data.content.[].supportScale+`
+|`+String+`
+|false
+|지원 규모
+|`+data.content.[].support+`
+|`+String+`
+|false
+|지원 내용
+|`+data.content.[].period+`
+|`+String+`
+|false
+|기간
+|`+data.content.[].startDate+`
+|`+String+`
+|false
+|시작일
+|`+data.content.[].endDate+`
+|`+String+`
+|false
+|종료일
+|`+data.content.[].process+`
+|`+String+`
+|false
+|신청 절차
+|`+data.content.[].announcement+`
+|`+String+`
+|false
+|결과 발표
+|`+data.content.[].detailUrl+`
+|`+String+`
+|false
+|상세내용 url
+|`+data.content.[].openApiType+`
+|`+String+`
+|false
+|Open API 출처
+|`+data.content.[].modifiedAt+`
+|`+String+`
+|false
+|수정일
+|`+data.content.[].category+`
+|`+Object+`
+|false
+|카테고리
+|`+data.content.[].region+`
+|`+Object+`
+|false
+|지역
+|`+data.last+`
+|`+Boolean+`
+|true
+|현재가 마지막 페이지인가
+|`+data.first+`
+|`+Boolean+`
+|true
+|현재가 첫 페이지인가
+|`+data.totalElements+`
+|`+Number+`
+|true
+|전체 데이터 수
+|`+data.totalPages+`
+|`+Number+`
+|true
+|전체 페이지 수
+|`+data.number+`
+|`+Number+`
+|true
+|현재 페이지
+|`+data.size+`
+|`+Number+`
+|true
+|한 페이지 데이터 개수
+|`+data.numberOfElements+`
+|`+Number+`
+|true
+|현재 페이지 데이터 개수
+|`+data.empty+`
+|`+Boolean+`
+|true
+|현재 페이지가 비어있는가
+|===

@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ curl 'https://dev.finpo.kr/policy/search?title=%EC%B2%AD%EB%85%84&region=107,4,10,11,102,104&category=9,10,11&page=0&size=5&sort=title,asc&sort=modifiedAt,desc' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMTMyIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3VwbG9hZC9wcm9maWxlL2ZkYzg1NzAyLTE5NmMtNDhkNi04Mjg5LTdkZTU1M2Y1M2NjMy5qcGVnIiwiZGVmYXVsdFJlZ2lvbiI6eyJpZCI6MTQsIm5hbWUiOiLrp4jtj6wiLCJkZXB0aCI6MiwicGFyZW50Ijp7ImlkIjowLCJuYW1lIjoi7ISc7Jq4IiwiZGVwdGgiOjEsInBhcmVudCI6bnVsbH19LCJvQXV0aFR5cGUiOiJLQUtBTyIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NTQxNTEyNDB9.AvMAEJuvtXfO5kmY_WJDp0ia3OBcR5_bo22XjG0CRJVKus6qG1Ds92Xc6gvfw0TnnU4uGznxd8psh7rZtxKqlA'
+----

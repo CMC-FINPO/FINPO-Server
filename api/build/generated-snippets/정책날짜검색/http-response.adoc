@@ -1,0 +1,195 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 4639
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "content" : [ {
+      "id" : 993,
+      "title" : "안산시  2022년도 소상공인 특례보증 지원",
+      "institution" : "안산시청",
+      "startDate" : "2022-05-20",
+      "endDate" : "2022-12-31",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8772&cntType=O",
+      "openApiType" : "GGDATA",
+      "modifiedAt" : "2022-06-02T10:46:31",
+      "category" : {
+        "id" : 6,
+        "name" : "취업",
+        "depth" : 2,
+        "parent" : {
+          "id" : 1,
+          "name" : "일자리",
+          "depth" : 1,
+          "parent" : null
+        }
+      },
+      "region" : {
+        "id" : 109,
+        "name" : "안산",
+        "depth" : 2,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "parent" : null
+        }
+      }
+    }, {
+      "id" : 954,
+      "title" : "기업퇴직(예정)자 사회공헌 뉴스타트 18기 교육 참가자 모집",
+      "institution" : "상상우리",
+      "startDate" : "2022-05-20",
+      "endDate" : "2022-06-06",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8755&cntType=O",
+      "openApiType" : "GGDATA",
+      "modifiedAt" : "2022-06-02T10:46:30",
+      "category" : {
+        "id" : 6,
+        "name" : "취업",
+        "depth" : 2,
+        "parent" : {
+          "id" : 1,
+          "name" : "일자리",
+          "depth" : 1,
+          "parent" : null
+        }
+      },
+      "region" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "parent" : null
+      }
+    }, {
+      "id" : 977,
+      "title" : "파주시  제3회 꿈일터 구인구직 만남의 날 참여업체 모집",
+      "institution" : "파주시 일자리센터",
+      "startDate" : "2022-05-20",
+      "endDate" : "2022-06-07",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8791&cntType=O",
+      "openApiType" : "GGDATA",
+      "modifiedAt" : "2022-06-02T10:46:30",
+      "category" : {
+        "id" : 6,
+        "name" : "취업",
+        "depth" : 2,
+        "parent" : {
+          "id" : 1,
+          "name" : "일자리",
+          "depth" : 1,
+          "parent" : null
+        }
+      },
+      "region" : {
+        "id" : 120,
+        "name" : "파주",
+        "depth" : 2,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "parent" : null
+        }
+      }
+    }, {
+      "id" : 979,
+      "title" : "2022년 경기도 나노 중소기업 지원 사업 하반기 참여기업 모집",
+      "institution" : "경기도청",
+      "startDate" : "2022-05-23",
+      "endDate" : "2022-06-15",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8789&cntType=O",
+      "openApiType" : "GGDATA",
+      "modifiedAt" : "2022-06-02T10:46:31",
+      "category" : {
+        "id" : 6,
+        "name" : "취업",
+        "depth" : 2,
+        "parent" : {
+          "id" : 1,
+          "name" : "일자리",
+          "depth" : 1,
+          "parent" : null
+        }
+      },
+      "region" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "parent" : null
+      }
+    }, {
+      "id" : 996,
+      "title" : "안산시  2022년 경력단절여성 디딤돌 취업지원사업 참여 동아리 모집",
+      "institution" : "안산여성인력개발센터",
+      "startDate" : "2022-05-23",
+      "endDate" : "2022-06-17",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8768&cntType=O",
+      "openApiType" : "GGDATA",
+      "modifiedAt" : "2022-06-02T10:46:31",
+      "category" : {
+        "id" : 6,
+        "name" : "취업",
+        "depth" : 2,
+        "parent" : {
+          "id" : 1,
+          "name" : "일자리",
+          "depth" : 1,
+          "parent" : null
+        }
+      },
+      "region" : {
+        "id" : 109,
+        "name" : "안산",
+        "depth" : 2,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "parent" : null
+        }
+      }
+    } ],
+    "pageable" : {
+      "sort" : {
+        "empty" : false,
+        "sorted" : true,
+        "unsorted" : false
+      },
+      "offset" : 0,
+      "pageNumber" : 0,
+      "pageSize" : 5,
+      "paged" : true,
+      "unpaged" : false
+    },
+    "last" : false,
+    "totalPages" : 4,
+    "totalElements" : 18,
+    "first" : true,
+    "size" : 5,
+    "number" : 0,
+    "sort" : {
+      "empty" : false,
+      "sorted" : true,
+      "unsorted" : false
+    },
+    "numberOfElements" : 5,
+    "empty" : false
+  }
+}
+----

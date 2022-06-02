@@ -55,6 +55,8 @@ class OAuthControllerTest {
   private UserService userService;
 
 
+  private String kakaoToken= "FMVgGeczt03YLEA9V_c4xzJi04nIemms1faaVUflCj102gAAAYEijNty";
+  private final String googleToken ="ya29.a0ARrdaM-YvNiW46DJILb48qSqt7jlurzjUrHNhtA2II-qLGecZTvqXO5yv3SQ2KwuUuXjzTonKXD71RJ-8-KPUuef-lbt0_Lr20SoyAeVetBUFsACwAX7eLSlAGaEsZZBAuUg-IUkFlMI-FFeZWZj0awBGo3K";
 
   @BeforeEach
   void setUp() throws Exception {
@@ -375,7 +377,7 @@ class OAuthControllerTest {
             .param("nickname", "메이슨")
             .param("birth", "1999-01-01")
             .param("gender", Gender.MALE.toString())
-            .param("email", "mskim9967@gmail.com")
+            .param("email", "ksksksk@gmail.com")
             .param("regionId", "14")
             .param("status", "대학교 재학 중")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)

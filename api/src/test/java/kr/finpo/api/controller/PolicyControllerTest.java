@@ -77,9 +77,9 @@ class PolicyControllerTest {
                     headerWithName("Authorization").description("Access Token")
                 ),
                 requestParameters(
-                    parameterWithName("page").description("페이지 위치 (0부터 시작)"),
-                    parameterWithName("size").description("한 페이지의 데이터 개수"),
-                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt]")
+                    parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
+                    parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -113,5 +113,128 @@ class PolicyControllerTest {
                 )
             )
         );
+  }
+
+  @Test
+  void search() throws Exception {
+    mockMvc.perform(get("/policy/search?title=청년&&region=107,4,10,11,102,104&category=9,10,11&page=0&size=5&sort=title,asc&sort=modifiedAt,desc")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("정책제목검색",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("title").description("제목 검색").optional(),
+                    parameterWithName("startDate").description("시작 날짜").optional(),
+                    parameterWithName("endDate").description("종료 날짜").optional(),
+                    parameterWithName("region").description("지역 id(복수개 가능)").optional(),
+                    parameterWithName("category").description("카테고리 id(복수개 가능)").optional(),
+
+                    parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
+                    parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt]").optional()
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.content.[].id").description("정책 id"),
+                    fieldWithPath("data.content.[].title").description("정책 제목").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].content").description("정책 내용").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].institution").description("주관 기관").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].supportScale").description("지원 규모").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].support").description("지원 내용").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].period").description("기간").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].startDate").description("시작일").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].endDate").description("종료일").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].process").description("신청 절차").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].announcement").description("결과 발표").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].detailUrl").description("상세내용 url").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].openApiType").description("Open API 출처").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].modifiedAt").description("수정일").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
+                    fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
+
+                    fieldWithPath("data.last").description("현재가 마지막 페이지인가"),
+                    fieldWithPath("data.first").description("현재가 첫 페이지인가"),
+                    fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                    fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                    fieldWithPath("data.number").description("현재 페이지"),
+                    fieldWithPath("data.size").description("한 페이지 데이터 개수"),
+                    fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 개수"),
+                    fieldWithPath("data.empty").description("현재 페이지가 비어있는가")
+                )
+            )
+        )
+        ;
+
+    mockMvc.perform(get("/policy/search?startDate=2022-05-20&category=6&page=0&size=5&sort=startDate,asc&sort=modifiedAt,desc")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("정책날짜검색",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("title").description("제목 검색").optional(),
+                    parameterWithName("startDate").description("시작 날짜").optional(),
+                    parameterWithName("endDate").description("종료 날짜").optional(),
+                    parameterWithName("region").description("지역 id(복수개 가능)").optional(),
+                    parameterWithName("category").description("카테고리 id(복수개 가능)").optional(),
+
+                    parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
+                    parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt]").optional()
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.content.[].id").description("정책 id"),
+                    fieldWithPath("data.content.[].title").description("정책 제목").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].content").description("정책 내용").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].institution").description("주관 기관").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].supportScale").description("지원 규모").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].support").description("지원 내용").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].period").description("기간").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].startDate").description("시작일").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].endDate").description("종료일").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].process").description("신청 절차").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].announcement").description("결과 발표").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].detailUrl").description("상세내용 url").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].openApiType").description("Open API 출처").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].modifiedAt").description("수정일").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
+                    fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
+
+                    fieldWithPath("data.last").description("현재가 마지막 페이지인가"),
+                    fieldWithPath("data.first").description("현재가 첫 페이지인가"),
+                    fieldWithPath("data.totalElements").description("전체 데이터 수"),
+                    fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                    fieldWithPath("data.number").description("현재 페이지"),
+                    fieldWithPath("data.size").description("한 페이지 데이터 개수"),
+                    fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 개수"),
+                    fieldWithPath("data.empty").description("현재 페이지가 비어있는가")
+                )
+            )
+        )
+    ;
   }
 }
