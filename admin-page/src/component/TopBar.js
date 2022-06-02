@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
+import HomeIcon from '@mui/icons-material/Home';
 
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -23,6 +24,7 @@ import AppleIcon from '@mui/icons-material/Apple';
 import { axiosInstance } from '../axiosInstance';
 import jwt_decode from 'jwt-decode';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function TopBar({ user, setUser, fetch, fetchData }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -179,11 +181,16 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
     </Menu>
   );
 
+  const navigate = useNavigate();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static'>
         <Toolbar>
           <SideBar />
+          <IconButton size='large' edge='start' color='inherit' sx={{ mr: 2 }} onClick={() => navigate('/')}>
+            <HomeIcon />
+          </IconButton>
           <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
             FINPO Admin page
           </Typography>

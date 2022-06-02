@@ -9,6 +9,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import UserCard from './component/UserCard';
 import { axiosInstance } from './axiosInstance';
+import PolicyScreen from './screen/PolicyScreen';
 
 const themeLight = createTheme({
   palette: {
@@ -68,6 +69,7 @@ function App() {
         <Routes>
           <Route path='/' element={<MainScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
           <Route path='/register/*' element={<RegisterPopup />}></Route>
+          <Route path='/policy/*' element={<PolicyScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
         </Routes>
       </div>
     </ThemeProvider>
