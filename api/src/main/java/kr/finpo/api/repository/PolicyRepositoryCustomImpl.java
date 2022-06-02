@@ -7,7 +7,6 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.finpo.api.domain.Policy;
 import kr.finpo.api.domain.QPolicy;
-import kr.finpo.api.domain.QUser;
 import kr.finpo.api.dto.InterestCategoryDto;
 import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.dto.PolicyDto;
@@ -19,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -29,16 +29,16 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @Slf4j
 public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
 
-    private final JPAQueryFactory jpaQueryFactory;
+  private final JPAQueryFactory jpaQueryFactory;
+  private final QPolicy p = QPolicy.policy;
 
-    public PolicyRepositoryCustomImpl(EntityManager em) {
-      jpaQueryFactory = new JPAQueryFactory(em);
-    }
-
+  public PolicyRepositoryCustomImpl(EntityManager em) {
+    jpaQueryFactory = new JPAQueryFactory(em);
+  }
 
   private List<OrderSpecifier> getAllOrderSpecifiers(Pageable pageable) {
 
-    List<OrderSpecifier> ORDERS = new ArrayList<>();
+    List<OrderSpecifier> orders = new ArrayList<>();
 
     if (!isEmpty(pageable.getSort())) {
       for (Sort.Order order : pageable.getSort()) {
@@ -47,63 +47,102 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
         switch (order.getProperty()) {
           case "title":
             orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "title");
-            ORDERS.add(orderSpecifier);
+            orders.add(orderSpecifier);
             break;
           case "endDate":
             orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "endDate");
-            ORDERS.add(orderSpecifier);
+            orders.add(orderSpecifier);
             break;
           case "startDate":
             orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "startDate");
-            ORDERS.add(orderSpecifier);
+            orders.add(orderSpecifier);
             break;
           case "modifiedAt":
             orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "modifiedAt");
-            ORDERS.add(orderSpecifier);
+            orders.add(orderSpecifier);
             break;
           case "institution":
             orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "institution");
-            ORDERS.add(orderSpecifier);
+            orders.add(orderSpecifier);
             break;
           default:
             break;
         }
       }
     }
-    return ORDERS;
+    return orders;
   }
 
 
-    @Override
-    public Page<PolicyDto> querydslFindMy(List<InterestCategoryDto> myCategoryDtos, List<InterestRegionDto> myRegionDtos, Pageable pageable){
+  @Override
+  public Page<PolicyDto> querydslFindMy(List<InterestCategoryDto> myCategoryDtos, List<InterestRegionDto> myRegionDtos, Pageable pageable) {
 
-      QPolicy p = QPolicy.policy;
-      List<OrderSpecifier> ORDERS = getAllOrderSpecifiers(pageable);
+    List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
 
-      BooleanBuilder categoryBuilder = new BooleanBuilder(),
-          regionBuilder = new BooleanBuilder();
+    BooleanBuilder categoryBuilder = new BooleanBuilder(),
+        regionBuilder = new BooleanBuilder();
 
-      myCategoryDtos.forEach(dto -> {
-        log.debug("관심카테고리 "+ dto.category().getId() + " " + dto.category().getName());
-        categoryBuilder.or(p.category.id.eq(dto.category().getId()));
+    myCategoryDtos.forEach(dto -> {
+      log.debug("관심카테고리 " + dto.category().getId() + " " + dto.category().getName());
+      categoryBuilder.or(p.category.id.eq(dto.category().getId()));
+    });
+    myRegionDtos.forEach(dto -> {
+      log.debug("관심지역 " + dto.region().getId() + " " + dto.region().getName());
+      regionBuilder.or(p.region.id.eq(dto.region().getId()));
+    });
+
+    QueryResults<Policy> results = jpaQueryFactory
+        .selectFrom(QPolicy.policy)
+        .where(categoryBuilder, regionBuilder, p.status.eq(true))
+        .orderBy(orders.stream().toArray(OrderSpecifier[]::new))
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetchResults();
+
+    List<PolicyDto> content = StreamSupport.stream(results.getResults().spliterator(), false).map(PolicyDto::response).toList();
+    ;
+
+    return new PageImpl<>(content, pageable, results.getTotal());
+  }
+
+  @Override
+  public Page<PolicyDto> querydslFindbyTitle(String title, LocalDate startDate, LocalDate endDate, List<Long> categoryIds, List<Long> regionIds, Pageable pageable) {
+
+    System.out.println(title);
+
+    List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
+
+    BooleanBuilder categoryBuilder = new BooleanBuilder(),
+        regionBuilder = new BooleanBuilder(),
+        builder = new BooleanBuilder();
+
+    if (!isEmpty(categoryIds))
+      categoryIds.forEach(id -> {
+        if (!isEmpty(id))
+          categoryBuilder.or(p.category.id.eq(id));
       });
-      myRegionDtos.forEach(dto -> {
-        log.debug("관심지역 "+dto.region().getId() + " " + dto.region().getName());
-        regionBuilder.or(p.region.id.eq(dto.region().getId()));
+    if (!isEmpty(regionIds))
+      regionIds.forEach(id -> {
+        if (!isEmpty(id))
+          regionBuilder.or(p.region.id.eq(id));
       });
 
-      QueryResults<Policy> results = jpaQueryFactory
-          .selectFrom(QPolicy.policy)
-          .where(categoryBuilder, regionBuilder)
-          .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
-          .offset(pageable.getOffset())
-          .limit(pageable.getPageSize())
-          .fetchResults();
+    if (!isEmpty(title)) builder.and(p.title.contains(title));
+    if (!isEmpty(startDate)) builder.and(p.startDate.after(startDate.minusDays(1)));
+    if (!isEmpty(endDate)) builder.and(p.endDate.before(startDate.plusDays(1)));
 
-      List<PolicyDto> content = StreamSupport.stream(results.getResults().spliterator(), false).map(PolicyDto::response).toList();;
+    QueryResults<Policy> results = jpaQueryFactory
+        .selectFrom(QPolicy.policy)
+        .where(categoryBuilder, regionBuilder, builder, p.status.eq(true))
+        .orderBy(orders.stream().toArray(OrderSpecifier[]::new))
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetchResults();
 
-      Long total = results.getTotal();
-      return new PageImpl<>(content, pageable, total);
-    }
+    List<PolicyDto> content = StreamSupport.stream(results.getResults().spliterator(), false).map(PolicyDto::response).toList();
+    ;
+
+    return new PageImpl<>(content, pageable, results.getTotal());
+  }
 
 }
