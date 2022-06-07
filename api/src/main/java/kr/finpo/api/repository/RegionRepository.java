@@ -13,6 +13,7 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
   Optional<Region> findById(Long id);
   Optional<Region> findOneByName(String name);
   List<Region> findByParentId(Long parentId);
+  List<Region> findByParentIdOrderByNameAsc(Long parentId);
   List<Region> findByDepth(Long depth);
 }
 

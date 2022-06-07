@@ -74,7 +74,7 @@ public class RegionService {
 
   public List<Region> getByParentId(Long parentId) {
     try {
-      return regionRepository.findByParentId(parentId);
+      return regionRepository.findByParentIdOrderByNameAsc(parentId);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
