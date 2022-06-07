@@ -2,5 +2,5 @@
 ----
 $ curl 'https://dev.finpo.kr/oauth/login/google' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer ya29.a0ARrdaM8EQIT0qaDmtmLjLU9ecCimKAfTD4S4EuBjXpgwTSqBsBLGJwHWrCmps98x1qmC5gk88-opf0EpLm-z9Q3BzmzaS67NNQQKVdAvVDtb40-sVO0RzsYB7T1oYIixx4BZs8CP2UoJms9PEUe6cwuBFR-Q'
+    -H 'Authorization: Bearer ya29.a0ARrdaM-Nc5AFUkWxsT9UarZ7oKLQesz9DQUhpmi3z6AAsAXCS5Oeby_9FfRye3jwoh3mIJ7ESoAQxCpwi-wp1VYNI65JHy44omchepPMTgcn6L2chHOCm1ocmN4b1KFRNK7B4uMS2TivbbW75yLnisprme3G'
 ----

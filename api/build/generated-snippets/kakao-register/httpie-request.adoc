@@ -3,12 +3,11 @@
 $ http --multipart POST 'https://dev.finpo.kr/oauth/register/kakao' \
     'profileImgFile'@'imagefile.jpeg' \
     'Content-Type:application/x-www-form-urlencoded;charset=UTF-8' \
-    'Authorization:Bearer zxQ0U_scchvK89uI-a8Ys_fjJICaQHeHPV4CilMbCilwngAAAYEeF_58' \
+    'Authorization:Bearer gQV_ItBy5yIUCd-n6XFL6-_c05B0hRdhPkroCIUZCinI2gAAAYE-ijvW' \
     'name=김명승' \
     'nickname=메이슨' \
     'birth=1999-01-01' \
     'gender=MALE' \
-    'email=mskim9967@gmail.com' \
     'regionId=14' \
     'status=대학교 재학 중'
 ----

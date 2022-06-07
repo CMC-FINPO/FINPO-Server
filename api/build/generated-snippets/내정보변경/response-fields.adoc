@@ -33,10 +33,6 @@
 |true
 |갱신된 성별
 [MALE/FEMALE/PRIVATE]
-|`+data.email+`
-|`+String+`
-|true
-|갱신된 이메일 주소
 |`+data.status+`
 |`+String+`
 |true

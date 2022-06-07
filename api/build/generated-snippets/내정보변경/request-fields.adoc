@@ -21,11 +21,6 @@
 |
 |성별
 [MALE/FEMALE/PRIVATE]
-|`+email+`
-|`+String+`
-|false
-|
-|이메일 주소
 |`+regionId+`
 |`+Number+`
 |false

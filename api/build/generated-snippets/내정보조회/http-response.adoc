@@ -12,21 +12,20 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 614
+Content-Length: 577
 
 {
   "success" : true,
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 584,
+    "id" : 653,
     "name" : "김명승",
     "nickname" : "메이슨",
     "birth" : "1999-01-01",
     "gender" : "MALE",
-    "email" : "mskim9967@gmail.com",
     "status" : "대학교 재학 중",
-    "profileImg" : "http://localhost:8080/upload/profile/05a4ef87-7949-45a5-a827-58b6cccb7c00.jpeg",
+    "profileImg" : "http://localhost:8080/upload/profile/7b207195-3d48-43d9-bd12-4dba670535f5.jpeg",
     "oAuthType" : "KAKAO",
     "defaultRegion" : {
       "id" : 14,

@@ -2,5 +2,5 @@
 ----
 $ curl 'https://dev.finpo.kr/oauth/login/kakao' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer zxQ0U_scchvK89uI-a8Ys_fjJICaQHeHPV4CilMbCilwngAAAYEeF_58'
+    -H 'Authorization: Bearer gQV_ItBy5yIUCd-n6XFL6-_c05B0hRdhPkroCIUZCinI2gAAAYE-ijvW'
 ----

@@ -13,9 +13,6 @@
 |true
 |성별
 (MALE, FEMALE, PRIVATE)
-|`+email+`
-|true
-|메일주소
 |`+regionId+`
 |true
 |지역id
