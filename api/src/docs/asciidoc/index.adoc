@@ -27,7 +27,7 @@ Access token이 만료되었을 때 해당 방식으로 토큰을 재발급합�
 
 operation::reissue[snippets='http-request,request-fields,http-response,response-fields']
 
-Refresh token이 발급된지 7일이 넘었다면 재발급이 불가합니다.
+Refresh token이 발급된지 30일이 넘었다면 재발급이 불가합니다.
 
 새로 로그인해주세요.
 
@@ -49,17 +49,17 @@ operation::닉네임중복체크[snippets='http-request,request-parameters,http-
 
 &nbsp;
 
-==== 이메일 중복 체크
-
-가입한 유저의 경우 기존 이메일로 중복체크해도 false 뜨게 예외처리 해놨습니다.
-
-operation::이메일중복체크[snippets='http-request,request-parameters,http-response,response-fields']
-
-&nbsp;
-
-&nbsp;
-
-&nbsp;
+//==== 이메일 중복 체크
+//
+//가입한 유저의 경우 기존 이메일로 중복체크해도 false 뜨게 예외처리 해놨습니다.
+//
+//operation::이메일중복체크[snippets='http-request,request-parameters,http-response,response-fields']
+//
+//&nbsp;
+//
+//&nbsp;
+//
+//&nbsp;
 
 
 === 카카오

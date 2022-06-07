@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +73,7 @@ public class UserService {
     try {
       if (isNicknameDuplicated(dto.nickname()))
         throw new GeneralException(ErrorCode.VALIDATION_ERROR, "nickname duplicated");
-      if (isEmailDuplicated(dto.email()))
+      if (StringUtils.hasText(dto.email()) && isEmailDuplicated(dto.email()))
         throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
 
       User user = dto.updateEntity(userRepository.findById(id).get());

@@ -95,7 +95,7 @@ class UserControllerTest {
                     fieldWithPath("data.nickname").description("닉네임"),
                     fieldWithPath("data.birth").description("생년월일"),
                     fieldWithPath("data.gender").description("성별\n[MALE/FEMALE/PRIVATE]"),
-                    fieldWithPath("data.email").description("이메일 주소"),
+//                    fieldWithPath("data.email").description("이메일 주소"),
                     fieldWithPath("data.status").description("현재 상태"),
                     fieldWithPath("data.profileImg").description("프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
@@ -135,7 +135,7 @@ class UserControllerTest {
                     fieldWithPath("nickname").description("닉네임").optional().type(JsonFieldType.STRING),
                     fieldWithPath("birth").description("생년월일(YYYY-MM-DD)").optional().type(JsonFieldType.STRING),
                     fieldWithPath("gender").description("성별\n[MALE/FEMALE/PRIVATE]").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("email").description("이메일 주소").optional().type(JsonFieldType.STRING),
+//                    fieldWithPath("email").description("이메일 주소").optional().type(JsonFieldType.STRING),
                     fieldWithPath("regionId").description("거주 지역 id").optional().type(JsonFieldType.NUMBER),
                     fieldWithPath("region2").description("세부 거주 지역").optional().type(JsonFieldType.STRING),
                     fieldWithPath("status").description("갱신할 상태").optional().type(JsonFieldType.STRING)
@@ -149,7 +149,7 @@ class UserControllerTest {
                     fieldWithPath("data.nickname").description("갱신된 닉네임"),
                     fieldWithPath("data.birth").description("갱신된 생년월일"),
                     fieldWithPath("data.gender").description("갱신된 성별\n[MALE/FEMALE/PRIVATE]"),
-                    fieldWithPath("data.email").description("갱신된 이메일 주소"),
+//                    fieldWithPath("data.email").description("갱신된 이메일 주소"),
                     fieldWithPath("data.status").description("갱신될 상태"),
                     fieldWithPath("data.profileImg").description("프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
@@ -183,7 +183,7 @@ class UserControllerTest {
                 requestParts(
                     partWithName("profileImgFile").description("갱신할 프로필 이미지 파일")
                 ),
-                responseFields(
+                relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
@@ -192,12 +192,11 @@ class UserControllerTest {
                     fieldWithPath("data.nickname").description("닉네임"),
                     fieldWithPath("data.birth").description("생년월일"),
                     fieldWithPath("data.gender").description("성별\n[MALE/FEMALE/PRIVATE]"),
-                    fieldWithPath("data.email").description("이메일 주소"),
+//                    fieldWithPath("data.email").description("이메일 주소"),
                     fieldWithPath("data.status").description("현재 상태"),
                     fieldWithPath("data.profileImg").description("갱신된 프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
-                    fieldWithPath("data.region1").description("거주 지역"),
-                    fieldWithPath("data.region2").description("세부 거주 지역")
+                    fieldWithPath("data.defaultRegion").description("갱신된 거주 지역")
                 )
             )
         )
@@ -229,7 +228,7 @@ class UserControllerTest {
         );
   }
 
-  @Test
+//  @Test
   void checkEmailDuplicate() throws Exception {
     mockMvc.perform(get("/user/check-duplicate?email=mskim9967@gmail.com").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())

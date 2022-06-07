@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
@@ -201,16 +202,19 @@ public class OAuthService {
         throw new GeneralException(ErrorCode.VALIDATION_ERROR, "nickname duplicated");
       });
 
-      // email duplication check
-      userRepository.findByEmail(dto.email()).ifPresent(e -> {
-        throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
-      });
 
-      // email format check
-      if (!dto.email().matches("^(.+)@(\\S+)$"))
-        throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email format error");
+      if(StringUtils.hasText(dto.email())) {
+        // email duplication check
+        userRepository.findByEmail(dto.email()).ifPresent(e -> {
+          throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
+        });
+
+        // email format check
+        if (!dto.email().matches("^(.+)@(\\S+)$"))
+          throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email format error");
+      }
+
       // region check
-
       String profileImgUrl = dto.profileImg();
       if (dto.profileImgFile() != null)
         profileImgUrl = uploadUrl + s3Uploader.uploadFile("profile", dto.profileImgFile());
@@ -260,6 +264,7 @@ public class OAuthService {
 
       RefreshToken refreshToken = refreshTokenRepository.findOneByUserId(userId)
           .orElseThrow(() -> new GeneralException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+      log.debug("토큰비교: " + refreshToken.getRefreshToken() + " " + tokenDto.getRefreshToken());
       if (!refreshToken.getRefreshToken().equals(tokenDto.getRefreshToken()))
         throw new GeneralException(ErrorCode.INVALID_REFRESH_TOKEN);
 

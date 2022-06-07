@@ -39,7 +39,7 @@ public class User{
   private Gender gender;
 
   @Setter
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String email;
 
   @Setter

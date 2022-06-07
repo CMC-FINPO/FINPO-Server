@@ -55,8 +55,7 @@ class OAuthControllerTest {
   private UserService userService;
 
 
-  private String kakaoToken= "FMVgGeczt03YLEA9V_c4xzJi04nIemms1faaVUflCj102gAAAYEijNty";
-  private final String googleToken ="ya29.a0ARrdaM-YvNiW46DJILb48qSqt7jlurzjUrHNhtA2II-qLGecZTvqXO5yv3SQ2KwuUuXjzTonKXD71RJ-8-KPUuef-lbt0_Lr20SoyAeVetBUFsACwAX7eLSlAGaEsZZBAuUg-IUkFlMI-FFeZWZj0awBGo3K";
+
 
   @BeforeEach
   void setUp() throws Exception {
@@ -86,7 +85,7 @@ class OAuthControllerTest {
                 requestHeaders(
                     headerWithName("Authorization").description("Kakao Access Token")
                 ),
-                responseFields(
+                relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("로그인 성공 여부\n회원가입 하지 않았다면 [need register]"),
@@ -94,7 +93,7 @@ class OAuthControllerTest {
                     , fieldWithPath("data.nickname").description("닉네임").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.birth").description("생년월일(YYYY-MM-DD)").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.gender").description("성별\n(MALE, FEMALE, PRIVATE)").optional().type(JsonFieldType.STRING)
-                    , fieldWithPath("data.email").description("메일주소").optional().type(JsonFieldType.STRING)
+//                    , fieldWithPath("data.email").description("메일주소").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.status").description("현재 상태").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.oAuthType").description("소셜 로그인 타입\nKAKAO/GOOGLE/APPLE").optional().type(JsonFieldType.STRING)
                 )
@@ -157,7 +156,7 @@ class OAuthControllerTest {
                 requestHeaders(
                     headerWithName("Authorization").description("Google Access Token")
                 ),
-                responseFields(
+                relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("로그인 성공 여부\n회원가입 하지 않았다면 [need register]"),
@@ -165,7 +164,7 @@ class OAuthControllerTest {
                     , fieldWithPath("data.nickname").description("닉네임").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.birth").description("생년월일(YYYY-MM-DD)").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.gender").description("성별\n(MALE, FEMALE, PRIVATE)").optional().type(JsonFieldType.STRING)
-                    , fieldWithPath("data.email").description("메일주소").optional().type(JsonFieldType.STRING)
+//                    , fieldWithPath("data.email").description("메일주소").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.profileImg").description("프로필 이미지 url").optional().type(JsonFieldType.STRING)
                     , fieldWithPath("data.oAuthType").description("소셜 로그인 타입\nKAKAO/GOOGLE/APPLE").optional().type(JsonFieldType.STRING)
                 )
@@ -176,7 +175,7 @@ class OAuthControllerTest {
 
   @Test
   void loginWithGoogleTokenSuccess() throws Exception {
-    registerByGoogleTest();
+//    registerByGoogleTest();
 
     mockMvc.perform(get("/oauth/login/google")
             .contentType(MediaType.APPLICATION_JSON)
@@ -219,7 +218,7 @@ class OAuthControllerTest {
             .param("nickname", "메이슨")
             .param("birth", "1999-01-01")
             .param("gender", Gender.MALE.toString())
-            .param("email", "mskim9967@gmail.com")
+//            .param("email", "mskim9967@gmail.com")
             .param("regionId", "14")
             .param("status", "대학교 재학 중")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -243,7 +242,7 @@ class OAuthControllerTest {
                     , parameterWithName("nickname").description("닉네임")
                     , parameterWithName("birth").description("생년월일(YYYY-MM-DD)")
                     , parameterWithName("gender").description("성별\n(MALE, FEMALE, PRIVATE)")
-                    , parameterWithName("email").description("메일주소")
+//                    , parameterWithName("email").description("메일주소")
                     , parameterWithName("regionId").description("지역id")
                     , parameterWithName("status").description("현재 상태")
                     , parameterWithName("profileImg").description("프로필 이미지 url").optional()
@@ -275,7 +274,7 @@ class OAuthControllerTest {
             .param("nickname", "mason")
             .param("birth", "1999-01-01")
             .param("gender", Gender.MALE.toString())
-            .param("email", "mskim9967@naver.com")
+//            .param("email", "mskim9967@naver.com")
             .param("regionId", "8")
             .param("status", "대학교 재학 중")
             .param("profileImg", "https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100")
@@ -301,7 +300,7 @@ class OAuthControllerTest {
                     , parameterWithName("nickname").description("닉네임")
                     , parameterWithName("birth").description("생년월일(YYYY-MM-DD)")
                     , parameterWithName("gender").description("성별\n(MALE, FEMALE, PRIVATE)")
-                    , parameterWithName("email").description("메일주소")
+//                    , parameterWithName("email").description("메일주소")
                     , parameterWithName("regionId").description("지역id")
                     , parameterWithName("status").description("현재 상태")
                     , parameterWithName("profileImg").description("프로필 이미지 url").optional()
@@ -331,7 +330,7 @@ class OAuthControllerTest {
 
     HashMap<String, String> map = registerAndGetToken(mockMvc);
     String accessToken = map.get("accessToken"), refreshToken = map.get("refreshToken");
-
+    System.out.println(refreshToken);
 
     HashMap<String, Object> body = new HashMap<>();
     ObjectMapper objectMapper = new ObjectMapper();
@@ -377,7 +376,7 @@ class OAuthControllerTest {
             .param("nickname", "메이슨")
             .param("birth", "1999-01-01")
             .param("gender", Gender.MALE.toString())
-            .param("email", "ksksksk@gmail.com")
+//            .param("email", "ksksksk@gmail.com")
             .param("regionId", "14")
             .param("status", "대학교 재학 중")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
