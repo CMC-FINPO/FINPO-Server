@@ -29,6 +29,11 @@ public class CategoryController {
     return DataResponse.of(categoryService.getByDepth(depth));
   }
 
+  @GetMapping(path = "/name/child-format")
+  public DataResponse<Object> getAllByChildFormat() {
+    return DataResponse.of(categoryService.getAllByChildFormat());
+  }
+
   @GetMapping("/me")
   public DataResponse<Object> getMy() {
     return DataResponse.of(categoryService.getMyInterests());

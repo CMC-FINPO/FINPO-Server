@@ -4,7 +4,9 @@ import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.Category;
 import kr.finpo.api.domain.InterestCategory;
 import kr.finpo.api.domain.User;
+import kr.finpo.api.dto.CategoryDto;
 import kr.finpo.api.dto.InterestCategoryDto;
+import kr.finpo.api.dto.UserDto;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.CategoryRepository;
 import kr.finpo.api.repository.InterestCategoryRepository;
@@ -33,12 +35,13 @@ public class CategoryService {
 
   public void initialize() {
     List<String> firsts = Arrays.asList("일자리", "생활안정", "교육문화", "참여공간");
+    List<String> firstImgs = Arrays.asList("work", "live", "edu", "space");
     List<String> seconds = Arrays.asList("진로", "취업", "창업", "생활지원", "건강", "교육", "문화/예술", "사회참여", "공간", "대외활동");
     List<Integer> parents = Arrays.asList(1, 1, 1, 2, 2, 3, 3, 4, 4, 4);
 
     Long id = 0L;
     for (int i = 0; i < firsts.size(); i++)
-      categoryRepository.save(Category.of(++id, firsts.get(i), 1L));
+      categoryRepository.save(Category.of(++id, firsts.get(i), 1L, "https://dev.finpo.kr/upload/" + firstImgs.get(i) + ".png"));
 
     for (int i = 0; i < seconds.size(); i++) {
       Category category = Category.of(++id, seconds.get(i), 2L);
@@ -47,25 +50,36 @@ public class CategoryService {
     }
   }
 
-  public List<Category> getByParentId(Long parentId) {
+  public List<CategoryDto> getByParentId(Long parentId) {
     try {
-      return categoryRepository.findByParentId(parentId);
+      return StreamSupport.stream(categoryRepository.findByParentId(parentId).spliterator(), false).map(CategoryDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
-  public List<Category> getByDepth(Long depth) {
+  public List<CategoryDto> getAllByChildFormat() {
     try {
-      return categoryRepository.findByDepth(depth);
+      return StreamSupport.stream(categoryRepository.findByDepth(1L).spliterator(), false).map(e ->
+          CategoryDto.childsResponse(e, StreamSupport.stream(categoryRepository.findByParentId(e.getId()).spliterator(), false).map(ee -> CategoryDto.childsResponse(ee, null)).toList())
+      ).toList();
+
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
-  public Optional<Category> getById(Long id) {
+  public List<CategoryDto> getByDepth(Long depth) {
     try {
-      return categoryRepository.findById(id);
+      return StreamSupport.stream(categoryRepository.findByDepth(depth).spliterator(), false).map(CategoryDto::response).toList();
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public Optional<CategoryDto> getById(Long id) {
+    try {
+      return categoryRepository.findById(id).map(CategoryDto::response);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.BAD_REQUEST, "id not valid");
     }
@@ -113,9 +127,9 @@ public class CategoryService {
     }
   }
 
-    public Boolean deleteByParams(List<Long> ids) {
+  public Boolean deleteByParams(List<Long> ids) {
     try {
-      ids.stream().forEach(id->{
+      ids.stream().forEach(id -> {
         delete(id);
       });
       return true;

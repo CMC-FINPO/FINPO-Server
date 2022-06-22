@@ -26,13 +26,22 @@ public class Category {
   @Column(nullable = false)
   private Long depth;
 
+  @Setter
+  @Column(nullable = true)
+  private String img;
+
   protected Category() {
   }
 
   public Category(Long id, String name, Long depth) {
+    this(id, name, depth, null);
+  }
+
+  public Category(Long id, String name, Long depth, String img) {
     this.id = id;
     this.name = name;
     this.depth = depth;
+    this.img = img;
   }
 
   public static Category of() {
@@ -43,8 +52,12 @@ public class Category {
     return new Category(id, name, depth);
   }
 
+  public static Category of(Long id, String name, Long depth, String img) {
+    return new Category(id, name, depth, img);
+  }
+
   @Setter
-  @OneToOne
   @JoinColumn(name = "parent_id")
+  @ManyToOne(optional = true)
   private Category parent;
 }
