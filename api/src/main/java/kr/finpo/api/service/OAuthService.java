@@ -113,12 +113,20 @@ public class OAuthService {
       headers.set("Authorization", accessToken);
       headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+      ResponseEntity<String> res = new RestTemplate().exchange(
+          "https://kapi.kakao.com/v2/user/me",
+          HttpMethod.POST,
+          new HttpEntity<>(null, headers),
+          String.class
+      );
+
       ResponseEntity<KakaoAccountDto> response = new RestTemplate().exchange(
           "https://kapi.kakao.com/v2/user/me",
           HttpMethod.POST,
           new HttpEntity<>(null, headers),
           KakaoAccountDto.class
       );
+
 
       return response.getBody();
     } catch (Exception e) {

@@ -14,23 +14,33 @@ public record KakaoAccountDto(
       String email,
       String gender
   ) {
-    record Profile(String nickname) {
+    record Profile(String nickname, String profile_image_url) {
     }
   }
 
   public UserDto toUserDto() {
+    String nickname = null, profileUrl = null;
+    try {
+      nickname = kakao_account.profile.nickname;
+    } catch (NullPointerException ignored) {
+    }
+    try {
+      profileUrl = kakao_account.profile.profile_image_url;
+    } catch (NullPointerException ignored) {
+    }
+
     return new UserDto(null,
         null,
-        kakao_account.profile == null ? null : kakao_account.profile.nickname,
+        nickname,
         null,
         "male".equals(kakao_account.gender) ? Gender.MALE : "female".equals(kakao_account.gender) ? Gender.FEMALE : null,
         kakao_account.email,
         null,
-        null,
+        profileUrl,
         OAuthType.KAKAO,
         null,
         null,
-    null
+        null
     );
   }
 }
