@@ -44,6 +44,11 @@ public class CategoryController {
     return DataResponse.of(categoryService.insertMyInterests(body));
   }
 
+  @PutMapping("/me")
+  public DataResponse<Object> updateMyInterests(@RequestBody List<InterestCategoryDto> body) {
+    return DataResponse.of(categoryService.updateMyInterests(body));
+  }
+
   @DeleteMapping("")
   public DataResponse<Object> deleteByParams(@RequestParam(name="id") List<Long> ids) {
     return DataResponse.of(categoryService.deleteByParams(ids));

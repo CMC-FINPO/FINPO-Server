@@ -1,6 +1,5 @@
 package kr.finpo.api.service;
 
-
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.Category;
 import kr.finpo.api.domain.InterestCategory;
@@ -80,6 +79,16 @@ public class CategoryService {
     }
   }
 
+  public List<InterestCategoryDto> updateMyInterests(List<InterestCategoryDto> dtos) {
+    try {
+      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
+      interestCategoryRepository.deleteByUserId(user.getId());
+      return insertMyInterests(dtos);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
   public List<InterestCategoryDto> insertMyInterests(List<InterestCategoryDto> dtos) {
     try {
       ArrayList<InterestCategoryDto> res = new ArrayList<InterestCategoryDto>();
@@ -118,8 +127,6 @@ public class CategoryService {
   public Boolean delete(Long id) {
     try {
       InterestCategory interestCategory = interestCategoryRepository.findById(id).get();
-      log.debug("삭제카테고리유저: " + interestCategory.getUser().getId());
-      log.debug("현재유저 : " + SecurityUtil.getCurrentUserId());
       if (!interestCategory.getUser().getId().equals(SecurityUtil.getCurrentUserId()))
         throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
 

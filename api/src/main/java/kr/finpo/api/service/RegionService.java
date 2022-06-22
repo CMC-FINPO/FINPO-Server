@@ -99,7 +99,7 @@ public class RegionService {
 
   public List<InterestRegionDto> insertMyInterests(List<InterestRegionDto> dtos) {
     try {
-      ArrayList<InterestRegionDto> res = new ArrayList<InterestRegionDto>();
+      ArrayList<InterestRegionDto> res = new ArrayList<>();
       User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
 
       dtos.stream().forEach(dto -> {
@@ -122,6 +122,16 @@ public class RegionService {
     }
   }
 
+
+  public List<InterestRegionDto> updateMyInterests(List<InterestRegionDto> dtos) {
+    try {
+      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
+      interestRegionRepository.deleteByUserIdAndIsDefault(user.getId(), false);
+      return insertMyInterests(dtos);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
 
   public Boolean delete(Long id) {
     try {

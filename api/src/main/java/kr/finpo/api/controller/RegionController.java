@@ -36,25 +36,29 @@ public class RegionController {
 
 
   @GetMapping("/me")
-  public DataResponse<Object> getMyRegions() {
+  public DataResponse<Object> getMy() {
     return DataResponse.of(regionService.getMyInterests());
   }
 
 
   @GetMapping("/my-default")
-  public DataResponse<Object> getMyDefaultRegion() {
+  public DataResponse<Object> getMyDefault() {
     return DataResponse.of(regionService.getMyDefault());
   }
 
 
   @PostMapping("/me")
-  public DataResponse<Object> insertMyRegions(@RequestBody List<InterestRegionDto> body) {
+  public DataResponse<Object> insertMyInterests(@RequestBody List<InterestRegionDto> body) {
     return DataResponse.of(regionService.insertMyInterests(body));
   }
 
+  @PutMapping("/me")
+  public DataResponse<Object> updateMyInterests(@RequestBody List<InterestRegionDto> body) {
+    return DataResponse.of(regionService.updateMyInterests(body));
+  }
 
   @PutMapping("/my-default")
-  public DataResponse<Object> upsertMyDefaultRegion(@RequestBody InterestRegionDto body) {
+  public DataResponse<Object> updateMyDefault(@RequestBody InterestRegionDto body) {
     return DataResponse.of(regionService.updateMyDefault(body));
   }
 
