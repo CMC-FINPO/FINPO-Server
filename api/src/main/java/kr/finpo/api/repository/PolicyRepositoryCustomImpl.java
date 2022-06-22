@@ -39,11 +39,11 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
   private List<OrderSpecifier> getAllOrderSpecifiers(Pageable pageable) {
 
     List<OrderSpecifier> orders = new ArrayList<>();
+    OrderSpecifier<?> orderSpecifier;
 
     if (!isEmpty(pageable.getSort())) {
       for (Sort.Order order : pageable.getSort()) {
         Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
-        OrderSpecifier<?> orderSpecifier;
         switch (order.getProperty()) {
           case "title":
             orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "title");
@@ -70,6 +70,9 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
         }
       }
     }
+    orderSpecifier = QuerydslUtil.getSortedColumn(Order.ASC, QPolicy.policy, "id");
+    orders.add(orderSpecifier);
+
     return orders;
   }
 
