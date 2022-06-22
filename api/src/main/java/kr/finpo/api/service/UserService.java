@@ -2,9 +2,12 @@ package kr.finpo.api.service;
 
 
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.InterestRegion;
+import kr.finpo.api.domain.KakaoAccount;
 import kr.finpo.api.domain.Region;
 import kr.finpo.api.domain.User;
+import kr.finpo.api.dto.GoogleTokenDto;
 import kr.finpo.api.dto.UserDto;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.*;
@@ -12,9 +15,13 @@ import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +35,7 @@ public class UserService {
 
   private final UserRepository userRepository;
   private final InterestRegionRepository interestRegionRepository;
+  private final InterestCategoryRepository interestCategoryRepository;
   private final RegionRepository regionRepository;
   private final KakaoAccountRepository kakaoAccountRepository;
   private final GoogleAccountRepository googleAccountRepository;
@@ -36,6 +44,9 @@ public class UserService {
 
   @Value("${upload.url}")
   private String uploadUrl;
+
+  @Value("${oauth.kakao.admin-key}")
+  private String kakaoAdminKey;
 
   public List<UserDto> getAll() {
     try {
@@ -118,11 +129,37 @@ public class UserService {
 
   public Boolean delete(Long id) {
     try {
+      User user = userRepository.findById(id).get();
+
       interestRegionRepository.deleteByUserId(id);
-      kakaoAccountRepository.deleteByUserId(id);
-      googleAccountRepository.deleteByUserId(id);
+      interestCategoryRepository.deleteByUserId(id);
+
+      if(user.getOAuthType().equals(OAuthType.KAKAO)) {
+        KakaoAccount kakaoAccount = kakaoAccountRepository.findByUserId(id).get();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "KakaoAK " + kakaoAdminKey);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("target_id_type", "user_id");
+        params.add("target_id", kakaoAccount.getId());
+
+        new RestTemplate().exchange(
+            "https://kapi.kakao.com/v1/user/unlink",
+            HttpMethod.POST,
+            new HttpEntity<>(params, headers),
+            String.class
+        );
+
+        kakaoAccountRepository.deleteByUserId(id);
+      }
+      else if(user.getOAuthType().equals(OAuthType.GOOGLE)) {
+        googleAccountRepository.deleteByUserId(id);
+      }
       refreshTokenRepository.deleteByUserId(id);
       userRepository.deleteById(id);
+
       return true;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
