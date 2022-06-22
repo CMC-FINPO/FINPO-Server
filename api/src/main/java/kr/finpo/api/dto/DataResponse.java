@@ -22,12 +22,21 @@ public class DataResponse<T> extends Response {
     this.data = data;
   }
 
+  private DataResponse(T data, String message, int code) {
+    super(true, code, message);
+    this.data = data;
+  }
+
   public static <T> DataResponse<T> of(T data) {
     return new DataResponse<>(data);
   }
 
   public static <T> DataResponse<T> of(T data, String message) {
     return new DataResponse<>(data, message);
+  }
+
+  public static <T> DataResponse<T> of(T data, String message, int code) {
+    return new DataResponse<>(data, message, code);
   }
 
   public static <T> DataResponse<T> empty() {

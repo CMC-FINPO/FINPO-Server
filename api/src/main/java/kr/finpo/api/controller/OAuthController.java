@@ -89,7 +89,7 @@ public class OAuthController {
 
     Object loginRes = oAuthService.loginWithOAuthToken(kakaoAccessToken, oAuthType);
     if (loginRes.getClass() == UserDto.class) // not registered
-      return DataResponse.of(loginRes, "need register");
+      return DataResponse.of(loginRes, "need register", 210);
     return DataResponse.of(loginRes);
   }
 
