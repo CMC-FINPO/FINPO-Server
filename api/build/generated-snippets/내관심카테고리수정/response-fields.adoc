@@ -1,0 +1,35 @@
+|===
+|필드명|타입|필수여부|설명
+|`+success+`
+|`+Boolean+`
+|true
+|성공 여부
+|`+errorCode+`
+|`+Number+`
+|true
+|응답 코드
+|`+message+`
+|`+String+`
+|true
+|응답 메시지
+|`+data.[].id+`
+|`+Number+`
+|true
+|관심 카테고리 id (카테고리 id와 다름
+|`+data.[].category+`
+|`+Object+`
+|true
+|카테고리 정보
+|`+data.[].category.id+`
+|`+Number+`
+|true
+|카테고리 id
+|`+data.[].category.name+`
+|`+String+`
+|true
+|카테고리 이름
+|`+data.[].category.depth+`
+|`+Number+`
+|true
+|카테고리 깊이
+|===

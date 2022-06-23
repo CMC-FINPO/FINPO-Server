@@ -5,7 +5,7 @@
   "errorCode" : 0,
   "message" : "Ok",
   "data" : [ {
-    "id" : 833,
+    "id" : 1922,
     "region" : {
       "id" : 14,
       "name" : "마포",
@@ -19,7 +19,7 @@
     },
     "isDefault" : true
   }, {
-    "id" : 836,
+    "id" : 1925,
     "region" : {
       "id" : 6,
       "name" : "동대문",
@@ -33,10 +33,10 @@
     },
     "isDefault" : false
   }, {
-    "id" : 837,
+    "id" : 1926,
     "region" : {
-      "id" : 203,
-      "name" : "동구",
+      "id" : 205,
+      "name" : "부산진",
       "depth" : 2,
       "parent" : {
         "id" : 200,
@@ -47,7 +47,21 @@
     },
     "isDefault" : false
   }, {
-    "id" : 838,
+    "id" : 1927,
+    "region" : {
+      "id" : 110,
+      "name" : "고양",
+      "depth" : 2,
+      "parent" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
+    "isDefault" : false
+  }, {
+    "id" : 1928,
     "region" : {
       "id" : 202,
       "name" : "서구",

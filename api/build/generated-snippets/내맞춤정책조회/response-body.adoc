@@ -6,28 +6,30 @@
   "message" : "Ok",
   "data" : {
     "content" : [ {
-      "id" : 962,
-      "title" : "동두천시  6월 25일  자소서 특강",
-      "institution" : "커리어개발전문가협회",
-      "startDate" : "2022-05-18",
-      "endDate" : "2022-06-25",
-      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8741&cntType=O",
+      "id" : 54,
+      "title" : "고양시  면접사진 무료촬영",
+      "institution" : "청취다방",
+      "startDate" : "2022-02-01",
+      "endDate" : "2022-11-30",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8489&cntType=O",
       "openApiType" : "GGDATA",
-      "modifiedAt" : "2022-06-02T10:46:30",
+      "modifiedAt" : "2022-06-23T10:55:15",
       "category" : {
         "id" : 6,
         "name" : "취업",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 1,
           "name" : "일자리",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/work.png",
           "parent" : null
         }
       },
       "region" : {
-        "id" : 102,
-        "name" : "성남",
+        "id" : 110,
+        "name" : "고양",
         "depth" : 2,
         "parent" : {
           "id" : 100,
@@ -37,121 +39,126 @@
         }
       }
     }, {
-      "id" : 1467,
-      "title" : "부산진구 청년플랫폼(청년flex)",
-      "content" : "청년거점공간 제공커뮤니티 활성화",
-      "institution" : "부산 부산진구",
-      "supportScale" : "없음",
-      "support" : "청년 누구에게나 열려 있는 커뮤니티 시설로 무료 대관, 강의 청년 활동 정보 제공 등 서비스 제공",
-      "period" : "상시 운영(오전 11시~ 오후 7시)",
-      "process" : "없음",
-      "announcement" : "없음",
-      "openApiType" : "YOUTHCENTER",
-      "modifiedAt" : "2022-06-02T10:46:41",
-      "category" : {
-        "id" : 11,
-        "name" : "문화/예술",
-        "depth" : 2,
-        "parent" : {
-          "id" : 3,
-          "name" : "교육문화",
-          "depth" : 1,
-          "parent" : null
-        }
-      },
-      "region" : {
-        "id" : 205,
-        "name" : "부산진",
-        "depth" : 2,
-        "parent" : {
-          "id" : 200,
-          "name" : "부산",
-          "depth" : 1,
-          "parent" : null
-        }
-      }
-    }, {
-      "id" : 1374,
-      "title" : "부산진구 청년플랫폼(청년flex)",
-      "content" : "청년거점공간 제공커뮤니티 활성화",
-      "institution" : "마을기업청년진구",
-      "support" : "청년 누구에게나 열려 있는 커뮤니티 시설로 무료 대관, 강의 청년 활동 정보 제공 등 서비스 제공",
-      "period" : "상시 운영(오전 11시~ 오후 7시)",
-      "process" : "별도 신청절차 없음",
-      "announcement" : "없음",
-      "openApiType" : "YOUTHCENTER",
-      "modifiedAt" : "2022-06-02T10:46:39",
-      "category" : {
-        "id" : 11,
-        "name" : "문화/예술",
-        "depth" : 2,
-        "parent" : {
-          "id" : 3,
-          "name" : "교육문화",
-          "depth" : 1,
-          "parent" : null
-        }
-      },
-      "region" : {
-        "id" : 205,
-        "name" : "부산진",
-        "depth" : 2,
-        "parent" : {
-          "id" : 200,
-          "name" : "부산",
-          "depth" : 1,
-          "parent" : null
-        }
-      }
-    }, {
-      "id" : 1293,
-      "title" : "부산진구 청년플랫폼(청년flex)",
-      "content" : "청년거점공간 제공커뮤니티 활성화",
-      "institution" : "마을기업청년진구",
-      "support" : "청년 누구에게나 열려 있는 커뮤니티 시설로 무료 대관, 강의 청년 활동 정보 제공 등 서비스 제공",
-      "period" : "상시 운영(오전 11시~ 오후 7시)",
-      "process" : "별도 신청절차 없음",
-      "openApiType" : "YOUTHCENTER",
-      "modifiedAt" : "2022-06-02T10:46:38",
-      "category" : {
-        "id" : 11,
-        "name" : "문화/예술",
-        "depth" : 2,
-        "parent" : {
-          "id" : 3,
-          "name" : "교육문화",
-          "depth" : 1,
-          "parent" : null
-        }
-      },
-      "region" : {
-        "id" : 205,
-        "name" : "부산진",
-        "depth" : 2,
-        "parent" : {
-          "id" : 200,
-          "name" : "부산",
-          "depth" : 1,
-          "parent" : null
-        }
-      }
-    }, {
-      "id" : 939,
-      "title" : "새일여성인턴 모집",
-      "institution" : "성남여성인력개발센터",
-      "startDate" : "2022-04-11",
+      "id" : 55,
+      "title" : "고양시  면접정장 무료대여",
+      "institution" : "청취다방",
+      "startDate" : "2022-02-07",
       "endDate" : "2022-12-31",
-      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8529&cntType=O",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8488&cntType=O",
       "openApiType" : "GGDATA",
-      "modifiedAt" : "2022-06-02T10:46:30",
+      "modifiedAt" : "2022-06-23T10:55:15",
       "category" : {
         "id" : 6,
         "name" : "취업",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 1,
           "name" : "일자리",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/work.png",
+          "parent" : null
+        }
+      },
+      "region" : {
+        "id" : 110,
+        "name" : "고양",
+        "depth" : 2,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "parent" : null
+        }
+      }
+    }, {
+      "id" : 171,
+      "title" : "고양시  중소기업운전자금 융자 지원",
+      "institution" : "경기도 고양시청",
+      "startDate" : "2022-03-08",
+      "endDate" : "2022-12-31",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8327&cntType=O",
+      "openApiType" : "GGDATA",
+      "modifiedAt" : "2022-06-23T10:55:16",
+      "category" : {
+        "id" : 6,
+        "name" : "취업",
+        "depth" : 2,
+        "img" : null,
+        "parent" : {
+          "id" : 1,
+          "name" : "일자리",
+          "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/work.png",
+          "parent" : null
+        }
+      },
+      "region" : {
+        "id" : 110,
+        "name" : "고양",
+        "depth" : 2,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "parent" : null
+        }
+      }
+    }, {
+      "id" : 419,
+      "title" : "대학생 청소년 활동 기획단",
+      "content" : "청소년 활동 프로그램 운영을 매개로 대학생의 지역사회 참여 활동 활성화를 위한 대학생 청소년 활동 기획단(예비청소년지도사 등)에서 청소년 활동 프로그램 기획 및 진행",
+      "institution" : "탄현청소년문화의집",
+      "supportScale" : "예산 범위 내",
+      "support" : "예비 청소년 지도자 프로그램 기획, 운영 능력 향상 지원",
+      "period" : "2021 2월 중",
+      "process" : "모집기간 내 신청서 접수",
+      "announcement" : "내부회의 결정",
+      "detailUrl" : "탄현청소년문화의집",
+      "openApiType" : "YOUTHCENTER",
+      "modifiedAt" : "2022-06-23T10:55:24",
+      "category" : {
+        "id" : 11,
+        "name" : "문화/예술",
+        "depth" : 2,
+        "img" : null,
+        "parent" : {
+          "id" : 3,
+          "name" : "교육문화",
+          "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/edu.png",
+          "parent" : null
+        }
+      },
+      "region" : {
+        "id" : 110,
+        "name" : "고양",
+        "depth" : 2,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "parent" : null
+        }
+      }
+    }, {
+      "id" : 29,
+      "title" : "동두천시  (상시신청) 1 1 커리어 컨설팅 (비대면)",
+      "institution" : "커리어개발전문가협회",
+      "endDate" : "2022-12-31",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8640&cntType=O",
+      "openApiType" : "GGDATA",
+      "modifiedAt" : "2022-06-23T10:55:14",
+      "category" : {
+        "id" : 6,
+        "name" : "취업",
+        "depth" : 2,
+        "img" : null,
+        "parent" : {
+          "id" : 1,
+          "name" : "일자리",
+          "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/work.png",
           "parent" : null
         }
       },
@@ -174,14 +181,14 @@
         "unsorted" : false
       },
       "offset" : 5,
-      "pageSize" : 5,
       "pageNumber" : 1,
+      "pageSize" : 5,
       "paged" : true,
       "unpaged" : false
     },
     "last" : false,
-    "totalPages" : 7,
-    "totalElements" : 31,
+    "totalPages" : 10,
+    "totalElements" : 48,
     "first" : false,
     "size" : 5,
     "number" : 1,

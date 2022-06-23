@@ -12,7 +12,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 4639
+Content-Length: 5131
 
 {
   "success" : true,
@@ -20,22 +20,24 @@ Content-Length: 4639
   "message" : "Ok",
   "data" : {
     "content" : [ {
-      "id" : 993,
+      "id" : 114,
       "title" : "안산시  2022년도 소상공인 특례보증 지원",
       "institution" : "안산시청",
       "startDate" : "2022-05-20",
       "endDate" : "2022-12-31",
       "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8772&cntType=O",
       "openApiType" : "GGDATA",
-      "modifiedAt" : "2022-06-02T10:46:31",
+      "modifiedAt" : "2022-06-23T10:55:16",
       "category" : {
         "id" : 6,
         "name" : "취업",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 1,
           "name" : "일자리",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/work.png",
           "parent" : null
         }
       },
@@ -51,54 +53,30 @@ Content-Length: 4639
         }
       }
     }, {
-      "id" : 954,
-      "title" : "기업퇴직(예정)자 사회공헌 뉴스타트 18기 교육 참가자 모집",
-      "institution" : "상상우리",
-      "startDate" : "2022-05-20",
-      "endDate" : "2022-06-06",
-      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8755&cntType=O",
+      "id" : 102,
+      "title" : "광명시  청년 면접정장 무료대여 사업",
+      "institution" : "광명시청",
+      "startDate" : "2022-05-25",
+      "endDate" : "2022-12-31",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8798&cntType=O",
       "openApiType" : "GGDATA",
-      "modifiedAt" : "2022-06-02T10:46:30",
+      "modifiedAt" : "2022-06-23T10:55:16",
       "category" : {
         "id" : 6,
         "name" : "취업",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 1,
           "name" : "일자리",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/work.png",
           "parent" : null
         }
       },
       "region" : {
-        "id" : 100,
-        "name" : "경기",
-        "depth" : 1,
-        "parent" : null
-      }
-    }, {
-      "id" : 977,
-      "title" : "파주시  제3회 꿈일터 구인구직 만남의 날 참여업체 모집",
-      "institution" : "파주시 일자리센터",
-      "startDate" : "2022-05-20",
-      "endDate" : "2022-06-07",
-      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8791&cntType=O",
-      "openApiType" : "GGDATA",
-      "modifiedAt" : "2022-06-02T10:46:30",
-      "category" : {
-        "id" : 6,
-        "name" : "취업",
-        "depth" : 2,
-        "parent" : {
-          "id" : 1,
-          "name" : "일자리",
-          "depth" : 1,
-          "parent" : null
-        }
-      },
-      "region" : {
-        "id" : 120,
-        "name" : "파주",
+        "id" : 106,
+        "name" : "광명",
         "depth" : 2,
         "parent" : {
           "id" : 100,
@@ -108,22 +86,57 @@ Content-Length: 4639
         }
       }
     }, {
-      "id" : 979,
-      "title" : "2022년 경기도 나노 중소기업 지원 사업 하반기 참여기업 모집",
-      "institution" : "경기도청",
-      "startDate" : "2022-05-23",
-      "endDate" : "2022-06-15",
-      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8789&cntType=O",
+      "id" : 100,
+      "title" : "수원시  청년 해외취업 희망드림 아카데미 제7기",
+      "institution" : "수원시청",
+      "startDate" : "2022-05-30",
+      "endDate" : "2022-07-08",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8803&cntType=O",
       "openApiType" : "GGDATA",
-      "modifiedAt" : "2022-06-02T10:46:31",
+      "modifiedAt" : "2022-06-23T10:55:16",
       "category" : {
         "id" : 6,
         "name" : "취업",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 1,
           "name" : "일자리",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/work.png",
+          "parent" : null
+        }
+      },
+      "region" : {
+        "id" : 101,
+        "name" : "수원",
+        "depth" : 2,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "parent" : null
+        }
+      }
+    }, {
+      "id" : 61,
+      "title" : "2022년도 중견기업 핵심연구인력 성장지원사업 제2차 지원기업 선정",
+      "institution" : "한국중견기업연합회",
+      "startDate" : "2022-05-30",
+      "endDate" : "2022-06-24",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8947&cntType=O",
+      "openApiType" : "GGDATA",
+      "modifiedAt" : "2022-06-23T10:55:15",
+      "category" : {
+        "id" : 6,
+        "name" : "취업",
+        "depth" : 2,
+        "img" : null,
+        "parent" : {
+          "id" : 1,
+          "name" : "일자리",
+          "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/work.png",
           "parent" : null
         }
       },
@@ -134,28 +147,30 @@ Content-Length: 4639
         "parent" : null
       }
     }, {
-      "id" : 996,
-      "title" : "안산시  2022년 경력단절여성 디딤돌 취업지원사업 참여 동아리 모집",
-      "institution" : "안산여성인력개발센터",
-      "startDate" : "2022-05-23",
-      "endDate" : "2022-06-17",
-      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8768&cntType=O",
+      "id" : 97,
+      "title" : "2022년 경기스타트업플랫폼 연계형 기술창업지원사업  하반기 참가기업 모집공고",
+      "institution" : "경기도경제과학진흥원",
+      "startDate" : "2022-06-01",
+      "endDate" : "2022-06-23",
+      "detailUrl" : "https://www.jobaba.net/sprtPlcy/info/view.do?seq=8814&cntType=O",
       "openApiType" : "GGDATA",
-      "modifiedAt" : "2022-06-02T10:46:31",
+      "modifiedAt" : "2022-06-23T10:55:16",
       "category" : {
         "id" : 6,
         "name" : "취업",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 1,
           "name" : "일자리",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/work.png",
           "parent" : null
         }
       },
       "region" : {
-        "id" : 109,
-        "name" : "안산",
+        "id" : 102,
+        "name" : "성남",
         "depth" : 2,
         "parent" : {
           "id" : 100,
@@ -178,8 +193,8 @@ Content-Length: 4639
       "unpaged" : false
     },
     "last" : false,
-    "totalPages" : 4,
-    "totalElements" : 18,
+    "totalPages" : 5,
+    "totalElements" : 23,
     "first" : true,
     "size" : 5,
     "number" : 0,

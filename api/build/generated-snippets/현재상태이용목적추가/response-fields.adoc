@@ -1,0 +1,52 @@
+|===
+|필드명|타입|필수여부|설명
+|`+success+`
+|`+Boolean+`
+|true
+|성공 여부
+|`+errorCode+`
+|`+Number+`
+|true
+|응답 코드
+|`+message+`
+|`+String+`
+|true
+|응답 메시지
+|`+data.id+`
+|`+Number+`
+|true
+|유저 id
+|`+data.name+`
+|`+String+`
+|true
+|갱신된 이름
+|`+data.nickname+`
+|`+String+`
+|true
+|갱신된 닉네임
+|`+data.birth+`
+|`+String+`
+|true
+|갱신된 생년월일
+|`+data.gender+`
+|`+String+`
+|true
+|갱신된 성별
+[MALE/FEMALE/PRIVATE]
+|`+data.statusId+`
+|`+Number+`
+|true
+|갱신될 유저상태 id
+|`+data.profileImg+`
+|`+String+`
+|true
+|프로필이미지 url
+|`+data.oAuthType+`
+|`+String+`
+|true
+|소셜로그인 타입
+|`+data.defaultRegion+`
+|`+Object+`
+|true
+|갱신된 거주 지역
+|===

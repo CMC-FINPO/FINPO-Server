@@ -20,12 +20,12 @@
 |`+String+`
 |true
 |카테고리 이름
+|`+data.[].img+`
+|`+String+`
+|true
+|카테고리 이미지
 |`+data.[].depth+`
 |`+Number+`
 |true
 |카테고리 깊이
-|`+data.[].parent+`
-|`+Null+`
-|true
-|카테고리 부모
 |===

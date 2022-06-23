@@ -12,6 +12,7 @@
       "id" : 4,
       "name" : "참여공간",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/space.png",
       "parent" : null
     }
   }, {
@@ -22,6 +23,7 @@
       "id" : 4,
       "name" : "참여공간",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/space.png",
       "parent" : null
     }
   }, {
@@ -32,6 +34,7 @@
       "id" : 4,
       "name" : "참여공간",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/space.png",
       "parent" : null
     }
   } ]

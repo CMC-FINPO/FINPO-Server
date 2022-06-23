@@ -1,9 +1,7 @@
 package kr.finpo.api.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
-import kr.finpo.api.constant.Gender;
 import kr.finpo.api.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,17 +15,14 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -47,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "dev.finpo.kr", uriPort = 443)
 @Transactional
 @SpringBootTest
+public
 class UserControllerTest {
 
   @Autowired
@@ -96,7 +92,7 @@ class UserControllerTest {
                     fieldWithPath("data.birth").description("생년월일"),
                     fieldWithPath("data.gender").description("성별\n[MALE/FEMALE/PRIVATE]"),
 //                    fieldWithPath("data.email").description("이메일 주소"),
-                    fieldWithPath("data.status").description("현재 상태"),
+                    fieldWithPath("data.statusId").description("갱신된 유저상태 id"),
                     fieldWithPath("data.profileImg").description("프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
                     fieldWithPath("data.defaultRegion").description("거주 지역")
@@ -138,7 +134,7 @@ class UserControllerTest {
 //                    fieldWithPath("email").description("이메일 주소").optional().type(JsonFieldType.STRING),
                     fieldWithPath("regionId").description("거주 지역 id").optional().type(JsonFieldType.NUMBER),
                     fieldWithPath("region2").description("세부 거주 지역").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("status").description("갱신할 상태").optional().type(JsonFieldType.STRING)
+                    fieldWithPath("statusId").description("갱신할 유저상태 id").optional().type(JsonFieldType.STRING)
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -150,7 +146,7 @@ class UserControllerTest {
                     fieldWithPath("data.birth").description("갱신된 생년월일"),
                     fieldWithPath("data.gender").description("갱신된 성별\n[MALE/FEMALE/PRIVATE]"),
 //                    fieldWithPath("data.email").description("갱신된 이메일 주소"),
-                    fieldWithPath("data.status").description("갱신될 상태"),
+                    fieldWithPath("data.statusId").description("갱신된 유저상태 id"),
                     fieldWithPath("data.profileImg").description("프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
                     fieldWithPath("data.defaultRegion").description("갱신된 거주 지역")
@@ -193,7 +189,7 @@ class UserControllerTest {
                     fieldWithPath("data.birth").description("생년월일"),
                     fieldWithPath("data.gender").description("성별\n[MALE/FEMALE/PRIVATE]"),
 //                    fieldWithPath("data.email").description("이메일 주소"),
-                    fieldWithPath("data.status").description("현재 상태"),
+                    fieldWithPath("data.statusId").description("현재 상태 id"),
                     fieldWithPath("data.profileImg").description("갱신된 프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
                     fieldWithPath("data.defaultRegion").description("갱신된 거주 지역")
@@ -278,6 +274,111 @@ class UserControllerTest {
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data").description("탈퇴 성공 시 true")
+                )
+            )
+        );
+  }
+
+  @Test
+  void getUserStatusName() throws Exception {
+    mockMvc.perform(get("/user/status/name")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data[0].id").value(1))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("유저상태목록조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                responseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.[].id").description("유저상태 id"),
+                    fieldWithPath("data.[].name").description("유저상태")
+                )
+            )
+        );
+  }
+
+  @Test
+  void getUserPurposeName() throws Exception {
+    mockMvc.perform(get("/user/purpose/name")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data[0].id").value(1))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("이용목적목록조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                responseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.[].id").description("유저상태 id"),
+                    fieldWithPath("data.[].name").description("유저상태")
+                )
+            )
+        );
+  }
+
+  @Test
+  void setMyStatusAndPurpose() throws Exception {
+    HashMap<String, Object> body = new HashMap<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    body.put("statusId", "6");
+    body.put("purposeIds", Arrays.asList(1, 4, 5));
+
+    mockMvc.perform(put("/user/me")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(body))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.statusId").value("6"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("현재상태이용목적추가",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestFields(
+                    fieldWithPath("statusId").description("갱신할 유저상태 id").optional(),
+                    fieldWithPath("purposeIds").description("갱신할 유저목적 ids").optional()
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.id").description("유저 id"),
+                    fieldWithPath("data.name").description("갱신된 이름"),
+                    fieldWithPath("data.nickname").description("갱신된 닉네임"),
+                    fieldWithPath("data.birth").description("갱신된 생년월일"),
+                    fieldWithPath("data.gender").description("갱신된 성별\n[MALE/FEMALE/PRIVATE]"),
+//                    fieldWithPath("data.email").description("갱신된 이메일 주소"),
+                    fieldWithPath("data.statusId").description("갱신될 유저상태 id"),
+                    fieldWithPath("data.profileImg").description("프로필이미지 url"),
+                    fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
+                    fieldWithPath("data.defaultRegion").description("갱신된 거주 지역")
                 )
             )
         );

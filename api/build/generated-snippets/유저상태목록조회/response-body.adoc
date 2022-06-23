@@ -1,0 +1,33 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 1,
+    "name" : "재직중"
+  }, {
+    "id" : 2,
+    "name" : "취업 준비중"
+  }, {
+    "id" : 3,
+    "name" : "창업 준비중"
+  }, {
+    "id" : 4,
+    "name" : "구직중"
+  }, {
+    "id" : 5,
+    "name" : "이직 준비중"
+  }, {
+    "id" : 6,
+    "name" : "재학중"
+  }, {
+    "id" : 7,
+    "name" : "창업중"
+  }, {
+    "id" : 8,
+    "name" : "기타"
+  } ]
+}
+----

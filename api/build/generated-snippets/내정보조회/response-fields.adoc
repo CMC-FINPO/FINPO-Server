@@ -33,10 +33,10 @@
 |true
 |성별
 [MALE/FEMALE/PRIVATE]
-|`+data.status+`
-|`+String+`
+|`+data.statusId+`
+|`+Number+`
 |true
-|현재 상태
+|갱신된 유저상태 id
 |`+data.profileImg+`
 |`+String+`
 |true

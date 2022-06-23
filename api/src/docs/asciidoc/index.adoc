@@ -77,7 +77,9 @@ operation::kakao-login-success[snippets='http-response,response-fields']
 
 **실패 시**
 
-각 소셜 아이디로부터 얻어온 데이터를 가능한 return 해드립니다
+각 소셜 아이디로부터 얻어온 데이터를 가능한 return 해드립니다.
+
+HTTP status는 202(Accepted) 입니다.
 
 operation::kakao-login-fail[snippets='http-response,response-fields']
 
@@ -126,7 +128,9 @@ operation::구글로그인성공[snippets='http-response,response-fields']
 
 **실패 시**
 
-각 소셜 아이디로부터 얻어온 데이터를 가능한 return 해드립니다
+각 소셜 아이디로부터 얻어온 데이터를 가능한 return 해드립니다.
+
+HTTP status는 202(Accepted) 입니다.
 
 operation::구글로그인실패[snippets='http-response,response-fields']
 
@@ -158,6 +162,34 @@ operation::kakao-register[snippets='http-response,response-fields']
 
 
 == 회원
+=== 현재 상태 및 이용 목적
+==== 현재 상태 목록 조회
+operation::유저상태목록조회[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 이용 목적 목록 조회
+operation::이용목적목록조회[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 등록
+operation::현재상태이용목적추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 === 내 정보
 ==== 조회
 operation::내정보조회[snippets='http-request,request-headers,http-response,response-fields']
@@ -267,11 +299,15 @@ operation::get-my-regions[snippets='http-request,request-headers,http-response,r
 
 &nbsp;
 
-==== 추가
+==== 수정
+
+기존 관심지역은 삭제되고 요청주신 지역id들이 관심지역으로 등록됩니다.
+
+관심지역(거주지역 X) id들만 보내주세요.
 
 서버에서 중복체크 하지만, 중복이 안오는게 베스트겠죠?
 
-operation::insert-my-interest-region[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+operation::update-my-interest-region[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 &nbsp;
 
@@ -280,14 +316,27 @@ operation::insert-my-interest-region[snippets='http-request,request-headers,requ
 &nbsp;
 
 
-==== 삭제
-operation::관심지역들삭제[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
-
-&nbsp;
-
-&nbsp;
-
-&nbsp;
+//==== 추가
+//
+//서버에서 중복체크 하지만, 중복이 안오는게 베스트겠죠?
+//
+//operation::insert-my-interest-region[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+//
+//&nbsp;
+//
+//&nbsp;
+//
+//&nbsp;
+//
+//
+//==== 삭제
+//operation::관심지역들삭제[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+//
+//&nbsp;
+//
+//&nbsp;
+//
+//&nbsp;
 
 
 
@@ -298,6 +347,15 @@ operation::관심지역들삭제[snippets='http-request,request-headers,request-
 
 == 카테고리
 === 카테고리 조회
+==== child 형식 카테고리
+operation::child형식카테고리조회[snippets='http-request,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 ==== 상위 카테고리
 operation::1차카테고리조회[snippets='http-request,http-response,response-fields']
 
@@ -337,11 +395,13 @@ operation::내관심카테고리[snippets='http-request,request-headers,http-res
 
 &nbsp;
 
-==== 추가
+==== 수정
+
+기존 관심카테고리는 삭제되고 요청주신 카테고리id들이 관심카테고리로 등록됩니다.
 
 서버에서 중복체크 하지만, 중복이 안오는게 베스트겠죠?
 
-operation::내관심카테고리추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+operation::내관심카테고리수정[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 &nbsp;
 
@@ -350,14 +410,27 @@ operation::내관심카테고리추가[snippets='http-request,request-headers,re
 &nbsp;
 
 
-==== 삭제
-operation::내관심카테고리삭제[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
-
-&nbsp;
-
-&nbsp;
-
-&nbsp;
+//==== 추가
+//
+//서버에서 중복체크 하지만, 중복이 안오는게 베스트겠죠?
+//
+//operation::내관심카테고리추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+//
+//&nbsp;
+//
+//&nbsp;
+//
+//&nbsp;
+//
+//
+//==== 삭제
+//operation::내관심카테고리삭제[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+//
+//&nbsp;
+//
+//&nbsp;
+//
+//&nbsp;
 
 
 == 정책

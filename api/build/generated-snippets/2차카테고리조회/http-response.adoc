@@ -12,7 +12,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 1817
+Content-Length: 2358
 
 {
   "success" : true,
@@ -26,6 +26,7 @@ Content-Length: 1817
       "id" : 1,
       "name" : "일자리",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/work.png",
       "parent" : null
     }
   }, {
@@ -36,6 +37,7 @@ Content-Length: 1817
       "id" : 1,
       "name" : "일자리",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/work.png",
       "parent" : null
     }
   }, {
@@ -46,6 +48,7 @@ Content-Length: 1817
       "id" : 1,
       "name" : "일자리",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/work.png",
       "parent" : null
     }
   }, {
@@ -56,6 +59,7 @@ Content-Length: 1817
       "id" : 2,
       "name" : "생활안정",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/live.png",
       "parent" : null
     }
   }, {
@@ -66,6 +70,7 @@ Content-Length: 1817
       "id" : 2,
       "name" : "생활안정",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/live.png",
       "parent" : null
     }
   }, {
@@ -76,6 +81,7 @@ Content-Length: 1817
       "id" : 3,
       "name" : "교육문화",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/edu.png",
       "parent" : null
     }
   }, {
@@ -86,6 +92,7 @@ Content-Length: 1817
       "id" : 3,
       "name" : "교육문화",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/edu.png",
       "parent" : null
     }
   }, {
@@ -96,6 +103,7 @@ Content-Length: 1817
       "id" : 4,
       "name" : "참여공간",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/space.png",
       "parent" : null
     }
   }, {
@@ -106,6 +114,7 @@ Content-Length: 1817
       "id" : 4,
       "name" : "참여공간",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/space.png",
       "parent" : null
     }
   }, {
@@ -116,6 +125,7 @@ Content-Length: 1817
       "id" : 4,
       "name" : "참여공간",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/space.png",
       "parent" : null
     }
   } ]

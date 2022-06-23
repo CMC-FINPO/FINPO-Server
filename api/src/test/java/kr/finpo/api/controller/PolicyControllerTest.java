@@ -1,8 +1,6 @@
 package kr.finpo.api.controller;
 
 import kr.finpo.api.constant.ErrorCode;
-import kr.finpo.api.repository.CategoryRepository;
-import kr.finpo.api.repository.InterestCategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -37,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 @Transactional
 @SpringBootTest
+public
 class PolicyControllerTest {
 
   @Autowired
@@ -51,10 +49,12 @@ class PolicyControllerTest {
     accessToken = map.get("accessToken");
     refreshToken = map.get("refreshToken");
 
-    RegionControllerTest rc = new RegionControllerTest(mockMvc, accessToken);
-    rc.insertRegionTest();
+    RegionControllerTest rc = new RegionControllerTest();
+    rc.set(mockMvc, accessToken);
+    rc.insertMyInterestsTest();
 
-    PolicyCategoryControllerTest cc = new PolicyCategoryControllerTest(mockMvc, accessToken);
+    PolicyCategoryControllerTest cc = new PolicyCategoryControllerTest();
+    cc.set(mockMvc, accessToken);
     cc.insertMyInterestCategories();
   }
 

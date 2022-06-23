@@ -5,14 +5,14 @@
   "errorCode" : 0,
   "message" : "Ok",
   "data" : {
-    "id" : 653,
+    "id" : 1970,
     "name" : "김명승",
     "nickname" : "메이슨",
     "birth" : "1999-01-01",
     "gender" : "MALE",
-    "status" : "대학교 재학 중",
-    "profileImg" : "http://localhost:8080/upload/profile/7b207195-3d48-43d9-bd12-4dba670535f5.jpeg",
-    "oAuthType" : "KAKAO",
+    "statusId" : 5,
+    "profileImg" : "https://dev.finpo.kr/upload/profile/1855b430-856d-4e2f-b8f0-554b66608cff.png",
+    "oAuthType" : "APPLE",
     "defaultRegion" : {
       "id" : 14,
       "name" : "마포",

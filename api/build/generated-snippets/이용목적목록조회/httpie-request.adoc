@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ http GET 'https://dev.finpo.kr/user/purpose/name' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTc2Iiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cHM6Ly9kZXYuZmlucG8ua3IvdXBsb2FkL3Byb2ZpbGUvMTg1NWI0MzAtODU2ZC00ZTJmLWI4ZjAtNTU0YjY2NjA4Y2ZmLnBuZyIsImRlZmF1bHRSZWdpb24iOnsiaWQiOjE0LCJuYW1lIjoi66eI7Y-sIiwiZGVwdGgiOjIsInBhcmVudCI6eyJpZCI6MCwibmFtZSI6IuyEnOyauCIsImRlcHRoIjoxLCJwYXJlbnQiOm51bGx9fSwib0F1dGhUeXBlIjoiQVBQTEUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjU1OTk4MDk5fQ.dfeDBIsksdRAxBl7RzKmP6m04KrzHZ1YDJ0XsMU4NFGm5ZnM1iUqaYhn-_6OivIAAPgN8W1Kb3aPyGhYgeOXMA'
+----

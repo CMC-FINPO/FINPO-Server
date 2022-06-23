@@ -1,0 +1,18 @@
+[source,http,options="nowrap"]
+----
+PUT /policy/category/me HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxODc5Iiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cHM6Ly9kZXYuZmlucG8ua3IvdXBsb2FkL3Byb2ZpbGUvMTg1NWI0MzAtODU2ZC00ZTJmLWI4ZjAtNTU0YjY2NjA4Y2ZmLnBuZyIsImRlZmF1bHRSZWdpb24iOnsiaWQiOjE0LCJuYW1lIjoi66eI7Y-sIiwiZGVwdGgiOjIsInBhcmVudCI6eyJpZCI6MCwibmFtZSI6IuyEnOyauCIsImRlcHRoIjoxLCJwYXJlbnQiOm51bGx9fSwib0F1dGhUeXBlIjoiQVBQTEUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjU1OTk4MDk2fQ.1FrqB1yCvpjNtA-oijKapsNt2bqtJo8r-xO_EAYOr4ljG6CGbVEh9ZUzCbn1Ul0U_6ShaP8fXi52h1gbME1oxg
+Content-Length: 99
+Host: dev.finpo.kr
+
+[ {
+  "categoryId" : 5
+}, {
+  "categoryId" : 6
+}, {
+  "categoryId" : 6
+}, {
+  "categoryId" : 11
+} ]
+----

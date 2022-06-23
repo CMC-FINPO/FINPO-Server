@@ -2,7 +2,7 @@
 ----
 $ curl 'https://dev.finpo.kr/user/me' -i -X PUT \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2NTYiLCJuaWNrbmFtZSI6IuuplOydtOyKqCIsInByb2ZpbGVJbWciOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXBsb2FkL3Byb2ZpbGUvNDI4Nzk1ODMtODgzMy00NmFlLTg1Y2QtYTNkMzAwMWRhZDZhLmpwZWciLCJkZWZhdWx0UmVnaW9uIjp7ImlkIjoxNCwibmFtZSI6IuuniO2PrCIsImRlcHRoIjoyLCJwYXJlbnQiOnsiaWQiOjAsIm5hbWUiOiLshJzsmrgiLCJkZXB0aCI6MSwicGFyZW50IjpudWxsfX0sIm9BdXRoVHlwZSI6IktBS0FPIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY1NDYxNjc1N30._4ZWnSvlfvo9qFKbOxi-04jugvnLvwW9c0vz9JNXcILy-zHapxs11BFiUSeyDJ2kKtYYFHaTYIHUijXqDFI5NQ' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTczIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cHM6Ly9kZXYuZmlucG8ua3IvdXBsb2FkL3Byb2ZpbGUvMTg1NWI0MzAtODU2ZC00ZTJmLWI4ZjAtNTU0YjY2NjA4Y2ZmLnBuZyIsImRlZmF1bHRSZWdpb24iOnsiaWQiOjE0LCJuYW1lIjoi66eI7Y-sIiwiZGVwdGgiOjIsInBhcmVudCI6eyJpZCI6MCwibmFtZSI6IuyEnOyauCIsImRlcHRoIjoxLCJwYXJlbnQiOm51bGx9fSwib0F1dGhUeXBlIjoiQVBQTEUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjU1OTk4MDk5fQ.3OSnjIIDWReElShAmU5J3E-BEYR3r_wgQ15hs50j7LTIW89eCopdYXlGWxwIN8c18_86UGvPnpSa-zL4eVgbPg' \
     -d '{
   "regionId" : 3,
   "nickname" : "mason",

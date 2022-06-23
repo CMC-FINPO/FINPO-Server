@@ -1,0 +1,12 @@
+[source,options="nowrap"]
+----
+[ {
+  "categoryId" : 5
+}, {
+  "categoryId" : 6
+}, {
+  "categoryId" : 6
+}, {
+  "categoryId" : 11
+} ]
+----

@@ -31,9 +31,9 @@
 |false
 |
 |세부 거주 지역
-|`+status+`
+|`+statusId+`
 |`+String+`
 |false
 |
-|갱신할 상태
+|갱신할 유저상태 id
 |===

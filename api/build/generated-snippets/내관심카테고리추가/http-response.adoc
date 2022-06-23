@@ -12,48 +12,54 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 774
+Content-Length: 1001
 
 {
   "success" : true,
   "errorCode" : 0,
   "message" : "Ok",
   "data" : [ {
-    "id" : 2137,
+    "id" : 1916,
     "category" : {
       "id" : 5,
       "name" : "진로",
       "depth" : 2,
+      "img" : null,
       "parent" : {
         "id" : 1,
         "name" : "일자리",
         "depth" : 1,
+        "img" : "https://dev.finpo.kr/upload/work.png",
         "parent" : null
       }
     }
   }, {
-    "id" : 2138,
+    "id" : 1917,
     "category" : {
       "id" : 6,
       "name" : "취업",
       "depth" : 2,
+      "img" : null,
       "parent" : {
         "id" : 1,
         "name" : "일자리",
         "depth" : 1,
+        "img" : "https://dev.finpo.kr/upload/work.png",
         "parent" : null
       }
     }
   }, {
-    "id" : 2139,
+    "id" : 1918,
     "category" : {
       "id" : 11,
       "name" : "문화/예술",
       "depth" : 2,
+      "img" : null,
       "parent" : {
         "id" : 3,
         "name" : "교육문화",
         "depth" : 1,
+        "img" : "https://dev.finpo.kr/upload/edu.png",
         "parent" : null
       }
     }

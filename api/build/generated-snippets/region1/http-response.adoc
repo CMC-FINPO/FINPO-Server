@@ -19,11 +19,6 @@ Content-Length: 323
   "errorCode" : 0,
   "message" : "Ok",
   "data" : [ {
-    "id" : 0,
-    "name" : "서울",
-    "depth" : 1,
-    "parent" : null
-  }, {
     "id" : 100,
     "name" : "경기",
     "depth" : 1,
@@ -31,6 +26,11 @@ Content-Length: 323
   }, {
     "id" : 200,
     "name" : "부산",
+    "depth" : 1,
+    "parent" : null
+  }, {
+    "id" : 0,
+    "name" : "서울",
     "depth" : 1,
     "parent" : null
   } ]

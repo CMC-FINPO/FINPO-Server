@@ -12,7 +12,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 421
+Content-Length: 545
 
 {
   "success" : true,
@@ -22,22 +22,22 @@ Content-Length: 421
     "id" : 1,
     "name" : "일자리",
     "depth" : 1,
-    "parent" : null
+    "img" : "https://dev.finpo.kr/upload/work.png"
   }, {
     "id" : 2,
     "name" : "생활안정",
     "depth" : 1,
-    "parent" : null
+    "img" : "https://dev.finpo.kr/upload/live.png"
   }, {
     "id" : 3,
     "name" : "교육문화",
     "depth" : 1,
-    "parent" : null
+    "img" : "https://dev.finpo.kr/upload/edu.png"
   }, {
     "id" : 4,
     "name" : "참여공간",
     "depth" : 1,
-    "parent" : null
+    "img" : "https://dev.finpo.kr/upload/space.png"
   } ]
 }
 ----

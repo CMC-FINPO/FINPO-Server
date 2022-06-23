@@ -1,0 +1,13 @@
+|===
+|필드명|타입|필수여부|제약조건|설명
+|`+statusId+`
+|`+String+`
+|false
+|
+|갱신할 유저상태 id
+|`+purposeIds+`
+|`+Array+`
+|false
+|
+|갱신할 유저목적 ids
+|===

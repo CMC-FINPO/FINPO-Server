@@ -1,0 +1,12 @@
+[source,options="nowrap"]
+----
+[ {
+  "regionId" : 8
+}, {
+  "regionId" : 8
+}, {
+  "regionId" : 201
+}, {
+  "regionId" : 202
+} ]
+----

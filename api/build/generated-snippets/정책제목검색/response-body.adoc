@@ -6,22 +6,24 @@
   "message" : "Ok",
   "data" : {
     "content" : [ {
-      "id" : 1268,
+      "id" : 335,
       "title" : "노원 청년아지트 운영",
       "content" : "청년들의 다양한 욕구를 반영한 복합활동공간 조성 및 운영",
       "supportScale" : "방역수칙 내 이용객",
       "support" : "복합활동공간 조성 및 운영",
       "period" : "상시",
       "openApiType" : "YOUTHCENTER",
-      "modifiedAt" : "2022-06-02T10:46:37",
+      "modifiedAt" : "2022-06-23T10:55:22",
       "category" : {
         "id" : 11,
         "name" : "문화/예술",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 3,
           "name" : "교육문화",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/edu.png",
           "parent" : null
         }
       },
@@ -37,7 +39,7 @@
         }
       }
     }, {
-      "id" : 1457,
+      "id" : 523,
       "title" : "노원청년 힐링프로그램 운영사업",
       "content" : "후기 청소년(19세~24세) 및 청년에게 잠시 쉬어가는 힐링 프로그램을 운영하여 삶을 설계 할 수 있는 기회를 제공하고자 함",
       "institution" : "미정",
@@ -47,15 +49,17 @@
       "process" : "- 신청 홈페이지에 접속하여 참가신청서 양식 다운\n- 양식 작성 후 이메일 및 방문접수\n- 노원구청 홈페이지에서 신청서 다운 후 이메일 또는 방문접수",
       "announcement" : "0 서류심사 및 면접 후 선정(예정)",
       "openApiType" : "YOUTHCENTER",
-      "modifiedAt" : "2022-06-02T10:46:41",
+      "modifiedAt" : "2022-06-23T10:55:26",
       "category" : {
         "id" : 11,
         "name" : "문화/예술",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 3,
           "name" : "교육문화",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/edu.png",
           "parent" : null
         }
       },
@@ -71,21 +75,23 @@
         }
       }
     }, {
-      "id" : 1267,
+      "id" : 334,
       "title" : "노원청년죽제",
       "content" : "노원 청년이 직접 기획 및 참여하는 청년주도형 축제개최",
       "support" : "청년주도형 축제준비 및 개최",
       "period" : "4월중(예정)",
       "openApiType" : "YOUTHCENTER",
-      "modifiedAt" : "2022-06-02T10:46:37",
+      "modifiedAt" : "2022-06-23T10:55:22",
       "category" : {
         "id" : 11,
         "name" : "문화/예술",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 3,
           "name" : "교육문화",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/edu.png",
           "parent" : null
         }
       },
@@ -101,22 +107,24 @@
         }
       }
     }, {
-      "id" : 1269,
+      "id" : 336,
       "title" : "도봉청년축제",
       "content" : "청년 스스로 축제 주인공이 되어 직접 기획하고 실행하는 청년주도의 축제 개최",
       "supportScale" : "500명",
       "support" : "토크콘서트, 문화공연, 부스운영 지원",
       "period" : "2022.10. 예정",
       "openApiType" : "YOUTHCENTER",
-      "modifiedAt" : "2022-06-02T10:46:37",
+      "modifiedAt" : "2022-06-23T10:55:22",
       "category" : {
         "id" : 11,
         "name" : "문화/예술",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 3,
           "name" : "교육문화",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/edu.png",
           "parent" : null
         }
       },
@@ -132,7 +140,7 @@
         }
       }
     }, {
-      "id" : 1365,
+      "id" : 431,
       "title" : "성남시 청년마음건강 청춘상담소",
       "content" : "일반 청년들의 초기 고민상담에 대하여 함께 이야기하고 해소하는 프로그램 제공",
       "institution" : "성남시청년지원센터",
@@ -142,15 +150,17 @@
       "announcement" : "1. 참가신청 접수: 03.10 ~ 03.24\n\n2. 사전인터뷰 및 선정: 03.25 ~ 03.26\n\n3. 선정자 공고: 03.30(개별 안내)",
       "detailUrl" : "https://www.snspring.or.kr/",
       "openApiType" : "YOUTHCENTER",
-      "modifiedAt" : "2022-06-02T10:46:39",
+      "modifiedAt" : "2022-06-23T10:55:24",
       "category" : {
         "id" : 11,
         "name" : "문화/예술",
         "depth" : 2,
+        "img" : null,
         "parent" : {
           "id" : 3,
           "name" : "교육문화",
           "depth" : 1,
+          "img" : "https://dev.finpo.kr/upload/edu.png",
           "parent" : null
         }
       },

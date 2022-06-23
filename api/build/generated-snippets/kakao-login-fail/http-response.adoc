@@ -1,6 +1,6 @@
 [source,http,options="nowrap"]
 ----
-HTTP/1.1 200 OK
+HTTP/1.1 202 Accepted
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
@@ -12,7 +12,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 179
+Content-Length: 284
 
 {
   "success" : true,
@@ -21,6 +21,7 @@ Content-Length: 179
   "data" : {
     "nickname" : "mskim",
     "email" : "mskim9967@gmail.com",
+    "profileImg" : "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg",
     "oAuthType" : "KAKAO"
   }
 }

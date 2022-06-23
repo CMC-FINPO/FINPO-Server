@@ -2,12 +2,12 @@
 ----
 $ curl 'https://dev.finpo.kr/oauth/register/kakao' -i -X POST \
     -H 'Content-Type: application/x-www-form-urlencoded;charset=UTF-8' \
-    -H 'Authorization: Bearer gQV_ItBy5yIUCd-n6XFL6-_c05B0hRdhPkroCIUZCinI2gAAAYE-ijvW' \
+    -H 'Authorization: Bearer Sxj4FaTy5FcsFypvuwsTLwv7srDurijX4-B-CycgCilvVAAAAYGRHn-W' \
     -F 'profileImgFile=@imagefile.jpeg;type=image/jpeg' \
     -F 'name=김명승' \
     -F 'nickname=메이슨' \
     -F 'birth=1999-01-01' \
     -F 'gender=MALE' \
     -F 'regionId=14' \
-    -F 'status=대학교 재학 중'
+    -F 'categories=[{"categoryId":1},{"categoryId":3}]'
 ----

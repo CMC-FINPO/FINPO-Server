@@ -1,0 +1,36 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 1,
+    "name" : "정보 이용"
+  }, {
+    "id" : 2,
+    "name" : "취업 역량 강화"
+  }, {
+    "id" : 3,
+    "name" : "창업지원"
+  }, {
+    "id" : 4,
+    "name" : "구직 활동"
+  }, {
+    "id" : 5,
+    "name" : "생활 지원"
+  }, {
+    "id" : 6,
+    "name" : "문화/예술 활동"
+  }, {
+    "id" : 7,
+    "name" : "교육 이수"
+  }, {
+    "id" : 8,
+    "name" : "상담 활동"
+  }, {
+    "id" : 9,
+    "name" : "기타"
+  } ]
+}
+----

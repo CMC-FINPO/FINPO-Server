@@ -16,9 +16,9 @@
 |`+regionId+`
 |true
 |지역id
-|`+status+`
+|`+categories+`
 |true
-|현재 상태
+|카테고리 id들
 |`+profileImg+`
 |false
 |프로필 이미지 url

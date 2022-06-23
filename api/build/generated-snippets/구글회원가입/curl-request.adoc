@@ -2,13 +2,13 @@
 ----
 $ curl 'https://dev.finpo.kr/oauth/register/google' -i -X POST \
     -H 'Content-Type: application/x-www-form-urlencoded;charset=UTF-8' \
-    -H 'Authorization: Bearer ya29.a0ARrdaM-Nc5AFUkWxsT9UarZ7oKLQesz9DQUhpmi3z6AAsAXCS5Oeby_9FfRye3jwoh3mIJ7ESoAQxCpwi-wp1VYNI65JHy44omchepPMTgcn6L2chHOCm1ocmN4b1KFRNK7B4uMS2TivbbW75yLnisprme3G' \
+    -H 'Authorization: Bearer ya29.a0ARrdaM_fkJnzk1Fe2OJv7Esqld454mi5mnvsfgcmzQS07QnIEZidWgYVCKDYJlvEcICf7U_4KUzOJHxupyQMSyrzlY7DjxZMTjZOM1LYQ6zZTdjrm1MoY_czQ-Vf1UBy014uqmcVnARPytqLvE7M7WKXx0x-' \
     -F 'profileImgFile=@imagefile.jpeg;type=image/jpeg' \
     -F 'name=김명승' \
     -F 'nickname=mason' \
     -F 'birth=1999-01-01' \
     -F 'gender=MALE' \
     -F 'regionId=8' \
-    -F 'status=대학교 재학 중' \
+    -F 'categories=[{"categoryId":1},{"categoryId":3}]' \
     -F 'profileImg=https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100'
 ----

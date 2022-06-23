@@ -2,7 +2,6 @@ package kr.finpo.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
-import kr.finpo.api.service.OAuthService;
 import kr.finpo.api.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -41,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 @Transactional
 @SpringBootTest
+public
 class RegionControllerTest {
 
   @Autowired
@@ -48,7 +47,7 @@ class RegionControllerTest {
   @Autowired
   private UserService userService;
 
-  public RegionControllerTest(MockMvc mockMvc, String accessToken) {
+  public void set(MockMvc mockMvc, String accessToken) {
     this.mockMvc = mockMvc;
     this.accessToken = accessToken;
   }
@@ -229,12 +228,12 @@ class RegionControllerTest {
   }
 
   @Test
-  void insertRegionTest() throws Exception {
-    insertRegion(102L);
-    insertRegion(3L);
+  void insertMyInterestsTest() throws Exception {
+    insertMyInterests(102L);
+    insertMyInterests(3L);
   }
 
-  void insertRegion(Long regionId) throws Exception {
+  void insertMyInterests(Long regionId) throws Exception {
     ObjectMapper objectMapper = new ObjectMapper();
     HashMap<String, Object> body = new HashMap<>();
     body.put("regionId", regionId);
@@ -242,10 +241,14 @@ class RegionControllerTest {
     HashMap<String, Object> body2 = new HashMap<>();
     body2.put("regionId", 205);
 
+    HashMap<String, Object> body3 = new HashMap<>();
+    body3.put("regionId", 110);
+
     ArrayList<Object> arr = new ArrayList<>() {{
       add(body);
       add(body);
       add(body2);
+      add(body3);
     }};
 
     mockMvc.perform(post("/region/me")
@@ -284,38 +287,78 @@ class RegionControllerTest {
         );
   }
 
-  //  @Test
-  void deleteRegion() throws Exception {
+  @Test
+  void updateMyInterestsTest() throws Exception {
+    updateMyInterests(8L);
+  }
 
-    mockMvc.perform(RestDocumentationRequestBuilders.delete("/region/{id}", 4)
+  void updateMyInterests(Long regionId) throws Exception {
+    ObjectMapper objectMapper = new ObjectMapper();
+    HashMap<String, Object> body = new HashMap<>();
+    body.put("regionId", regionId);
+
+    HashMap<String, Object> body2 = new HashMap<>();
+    body2.put("regionId", 201);
+
+    HashMap<String, Object> body3 = new HashMap<>();
+    body3.put("regionId", 202);
+
+    ArrayList<Object> arr = new ArrayList<>() {{
+      add(body);
+      add(body);
+      add(body2);
+      add(body3);
+    }};
+
+    mockMvc.perform(put("/region/me")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(arr))
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.length()").value(3))
+        .andExpect(jsonPath("$.data[0].isDefault").value(false))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(
-            document("delete-my-interest-region",
+            document("update-my-interest-region",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestHeaders(
                     headerWithName("Authorization").description("Access Token")
                 ),
-                pathParameters(
-                    parameterWithName("id").description("삭제할 지역 id")
+                requestFields(
+                    fieldWithPath("[].regionId").description("추가할 관심지역 id")
                 ),
-                responseFields(
+                relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
-                    fieldWithPath("data").description("삭제 성공 여부")
+                    fieldWithPath("data.[].id").description("관심 지역 id"),
+                    fieldWithPath("data.[].region.id").description("지역 id"),
+                    fieldWithPath("data.[].region.name").description("지역 이름"),
+                    fieldWithPath("data.[].region.depth").description("지역 깊이"),
+                    fieldWithPath("data.[].region.parent").description("부모 지역"),
+                    fieldWithPath("data.[].isDefault").description("거주지역이면 true\n관심지역이면 false")
                 )
             )
         );
+
+    mockMvc.perform(get("/region/me")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(arr))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.length()").value(4))
+        .andExpect(jsonPath("$.data[0].isDefault").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()));
   }
 
-  @Test
+
+//  @Test
   void deleteRegions() throws Exception {
 
     mockMvc.perform(RestDocumentationRequestBuilders.delete("/region?id=4&id=6")
@@ -348,8 +391,8 @@ class RegionControllerTest {
 
   @Test
   void getMyRegions() throws Exception {
-    insertRegion(6L);
-    insertRegion(202L);
+    insertMyInterests(6L);
+    insertMyInterests(202L);
 
     mockMvc.perform(get("/region/me")
             .contentType(MediaType.APPLICATION_JSON)

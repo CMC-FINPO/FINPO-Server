@@ -1,0 +1,50 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 532
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 1,
+    "name" : "정보 이용"
+  }, {
+    "id" : 2,
+    "name" : "취업 역량 강화"
+  }, {
+    "id" : 3,
+    "name" : "창업지원"
+  }, {
+    "id" : 4,
+    "name" : "구직 활동"
+  }, {
+    "id" : 5,
+    "name" : "생활 지원"
+  }, {
+    "id" : 6,
+    "name" : "문화/예술 활동"
+  }, {
+    "id" : 7,
+    "name" : "교육 이수"
+  }, {
+    "id" : 8,
+    "name" : "상담 활동"
+  }, {
+    "id" : 9,
+    "name" : "기타"
+  } ]
+}
+----

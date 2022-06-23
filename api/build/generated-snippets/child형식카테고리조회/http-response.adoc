@@ -1,0 +1,87 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 1331
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 1,
+    "name" : "일자리",
+    "depth" : 1,
+    "img" : "https://dev.finpo.kr/upload/work.png",
+    "childs" : [ {
+      "id" : 5,
+      "name" : "진로",
+      "depth" : 2
+    }, {
+      "id" : 6,
+      "name" : "취업",
+      "depth" : 2
+    }, {
+      "id" : 7,
+      "name" : "창업",
+      "depth" : 2
+    } ]
+  }, {
+    "id" : 2,
+    "name" : "생활안정",
+    "depth" : 1,
+    "img" : "https://dev.finpo.kr/upload/live.png",
+    "childs" : [ {
+      "id" : 8,
+      "name" : "생활지원",
+      "depth" : 2
+    }, {
+      "id" : 9,
+      "name" : "건강",
+      "depth" : 2
+    } ]
+  }, {
+    "id" : 3,
+    "name" : "교육문화",
+    "depth" : 1,
+    "img" : "https://dev.finpo.kr/upload/edu.png",
+    "childs" : [ {
+      "id" : 10,
+      "name" : "교육",
+      "depth" : 2
+    }, {
+      "id" : 11,
+      "name" : "문화/예술",
+      "depth" : 2
+    } ]
+  }, {
+    "id" : 4,
+    "name" : "참여공간",
+    "depth" : 1,
+    "img" : "https://dev.finpo.kr/upload/space.png",
+    "childs" : [ {
+      "id" : 12,
+      "name" : "사회참여",
+      "depth" : 2
+    }, {
+      "id" : 13,
+      "name" : "공간",
+      "depth" : 2
+    }, {
+      "id" : 14,
+      "name" : "대외활동",
+      "depth" : 2
+    } ]
+  } ]
+}
+----

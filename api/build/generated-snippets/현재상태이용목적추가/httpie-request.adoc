@@ -1,0 +1,9 @@
+[source,bash]
+----
+$ echo '{
+  "statusId" : "6",
+  "purposeIds" : [ 1, 4, 5 ]
+}' | http PUT 'https://dev.finpo.kr/user/me' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTU4Iiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cHM6Ly9kZXYuZmlucG8ua3IvdXBsb2FkL3Byb2ZpbGUvMTg1NWI0MzAtODU2ZC00ZTJmLWI4ZjAtNTU0YjY2NjA4Y2ZmLnBuZyIsImRlZmF1bHRSZWdpb24iOnsiaWQiOjE0LCJuYW1lIjoi66eI7Y-sIiwiZGVwdGgiOjIsInBhcmVudCI6eyJpZCI6MCwibmFtZSI6IuyEnOyauCIsImRlcHRoIjoxLCJwYXJlbnQiOm51bGx9fSwib0F1dGhUeXBlIjoiQVBQTEUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjU1OTk4MDk5fQ.0-aCopwhu-4z2ftVNe3fiTJIjS8OpPnsakI0nb5A_eBkPogMbO_F7wF-8Lt3zBIjv29UsByMf9UCOyR3Bd_iUQ'
+----

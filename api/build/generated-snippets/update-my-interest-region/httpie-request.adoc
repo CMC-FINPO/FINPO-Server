@@ -1,0 +1,14 @@
+[source,bash]
+----
+$ echo '[ {
+  "regionId" : 8
+}, {
+  "regionId" : 8
+}, {
+  "regionId" : 201
+}, {
+  "regionId" : 202
+} ]' | http PUT 'https://dev.finpo.kr/region/me' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTMwIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cHM6Ly9kZXYuZmlucG8ua3IvdXBsb2FkL3Byb2ZpbGUvMTg1NWI0MzAtODU2ZC00ZTJmLWI4ZjAtNTU0YjY2NjA4Y2ZmLnBuZyIsImRlZmF1bHRSZWdpb24iOnsiaWQiOjE0LCJuYW1lIjoi66eI7Y-sIiwiZGVwdGgiOjIsInBhcmVudCI6eyJpZCI6MCwibmFtZSI6IuyEnOyauCIsImRlcHRoIjoxLCJwYXJlbnQiOm51bGx9fSwib0F1dGhUeXBlIjoiQVBQTEUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjU1OTk4MDk3fQ.OHpQRqF5JR-flvL6n8gkJ8uGhzp4OLNrbIA65eK7vai11A_f06ZZJM8EoGp7-vWIrfjvZoNZ5v0mw1O4LMEFdw'
+----

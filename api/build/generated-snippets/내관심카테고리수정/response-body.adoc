@@ -1,0 +1,54 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 1884,
+    "category" : {
+      "id" : 5,
+      "name" : "진로",
+      "depth" : 2,
+      "img" : null,
+      "parent" : {
+        "id" : 1,
+        "name" : "일자리",
+        "depth" : 1,
+        "img" : "https://dev.finpo.kr/upload/work.png",
+        "parent" : null
+      }
+    }
+  }, {
+    "id" : 1885,
+    "category" : {
+      "id" : 6,
+      "name" : "취업",
+      "depth" : 2,
+      "img" : null,
+      "parent" : {
+        "id" : 1,
+        "name" : "일자리",
+        "depth" : 1,
+        "img" : "https://dev.finpo.kr/upload/work.png",
+        "parent" : null
+      }
+    }
+  }, {
+    "id" : 1886,
+    "category" : {
+      "id" : 11,
+      "name" : "문화/예술",
+      "depth" : 2,
+      "img" : null,
+      "parent" : {
+        "id" : 3,
+        "name" : "교육문화",
+        "depth" : 1,
+        "img" : "https://dev.finpo.kr/upload/edu.png",
+        "parent" : null
+      }
+    }
+  } ]
+}
+----

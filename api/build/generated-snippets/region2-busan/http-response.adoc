@@ -19,98 +19,8 @@ Content-Length: 2805
   "errorCode" : 0,
   "message" : "Ok",
   "data" : [ {
-    "id" : 201,
-    "name" : "중구",
-    "depth" : 2,
-    "parent" : {
-      "id" : 200,
-      "name" : "부산",
-      "depth" : 1,
-      "parent" : null
-    }
-  }, {
-    "id" : 202,
-    "name" : "서구",
-    "depth" : 2,
-    "parent" : {
-      "id" : 200,
-      "name" : "부산",
-      "depth" : 1,
-      "parent" : null
-    }
-  }, {
-    "id" : 203,
-    "name" : "동구",
-    "depth" : 2,
-    "parent" : {
-      "id" : 200,
-      "name" : "부산",
-      "depth" : 1,
-      "parent" : null
-    }
-  }, {
-    "id" : 204,
-    "name" : "영도",
-    "depth" : 2,
-    "parent" : {
-      "id" : 200,
-      "name" : "부산",
-      "depth" : 1,
-      "parent" : null
-    }
-  }, {
-    "id" : 205,
-    "name" : "부산진",
-    "depth" : 2,
-    "parent" : {
-      "id" : 200,
-      "name" : "부산",
-      "depth" : 1,
-      "parent" : null
-    }
-  }, {
-    "id" : 206,
-    "name" : "동래구",
-    "depth" : 2,
-    "parent" : {
-      "id" : 200,
-      "name" : "부산",
-      "depth" : 1,
-      "parent" : null
-    }
-  }, {
-    "id" : 207,
-    "name" : "남구",
-    "depth" : 2,
-    "parent" : {
-      "id" : 200,
-      "name" : "부산",
-      "depth" : 1,
-      "parent" : null
-    }
-  }, {
-    "id" : 208,
-    "name" : "북구",
-    "depth" : 2,
-    "parent" : {
-      "id" : 200,
-      "name" : "부산",
-      "depth" : 1,
-      "parent" : null
-    }
-  }, {
-    "id" : 209,
-    "name" : "해운대",
-    "depth" : 2,
-    "parent" : {
-      "id" : 200,
-      "name" : "부산",
-      "depth" : 1,
-      "parent" : null
-    }
-  }, {
-    "id" : 210,
-    "name" : "사하",
+    "id" : 212,
+    "name" : "강서",
     "depth" : 2,
     "parent" : {
       "id" : 200,
@@ -129,8 +39,8 @@ Content-Length: 2805
       "parent" : null
     }
   }, {
-    "id" : 212,
-    "name" : "강서",
+    "id" : 216,
+    "name" : "기장",
     "depth" : 2,
     "parent" : {
       "id" : 200,
@@ -139,8 +49,8 @@ Content-Length: 2805
       "parent" : null
     }
   }, {
-    "id" : 213,
-    "name" : "연제",
+    "id" : 207,
+    "name" : "남구",
     "depth" : 2,
     "parent" : {
       "id" : 200,
@@ -149,8 +59,38 @@ Content-Length: 2805
       "parent" : null
     }
   }, {
-    "id" : 214,
-    "name" : "수영",
+    "id" : 203,
+    "name" : "동구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 206,
+    "name" : "동래구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 205,
+    "name" : "부산진",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 208,
+    "name" : "북구",
     "depth" : 2,
     "parent" : {
       "id" : 200,
@@ -169,8 +109,68 @@ Content-Length: 2805
       "parent" : null
     }
   }, {
-    "id" : 216,
-    "name" : "기장",
+    "id" : 210,
+    "name" : "사하",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 202,
+    "name" : "서구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 214,
+    "name" : "수영",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 213,
+    "name" : "연제",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 204,
+    "name" : "영도",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 201,
+    "name" : "중구",
+    "depth" : 2,
+    "parent" : {
+      "id" : 200,
+      "name" : "부산",
+      "depth" : 1,
+      "parent" : null
+    }
+  }, {
+    "id" : 209,
+    "name" : "해운대",
     "depth" : 2,
     "parent" : {
       "id" : 200,

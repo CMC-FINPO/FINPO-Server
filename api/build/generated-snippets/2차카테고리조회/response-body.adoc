@@ -12,6 +12,7 @@
       "id" : 1,
       "name" : "일자리",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/work.png",
       "parent" : null
     }
   }, {
@@ -22,6 +23,7 @@
       "id" : 1,
       "name" : "일자리",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/work.png",
       "parent" : null
     }
   }, {
@@ -32,6 +34,7 @@
       "id" : 1,
       "name" : "일자리",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/work.png",
       "parent" : null
     }
   }, {
@@ -42,6 +45,7 @@
       "id" : 2,
       "name" : "생활안정",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/live.png",
       "parent" : null
     }
   }, {
@@ -52,6 +56,7 @@
       "id" : 2,
       "name" : "생활안정",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/live.png",
       "parent" : null
     }
   }, {
@@ -62,6 +67,7 @@
       "id" : 3,
       "name" : "교육문화",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/edu.png",
       "parent" : null
     }
   }, {
@@ -72,6 +78,7 @@
       "id" : 3,
       "name" : "교육문화",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/edu.png",
       "parent" : null
     }
   }, {
@@ -82,6 +89,7 @@
       "id" : 4,
       "name" : "참여공간",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/space.png",
       "parent" : null
     }
   }, {
@@ -92,6 +100,7 @@
       "id" : 4,
       "name" : "참여공간",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/space.png",
       "parent" : null
     }
   }, {
@@ -102,6 +111,7 @@
       "id" : 4,
       "name" : "참여공간",
       "depth" : 1,
+      "img" : "https://dev.finpo.kr/upload/space.png",
       "parent" : null
     }
   } ]

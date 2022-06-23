@@ -1,0 +1,65 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 831
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 1932,
+    "region" : {
+      "id" : 8,
+      "name" : "성북",
+      "depth" : 2,
+      "parent" : {
+        "id" : 0,
+        "name" : "서울",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
+    "isDefault" : false
+  }, {
+    "id" : 1933,
+    "region" : {
+      "id" : 201,
+      "name" : "중구",
+      "depth" : 2,
+      "parent" : {
+        "id" : 200,
+        "name" : "부산",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
+    "isDefault" : false
+  }, {
+    "id" : 1934,
+    "region" : {
+      "id" : 202,
+      "name" : "서구",
+      "depth" : 2,
+      "parent" : {
+        "id" : 200,
+        "name" : "부산",
+        "depth" : 1,
+        "parent" : null
+      }
+    },
+    "isDefault" : false
+  } ]
+}
+----
