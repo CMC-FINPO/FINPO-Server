@@ -3,11 +3,9 @@ package kr.finpo.api.service;
 
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.OAuthType;
-import kr.finpo.api.domain.InterestRegion;
-import kr.finpo.api.domain.KakaoAccount;
-import kr.finpo.api.domain.Region;
-import kr.finpo.api.domain.User;
+import kr.finpo.api.domain.*;
 import kr.finpo.api.dto.GoogleTokenDto;
+import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.dto.UserDto;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.*;
@@ -24,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -33,7 +32,9 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class UserService {
 
+  private final RegionService regionService;
   private final UserRepository userRepository;
+  private final UserPurposeRepository userPurposeRepository;
   private final InterestRegionRepository interestRegionRepository;
   private final InterestCategoryRepository interestCategoryRepository;
   private final RegionRepository regionRepository;
@@ -89,19 +90,19 @@ public class UserService {
 
       User user = dto.updateEntity(userRepository.findById(id).get());
 
-      if(dto.regionId() != null) {
+      if (dto.regionId() != null)
+        regionService.updateMyDefault(InterestRegionDto.of(dto.regionId(), true));
 
-        InterestRegion defaultRegion = interestRegionRepository.findOneByUserIdAndIsDefault(id, true).get();
+      log.debug("purposeId: : " + dto.purposeIds());
+      if(dto.purposeIds() != null) {
+        userPurposeRepository.deleteByUserId(user.getId());
 
-        Region newRegion = regionRepository.findById(dto.regionId()).orElseThrow(
-            () -> new GeneralException(ErrorCode.BAD_REQUEST, "region id not valid")
-        );
-
-        defaultRegion.updateDefault(newRegion);
-        interestRegionRepository.save(defaultRegion);
-        user.setDefaultRegion(defaultRegion);
+        dto.purposeIds().forEach(purposeId->{
+          UserPurpose userPurpose = UserPurpose.of(purposeId);
+          userPurpose.setUser(user);
+          userPurposeRepository.save(userPurpose);
+        });
       }
-
       return UserDto.response(userRepository.save(user));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
@@ -134,27 +135,30 @@ public class UserService {
       interestRegionRepository.deleteByUserId(id);
       interestCategoryRepository.deleteByUserId(id);
 
-      if(user.getOAuthType().equals(OAuthType.KAKAO)) {
-        KakaoAccount kakaoAccount = kakaoAccountRepository.findByUserId(id).get();
+      if (user.getOAuthType().equals(OAuthType.KAKAO)) {
+        try {
+          KakaoAccount kakaoAccount = kakaoAccountRepository.findByUserId(id).get();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "KakaoAK " + kakaoAdminKey);
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+          HttpHeaders headers = new HttpHeaders();
+          headers.set("Authorization", "KakaoAK " + kakaoAdminKey);
+          headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("target_id_type", "user_id");
-        params.add("target_id", kakaoAccount.getId());
+          MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+          params.add("target_id_type", "user_id");
+          params.add("target_id", kakaoAccount.getId());
 
-        new RestTemplate().exchange(
-            "https://kapi.kakao.com/v1/user/unlink",
-            HttpMethod.POST,
-            new HttpEntity<>(params, headers),
-            String.class
-        );
+          new RestTemplate().exchange(
+              "https://kapi.kakao.com/v1/user/unlink",
+              HttpMethod.POST,
+              new HttpEntity<>(params, headers),
+              String.class
+          );
+        } catch (NoSuchElementException ignored) {
+        }
 
         kakaoAccountRepository.deleteByUserId(id);
       }
-      else if(user.getOAuthType().equals(OAuthType.GOOGLE)) {
+      else if (user.getOAuthType().equals(OAuthType.GOOGLE)) {
         googleAccountRepository.deleteByUserId(id);
       }
       refreshTokenRepository.deleteByUserId(id);

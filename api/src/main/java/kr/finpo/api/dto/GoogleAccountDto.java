@@ -92,6 +92,8 @@ public record GoogleAccountDto(
         OAuthType.GOOGLE,
         null,
         null,
+        null,
+        null,
         null
     );
   }

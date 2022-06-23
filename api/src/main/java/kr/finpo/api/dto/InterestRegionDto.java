@@ -14,6 +14,10 @@ public record InterestRegionDto(
   public InterestRegionDto {
   }
 
+  public static InterestRegionDto of(Long regionId, Boolean isDefault) {
+    return new InterestRegionDto(null, regionId, null, isDefault);
+  }
+
   public static InterestRegionDto response(InterestRegion interestRegion) {
     return new InterestRegionDto(interestRegion.getId(), null, interestRegion.getRegion(), interestRegion.getIsDefault());
   }

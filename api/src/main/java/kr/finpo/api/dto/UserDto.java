@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserDto(
@@ -22,18 +23,20 @@ public record UserDto(
     LocalDate birth,
     Gender gender,
     String email,
-    String status,
+    Long statusId,
     String profileImg,
     OAuthType oAuthType,
     MultipartFile profileImgFile,
     Long regionId,
-    Region defaultRegion
+    Region defaultRegion,
+    String categories,
+    List<Long> purposeIds
 ) {
   public UserDto {
   }
 
   public User toEntity() {
-    return User.of(name, nickname, birth, gender, email, status, profileImg, oAuthType);
+    return User.of(name, nickname, birth, gender, email, statusId, profileImg, oAuthType);
   }
 
   public String toUrlParameter() {
@@ -59,13 +62,13 @@ public record UserDto(
     if (birth != null) user.setBirth(birth);
     if (gender != null) user.setGender(gender);
     if (email != null) user.setEmail(email);
-    if (status != null) user.setStatus(status);
+    if (statusId != null) user.setStatusId(statusId);
     if (profileImg != null) user.setProfileImg(profileImg);
 
     return user;
   }
 
   public static UserDto response(User user) {
-    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatus(), user.getProfileImg(), user.getOAuthType(), null, null, user.getDefaultRegion().getRegion());
+    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatusId(), user.getProfileImg(), user.getOAuthType(), null, null, user.getDefaultRegion().getRegion(), null, null);
   }
 }

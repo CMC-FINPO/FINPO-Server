@@ -44,6 +44,6 @@ public class Region {
 
   @Setter
   @JoinColumn(name = "parent_id")
-  @OneToOne(optional = true)
+  @ManyToOne(optional = true)
   private Region parent;
 }

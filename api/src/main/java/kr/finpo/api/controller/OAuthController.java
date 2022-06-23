@@ -110,6 +110,12 @@ public class OAuthController {
     return DataResponse.of(oAuthService.register(oAuthAccessToken, "google", body));
   }
 
+  @PostMapping("/register/test")
+  public DataResponse<Object> registerTest(
+      @ModelAttribute UserDto body
+  ) {
+    return DataResponse.of(oAuthService.register(null, "test", body));
+  }
 
   @PostMapping("/reissue")
   public DataResponse<Object> reissueTokens(@RequestBody TokenDto tokenDto) {

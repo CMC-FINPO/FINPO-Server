@@ -1,12 +1,17 @@
 package kr.finpo.api.controller;
 
+import kr.finpo.api.constant.UserPurpose;
+import kr.finpo.api.constant.UserStatus;
 import kr.finpo.api.dto.DataResponse;
 import kr.finpo.api.dto.UserDto;
+import kr.finpo.api.dto.UserPurposeDto;
+import kr.finpo.api.dto.UserStatusDto;
 import kr.finpo.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,6 +26,15 @@ public class UserController {
     return DataResponse.of(userService.getAll());
   }
 
+  @GetMapping(path = "/status/name")
+  public DataResponse<Object> getAllStatus() {
+    return DataResponse.of(Stream.of(UserStatus.values()).map(e->UserStatusDto.response(e)).toList());
+  }
+
+  @GetMapping(path = "/purpose/name")
+  public DataResponse<Object> getAllPurpose() {
+    return DataResponse.of(Stream.of(UserPurpose.values()).map(e-> UserPurposeDto.response(e)).toList());
+  }
 
   @GetMapping("/{id}")
   public DataResponse<Object> getById(@PathVariable Long id) {

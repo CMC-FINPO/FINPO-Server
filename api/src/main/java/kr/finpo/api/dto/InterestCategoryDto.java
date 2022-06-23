@@ -14,6 +14,9 @@ public record InterestCategoryDto(
   public InterestCategoryDto {
   }
 
+  public static InterestCategoryDto of(Long id) {
+    return new InterestCategoryDto(null, id, null);
+  }
   public static InterestCategoryDto response(InterestCategory user) {
     return new InterestCategoryDto(user.getId(), null, user.getCategory());
   }

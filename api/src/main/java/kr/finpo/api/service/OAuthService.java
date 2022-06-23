@@ -1,5 +1,7 @@
 package kr.finpo.api.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.*;
@@ -18,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -25,6 +28,7 @@ import java.util.Optional;
 @Service
 public class OAuthService {
 
+  public final CategoryService categoryService;
   private final TokenProvider tokenProvider;
   private final KakaoAccountRepository kakaoAccountRepository;
   private final GoogleAccountRepository googleAccountRepository;
@@ -164,7 +168,8 @@ public class OAuthService {
         KakaoAccountDto kakaoAccount = getKakaoAccount(accessToken);
         user = userRepository.findByKakaoAccountId(kakaoAccount.id());
         if (user.isEmpty()) return kakaoAccount.toUserDto();
-      } else if (oAuthType.equals("google")) {
+      }
+      else if (oAuthType.equals("google")) {
         GoogleAccountDto googleAccount = getGoogleAccount(accessToken).of();
         user = userRepository.findByGoogleAccountId(googleAccount.id());
         if (user.isEmpty()) return googleAccount.toUserDto();
@@ -198,7 +203,8 @@ public class OAuthService {
         kakaoAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
           throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
         });
-      } else if (oAuthType.equals("google")) {
+      }
+      else if (oAuthType.equals("google")) {
         oAuthAccountId = getGoogleAccount(oAuthAccessToken).of().id();
         googleAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
           throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
@@ -211,7 +217,7 @@ public class OAuthService {
       });
 
 
-      if(StringUtils.hasText(dto.email())) {
+      if (StringUtils.hasText(dto.email())) {
         // email duplication check
         userRepository.findByEmail(dto.email()).ifPresent(e -> {
           throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
@@ -234,7 +240,8 @@ public class OAuthService {
       user.setProfileImg(profileImgUrl);
       user.setOAuthType(oAuthType.equals("kakao") ? OAuthType.KAKAO : oAuthType.equals("google") ? OAuthType.GOOGLE : OAuthType.APPLE);
 
-      InterestRegion defaultRegion = InterestRegion.of(null, region,true);
+      // 기본 지역 설정
+      InterestRegion defaultRegion = InterestRegion.of(null, region, true);
       defaultRegion = interestRegionRepository.save(defaultRegion);
       user.setDefaultRegion(defaultRegion);
       user = userRepository.save(user);
@@ -242,10 +249,18 @@ public class OAuthService {
       defaultRegion.setUser(user);
       interestRegionRepository.save(defaultRegion);
 
+      // 관심카테고리 설정
+      if (dto.categories() != null) {
+        List<InterestCategoryDto> categories = new ObjectMapper().readValue(dto.categories(), new TypeReference<>(){});
+        categoryService.insertMyInterests(categories, user);
+      }
+
+
       if (oAuthType.equals("kakao")) {
         KakaoAccount kakaoAccount = kakaoAccountRepository.save(KakaoAccount.of(oAuthAccountId));
         kakaoAccount.setUser(user);
-      } else if (oAuthType.equals("google")) {
+      }
+      else if (oAuthType.equals("google")) {
         GoogleAccount googleAccount = googleAccountRepository.save(GoogleAccount.of(oAuthAccountId));
         googleAccount.setUser(user);
       }

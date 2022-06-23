@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
@@ -104,25 +105,50 @@ public class CategoryService {
   }
 
   public List<InterestCategoryDto> insertMyInterests(List<InterestCategoryDto> dtos) {
+    return insertMyInterests(dtos, null);
+  }
+
+  public List<InterestCategoryDto> insertMyInterests(List<InterestCategoryDto> dtos, User user) {
     try {
       ArrayList<InterestCategoryDto> res = new ArrayList<InterestCategoryDto>();
 
-      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
-          () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED));
+      if (user == null)
+        user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
+            () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
+        );
+      User finalUser = user;
 
-      dtos.stream().forEach(dto -> {
+      List<InterestCategoryDto> cowDtos = new CopyOnWriteArrayList<>() {{
+        addAll(dtos);
+      }};
+
+      log.debug("cowDtos: " + cowDtos);
+
+      cowDtos.forEach(dto -> {
+        // 부모 카테고리 지정 시 자식 카테고리 전부 추가
+        if (categoryRepository.findById(dto.categoryId()).get().getDepth().equals(1L)) {
+          categoryRepository.findByParentId(dto.categoryId()).forEach((category -> {
+            cowDtos.add(InterestCategoryDto.of(category.getId()));
+            cowDtos.remove(dto);
+          }));
+        }
+      });
+
+      cowDtos.forEach(dto -> {
+        log.debug("dto: " + dto.toString());
         // 관심카테고리 이미 존재 시 넘어감
-        if (interestCategoryRepository.findByUserIdAndCategoryId(SecurityUtil.getCurrentUserId(), dto.categoryId()).isPresent())
+        if (interestCategoryRepository.findByUserIdAndCategoryId(finalUser.getId(), dto.categoryId()).isPresent())
           return;
 
         Category category = categoryRepository.findById(dto.categoryId()).get();
-        InterestCategory interestCategory = InterestCategory.of(user, category);
+        InterestCategory interestCategory = InterestCategory.of(finalUser, category);
         interestCategory = interestCategoryRepository.save(interestCategory);
         res.add(InterestCategoryDto.response(interestCategory));
       });
 
       return res;
     } catch (Exception e) {
+      e.printStackTrace();
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }

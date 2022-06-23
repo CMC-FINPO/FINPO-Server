@@ -26,7 +26,7 @@ public class User{
   private String name;
 
   @Setter
-  @Column(nullable = false, length = 12)
+  @Column(nullable = false, length = 13)
   private String nickname;
 
   @Setter
@@ -44,7 +44,7 @@ public class User{
 
   @Setter
   @Column(nullable = true)
-  private String status;
+  private Long statusId;
 
   @Setter
   @Column(nullable = true)
@@ -71,19 +71,19 @@ public class User{
   protected User() {
   }
 
-  protected User(String name, String nickname, LocalDate birth, Gender gender, String email, String status, String profileImg, OAuthType oAuthType) {
+  protected User(String name, String nickname, LocalDate birth, Gender gender, String email, Long statusId, String profileImg, OAuthType oAuthType) {
     this.name = name;
     this.nickname = nickname;
     this.birth = birth;
     this.gender = gender;
     this.email = email;
-    this.status = status;
+    this.statusId = statusId;
     this.profileImg = profileImg;
     this.oAuthType = oAuthType;
   }
 
-  public static User of(String name, String nickname, LocalDate birth, Gender gender, String email, String status, String profileImg, OAuthType oAuthType) {
-    return new User(name, nickname, birth, gender, email, status, profileImg, oAuthType);
+  public static User of(String name, String nickname, LocalDate birth, Gender gender, String email, Long statusId, String profileImg, OAuthType oAuthType) {
+    return new User(name, nickname, birth, gender, email, statusId, profileImg, oAuthType);
   }
 
 

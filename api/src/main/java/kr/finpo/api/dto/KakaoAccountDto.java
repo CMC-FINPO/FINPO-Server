@@ -40,6 +40,8 @@ public record KakaoAccountDto(
         OAuthType.KAKAO,
         null,
         null,
+        null,
+        null,
         null
     );
   }

@@ -105,6 +105,7 @@ public class RegionService {
       dtos.stream().forEach(dto -> {
         log.debug("삽입할 지역" + " " + dto.regionId());
 
+        // 중복 지역 넘기기
         if (interestRegionRepository.findOneByUserIdAndRegionId(SecurityUtil.getCurrentUserId(), dto.regionId()).isPresent())
           return;
 
@@ -186,9 +187,13 @@ public class RegionService {
       Region newRegion = regionRepository.findById(dto.regionId()).orElseThrow(
           () -> new GeneralException(ErrorCode.BAD_REQUEST, "region id not valid")
       );
-      InterestRegion region = interestRegionRepository.findOneByUserIdAndIsDefault(SecurityUtil.getCurrentUserId(), true).get();
-      region.updateDefault(newRegion);
-      return InterestRegionDto.response(interestRegionRepository.save(region));
+
+      InterestRegion defaultRegion = interestRegionRepository.findOneByUserIdAndIsDefault(SecurityUtil.getCurrentUserId(), true).get();
+      defaultRegion.updateDefault(newRegion);
+      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
+      user.setDefaultRegion(defaultRegion);
+
+      return InterestRegionDto.response(interestRegionRepository.save(defaultRegion));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
