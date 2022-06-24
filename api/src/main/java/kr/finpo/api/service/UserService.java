@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -162,12 +163,16 @@ public class UserService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         params.add("token", dto.access_token());
 
-        new RestTemplate().exchange(
-            "https://accounts.google.com/o/oauth2/revoke",
-            HttpMethod.POST,
-            new HttpEntity<>(params, headers),
-            String.class
-        );
+        try {
+          new RestTemplate().exchange(
+              "https://accounts.google.com/o/oauth2/revoke",
+              HttpMethod.POST,
+              new HttpEntity<>(params, headers),
+              String.class
+          );
+        }catch(HttpClientErrorException e) {
+          throw new GeneralException(ErrorCode.GOOGLE_ACCESS_TOKEN_ERROR, e);
+        }
         googleAccountRepository.deleteByUserId(id);
       }
       refreshTokenRepository.deleteByUserId(id);
