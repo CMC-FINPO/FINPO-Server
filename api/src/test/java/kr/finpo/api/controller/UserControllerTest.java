@@ -224,7 +224,7 @@ class UserControllerTest {
         );
   }
 
-//  @Test
+  //  @Test
   void checkEmailDuplicate() throws Exception {
     mockMvc.perform(get("/user/check-duplicate?email=mskim9967@gmail.com").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -253,9 +253,15 @@ class UserControllerTest {
   void deleteMe() throws Exception {
     getMyInfo();
 
+    HashMap<String, Object> body = new HashMap<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    body.put("access_token", "eydwefaw32....");
+
+
     mockMvc.perform(delete("/user/me").
             contentType(MediaType.APPLICATION_JSON).
             header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(body))
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -268,6 +274,9 @@ class UserControllerTest {
                 preprocessResponse(prettyPrint()),
                 requestHeaders(
                     headerWithName("Authorization").description("Access Token")
+                ),
+                requestFields(
+                    fieldWithPath("access_token").description("구글 access token").optional().type(JsonFieldType.STRING)
                 ),
                 responseFields(
                     fieldWithPath("success").description("성공 여부"),

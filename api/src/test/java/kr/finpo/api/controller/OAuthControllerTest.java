@@ -54,7 +54,8 @@ class OAuthControllerTest {
   @Autowired
   private UserService userService;
 
-
+  String kakaoToken = "Sxj4FaTy5FcsFypvuwsTLwv7srDurijX4-B-CycgCilvVAAAAYGRHn-W";
+  String googleToken = "ya29.a0ARrdaM_fkJnzk1Fe2OJv7Esqld454mi5mnvsfgcmzQS07QnIEZidWgYVCKDYJlvEcICf7U_4KUzOJHxupyQMSyrzlY7DjxZMTjZOM1LYQ6zZTdjrm1MoY_czQ-Vf1UBy014uqmcVnARPytqLvE7M7WKXx0x-";
 
 
   @BeforeEach

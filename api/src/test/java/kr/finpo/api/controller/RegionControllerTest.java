@@ -73,7 +73,7 @@ class RegionControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.data").isArray())
-        .andExpect(jsonPath("$.data.length()").value("3"))
+        .andExpect(jsonPath("$.data.length()").value("16"))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(
