@@ -65,7 +65,7 @@ public class CategoryService {
 
   public List<CategoryDto> getAllByChildFormat() {
     try {
-      return StreamSupport.stream(categoryRepository.findByDepth(1L).spliterator(), false).map(e ->
+      return categoryRepository.findByDepth(1L).stream().map(e ->
           CategoryDto.childsResponse(e, StreamSupport.stream(categoryRepository.findByParentId(e.getId()).spliterator(), false).map(ee -> CategoryDto.childsResponse(ee, null)).toList())
       ).toList();
 
