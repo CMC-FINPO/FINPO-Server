@@ -50,6 +50,10 @@ export default function UserCard({ fetch, fetchData }) {
     });
   }, [fetch]);
 
+  useEffect(() => {
+    console.log(userDetail);
+  }, [userDetail]);
+
   return (
     <>
       <Card sx={{ minWidth: 200, padding: 1 }}>
@@ -116,11 +120,21 @@ export default function UserCard({ fetch, fetchData }) {
                         variant='contained'
                         color='error'
                         onClick={(e) => {
+                          let access_token;
+
                           e.stopPropagation();
                           if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
+                          if (user.oAuthType === 'GOOGLE') {
+                            access_token = prompt('구글 access token 입력');
+                          }
+
                           axiosInstance
-                            .delete(`user/${user.id}`)
+                            .delete(`user/${user.id}`, {
+                              data: {
+                                access_token,
+                              },
+                            })
                             .then(() => {
                               fetchData();
                             })
@@ -157,7 +171,7 @@ export default function UserCard({ fetch, fetchData }) {
           {userDetail &&
             Object.entries(userDetail).map(([key, value]) => (
               <div>
-                {key}:{value}
+                {key}:{value.toString()}
               </div>
             ))}
           <Avatar src={userDetail?.profileImg} />
