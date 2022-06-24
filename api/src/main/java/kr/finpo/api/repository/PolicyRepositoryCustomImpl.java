@@ -97,12 +97,12 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
     QueryResults<Policy> results = jpaQueryFactory
         .selectFrom(QPolicy.policy)
         .where(categoryBuilder, regionBuilder, p.status.eq(true))
-        .orderBy(orders.stream().toArray(OrderSpecifier[]::new))
+        .orderBy(orders.toArray(OrderSpecifier[]::new))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetchResults();
 
-    List<PolicyDto> content = StreamSupport.stream(results.getResults().spliterator(), false).map(PolicyDto::response).toList();
+    List<PolicyDto> content = results.getResults().stream().map(PolicyDto::previewResponse).toList();
     ;
 
     return new PageImpl<>(content, pageable, results.getTotal());
@@ -137,12 +137,12 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
     QueryResults<Policy> results = jpaQueryFactory
         .selectFrom(QPolicy.policy)
         .where(categoryBuilder, regionBuilder, builder, p.status.eq(true))
-        .orderBy(orders.stream().toArray(OrderSpecifier[]::new))
+        .orderBy(orders.toArray(OrderSpecifier[]::new))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetchResults();
 
-    List<PolicyDto> content = StreamSupport.stream(results.getResults().spliterator(), false).map(PolicyDto::response).toList();
+    List<PolicyDto> content = results.getResults().stream().map(PolicyDto::previewResponse).toList();
     ;
 
     return new PageImpl<>(content, pageable, results.getTotal());
