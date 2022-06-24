@@ -2,10 +2,7 @@ package kr.finpo.api.controller;
 
 import kr.finpo.api.constant.UserPurpose;
 import kr.finpo.api.constant.UserStatus;
-import kr.finpo.api.dto.DataResponse;
-import kr.finpo.api.dto.UserDto;
-import kr.finpo.api.dto.UserPurposeDto;
-import kr.finpo.api.dto.UserStatusDto;
+import kr.finpo.api.dto.*;
 import kr.finpo.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -72,13 +69,13 @@ public class UserController {
   }
 
   @DeleteMapping("/me")
-  public DataResponse<Object> deleteMe() {
-    return DataResponse.of(userService.deleteMe());
+  public DataResponse<Object> deleteMe(@RequestBody(required = false) WithdrawDto body) {
+    return DataResponse.of(userService.deleteMe(body));
   }
 
   @DeleteMapping("/{id}")
-  public DataResponse<Object> delete(@PathVariable Long id) {
-    return DataResponse.of(userService.delete(id));
+  public DataResponse<Object> delete(@PathVariable Long id, @RequestBody(required=false) WithdrawDto body) {
+    return DataResponse.of(userService.delete(id, body));
   }
 
 

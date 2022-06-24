@@ -7,6 +7,7 @@ import kr.finpo.api.domain.*;
 import kr.finpo.api.dto.GoogleTokenDto;
 import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.dto.UserDto;
+import kr.finpo.api.dto.WithdrawDto;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.*;
 import kr.finpo.api.util.SecurityUtil;
@@ -94,10 +95,10 @@ public class UserService {
         regionService.updateMyDefault(InterestRegionDto.of(dto.regionId(), true));
 
       log.debug("purposeId: : " + dto.purposeIds());
-      if(dto.purposeIds() != null) {
+      if (dto.purposeIds() != null) {
         userPurposeRepository.deleteByUserId(user.getId());
 
-        dto.purposeIds().forEach(purposeId->{
+        dto.purposeIds().forEach(purposeId -> {
           UserPurpose userPurpose = UserPurpose.of(purposeId);
           userPurpose.setUser(user);
           userPurposeRepository.save(userPurpose);
@@ -124,26 +125,26 @@ public class UserService {
     }
   }
 
-  public Boolean deleteMe() {
-    return delete(SecurityUtil.getCurrentUserId());
+  public Boolean deleteMe(WithdrawDto body) {
+    return delete(SecurityUtil.getCurrentUserId(), body);
   }
 
-  public Boolean delete(Long id) {
+  public Boolean delete(Long id, WithdrawDto dto) {
     try {
       User user = userRepository.findById(id).get();
 
       interestRegionRepository.deleteByUserId(id);
       interestCategoryRepository.deleteByUserId(id);
 
+      HttpHeaders headers = new HttpHeaders();
+      MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
       if (user.getOAuthType().equals(OAuthType.KAKAO)) {
         try {
           KakaoAccount kakaoAccount = kakaoAccountRepository.findByUserId(id).get();
 
-          HttpHeaders headers = new HttpHeaders();
           headers.set("Authorization", "KakaoAK " + kakaoAdminKey);
           headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-          MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
           params.add("target_id_type", "user_id");
           params.add("target_id", kakaoAccount.getId());
 
@@ -155,10 +156,18 @@ public class UserService {
           );
         } catch (NoSuchElementException ignored) {
         }
-
         kakaoAccountRepository.deleteByUserId(id);
       }
       else if (user.getOAuthType().equals(OAuthType.GOOGLE)) {
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        params.add("token", dto.access_token());
+
+        new RestTemplate().exchange(
+            "https://accounts.google.com/o/oauth2/revoke",
+            HttpMethod.POST,
+            new HttpEntity<>(params, headers),
+            String.class
+        );
         googleAccountRepository.deleteByUserId(id);
       }
       refreshTokenRepository.deleteByUserId(id);
