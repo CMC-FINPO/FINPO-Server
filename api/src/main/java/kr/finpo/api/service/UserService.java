@@ -137,10 +137,10 @@ public class UserService {
       interestRegionRepository.deleteByUserId(id);
       interestCategoryRepository.deleteByUserId(id);
 
-      HttpHeaders headers = new HttpHeaders();
-      MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-      if (user.getOAuthType().equals(OAuthType.KAKAO)) {
-        try {
+      try {
+        HttpHeaders headers = new HttpHeaders();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        if (user.getOAuthType().equals(OAuthType.KAKAO)) {
           KakaoAccount kakaoAccount = kakaoAccountRepository.findByUserId(id).get();
 
           headers.set("Authorization", "KakaoAK " + kakaoAdminKey);
@@ -155,29 +155,28 @@ public class UserService {
               new HttpEntity<>(params, headers),
               String.class
           );
-        } catch (NoSuchElementException ignored) {
         }
-        kakaoAccountRepository.deleteByUserId(id);
-      }
-      else if (user.getOAuthType().equals(OAuthType.GOOGLE)) {
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        params.add("token", dto.access_token());
+        else if (user.getOAuthType().equals(OAuthType.GOOGLE)) {
+          headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+          params.add("token", dto.access_token());
 
-        try {
           new RestTemplate().exchange(
               "https://accounts.google.com/o/oauth2/revoke",
               HttpMethod.POST,
               new HttpEntity<>(params, headers),
               String.class
           );
-        }catch(HttpClientErrorException e) {
-          throw new GeneralException(ErrorCode.GOOGLE_ACCESS_TOKEN_ERROR, e);
-        }
-        googleAccountRepository.deleteByUserId(id);
-      }
-      refreshTokenRepository.deleteByUserId(id);
-      userRepository.deleteById(id);
 
+        }
+
+      } catch (HttpClientErrorException | NoSuchElementException e) {
+        return false;
+      } finally {
+        kakaoAccountRepository.deleteByUserId(id);
+        googleAccountRepository.deleteByUserId(id);
+        refreshTokenRepository.deleteByUserId(id);
+        userRepository.deleteById(id);
+      }
       return true;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);

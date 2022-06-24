@@ -5,6 +5,8 @@ import kr.finpo.api.constant.UserStatus;
 import kr.finpo.api.dto.*;
 import kr.finpo.api.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -25,12 +27,12 @@ public class UserController {
 
   @GetMapping(path = "/status/name")
   public DataResponse<Object> getAllStatus() {
-    return DataResponse.of(Stream.of(UserStatus.values()).map(e->UserStatusDto.response(e)).toList());
+    return DataResponse.of(Stream.of(UserStatus.values()).map(UserStatusDto::response).toList());
   }
 
   @GetMapping(path = "/purpose/name")
   public DataResponse<Object> getAllPurpose() {
-    return DataResponse.of(Stream.of(UserPurpose.values()).map(e-> UserPurposeDto.response(e)).toList());
+    return DataResponse.of(Stream.of(UserPurpose.values()).map(UserPurposeDto::response).toList());
   }
 
   @GetMapping("/{id}")
@@ -69,8 +71,9 @@ public class UserController {
   }
 
   @DeleteMapping("/me")
-  public DataResponse<Object> deleteMe(@RequestBody(required = false) WithdrawDto body) {
-    return DataResponse.of(userService.deleteMe(body));
+  public Object deleteMe(@RequestBody(required = false) WithdrawDto body) {
+    if(userService.deleteMe(body)) return DataResponse.of(true);
+    return new ResponseEntity<>(DataResponse.of(true, "OAuth account has already withdrawn"), HttpStatus.ACCEPTED);
   }
 
   @DeleteMapping("/{id}")
