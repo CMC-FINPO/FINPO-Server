@@ -14,8 +14,6 @@ import kr.finpo.api.repository.UserRepository;
 import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,10 +34,23 @@ public class RegionService {
 
   public static final Long REGION2_MAX = 100L;
 
-  public static final Map<String, List<String>> regions2 = new HashMap<>() {{
+  public static final Map<String, List<String>> regions2 = new LinkedHashMap<>() {{
     put("서울", seoul);
     put("경기", gyeonggi);
     put("부산", busan);
+    put("대구", null);
+    put("인천", null);
+    put("광주", null);
+    put("대전", null);
+    put("울산", null);
+    put("충북", null);
+    put("충남", null);
+    put("전북", null);
+    put("전남", null);
+    put("경북", null);
+    put("경남", null);
+    put("제주", null);
+    put("세종", null);
   }};
 
   public static final List<String> regions1 = new ArrayList<>(regions2.keySet());
@@ -50,15 +61,18 @@ public class RegionService {
 
   public void initialize() {
     for (int i = 0; i < regions1.size(); i++) {
-      Region parent = regionRepository.save(Region.of( i * REGION2_MAX, regions1.get(i), 1L));
+      Boolean status = regions2.get(regions1.get(i)) != null;
+      Region parent = regionRepository.save(Region.of( i * REGION2_MAX, regions1.get(i), 1L, status));
+
+      if(!status) continue;
+
       for (int j = 0; j < regions2.get(regions1.get(i)).size(); j++) {
-        Region region = Region.of(i * REGION2_MAX + j + 1, regions2.get(regions1.get(i)).get(j), 2L);
+        Region region = Region.of(i * REGION2_MAX + j + 1, regions2.get(regions1.get(i)).get(j), 2L, true);
         region.setParent(parent);
         regionRepository.save(region);
       }
     }
   }
-
 
   private final InterestRegionRepository interestRegionRepository;
   private final RegionRepository regionRepository;
@@ -134,7 +148,7 @@ public class RegionService {
     }
   }
 
-  public Boolean delete(Long id) {
+  public Boolean deleteMyInterest(Long id) {
     try {
       InterestRegion region = interestRegionRepository.findById(id).get();
 
@@ -151,10 +165,10 @@ public class RegionService {
     }
   }
 
-  public Boolean deleteByParams(List<Long> ids) {
+  public Boolean deleteMyInterestByParams(List<Long> ids) {
     try {
       ids.stream().forEach(id -> {
-        delete(id);
+        deleteMyInterest(id);
       });
       return true;
     } catch (Exception e) {

@@ -25,21 +25,26 @@ public class Region {
   @Column(nullable = false)
   private Long depth;
 
+  @Setter
+  @Column(nullable = false)
+  private Boolean status;
+
   protected Region() {
   }
 
-  public Region(Long id, String name, Long depth) {
+  public Region(Long id, String name, Long depth, Boolean status) {
     this.id = id;
     this.name = name;
     this.depth = depth;
+    this.status = status;
   }
 
   public static Region of() {
     return new Region();
   }
 
-  public static Region of(Long id, String name, Long depth) {
-    return new Region(id, name, depth);
+  public static Region of(Long id, String name, Long depth, Boolean status) {
+    return new Region(id, name, depth, status);
   }
 
   @Setter

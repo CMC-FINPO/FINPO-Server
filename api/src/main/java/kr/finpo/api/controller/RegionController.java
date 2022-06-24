@@ -17,16 +17,14 @@ public class RegionController {
 
   private final RegionService regionService;
 
-
   @GetMapping(path = "/name")
-  public DataResponse<Object> getByParentId(@RequestParam(value = "parentId", required = false) Long parentId) {
-    return DataResponse.of(regionService.getByParentId(parentId));
+  public DataResponse<Object> getByDepth(@RequestParam(value = "depth", required = false) Long depth) {
+    return DataResponse.of(regionService.getByDepth(depth == null ? 1L : depth));
   }
 
-
-  @GetMapping(path = "/name", params = "depth")
-  public DataResponse<Object> getByDepth(@RequestParam(value = "depth", required = false) Long depth) {
-    return DataResponse.of(regionService.getByDepth(depth));
+  @GetMapping(path = "/name", params = "parentId")
+  public DataResponse<Object> getByParentId(@RequestParam(value = "parentId", required = false) Long parentId) {
+    return DataResponse.of(regionService.getByParentId(parentId));
   }
 
   @GetMapping("")
@@ -65,12 +63,12 @@ public class RegionController {
 
   @DeleteMapping("/{id}")
   public DataResponse<Object> delete(@PathVariable Long id) {
-    return DataResponse.of(regionService.delete(id));
+    return DataResponse.of(regionService.deleteMyInterest(id));
   }
 
 
   @DeleteMapping("")
   public DataResponse<Object> deleteByParams(@RequestParam(name="id") List<Long> ids) {
-    return DataResponse.of(regionService.deleteByParams(ids));
+    return DataResponse.of(regionService.deleteMyInterestByParams(ids));
   }
 }
