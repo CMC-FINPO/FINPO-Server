@@ -33,7 +33,7 @@ public class Policy {
 
   @Setter
   @Convert(converter = EmptyStringToNullConverter.class)
-  @Column(nullable = true)
+  @Column(columnDefinition = "LONGTEXT", nullable = true)
   private String content;
 
   @Setter
@@ -43,7 +43,7 @@ public class Policy {
 
   @Setter
   @Convert(converter = EmptyStringToNullConverter.class)
-  @Column(nullable = true)
+  @Column(columnDefinition = "LONGTEXT", nullable = true)
   private String supportScale;
 
   @Setter
@@ -58,7 +58,7 @@ public class Policy {
 
   @Setter
   @Convert(converter = EmptyStringToNullConverter.class)
-  @Column(nullable = true)
+  @Column(columnDefinition = "LONGTEXT", nullable = true)
   private String period;
 
   @Setter
@@ -71,17 +71,17 @@ public class Policy {
 
   @Setter
   @Convert(converter = EmptyStringToNullConverter.class)
-  @Column(nullable = true)
+  @Column(columnDefinition = "LONGTEXT", nullable = true)
   private String process;
 
   @Setter
   @Convert(converter = EmptyStringToNullConverter.class)
-  @Column(nullable = true)
+  @Column(columnDefinition = "LONGTEXT", nullable = true)
   private String announcement;
 
   @Setter
   @Convert(converter = EmptyStringToNullConverter.class)
-  @Column(nullable = true)
+  @Column(columnDefinition = "LONGTEXT", nullable = true)
   private String detailUrl;
 
   @Setter

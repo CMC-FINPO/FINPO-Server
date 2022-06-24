@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -82,9 +83,11 @@ public class GgdataService {
   @Value("${ggdata.url}")
   private String url;
 
-
+  // 10시, 15시, 19시마다 업데이트
+  @Scheduled(cron = "0 0 10,15,19 * * *")
   public void initialize() {
     try {
+      log.debug("batch start");
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -108,26 +111,27 @@ public class GgdataService {
 
         if (dto.JobFndtnSportPolocy() == null) break;
 
-        dto.JobFndtnSportPolocy().get(1).row().stream().forEach(row -> {
+        for (GgdataDto.JobFndtnSportPolocyWrapper.Row row : dto.JobFndtnSportPolocy().get(1).row()) {
           Policy policy = row.toEntity();
-          if (policyRepository.findOneByPolicyKey(policy.getPolicyKey()).isPresent()
-              || categoryName.get(row.DIV_CD()) == null)
+          if (categoryName.get(row.DIV_CD()) == null) continue;
+          if (policyRepository.findOneByPolicyKey(policy.getPolicyKey()).isPresent()) {
+            log.debug("batch end");
             return;
+          }
+
 
           try {
             Region region = regionRepository.findById(RegionService.name2regionId("경기", regionName.get(row.REGION_CD()))).get();
             policy.setRegion(region);
           } catch (Exception e) {
             log.debug(e.toString());
-            return;
+            continue;
           }
 
-          categoryRepository.findById(categoryName.get(row.DIV_CD())).ifPresent(category ->
-              policy.setCategory(category)
-          );
-
+          categoryRepository.findById(categoryName.get(row.DIV_CD())).ifPresent(policy::setCategory);
           policyRepository.save(policy);
-        });
+        }
+        ;
       }
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);

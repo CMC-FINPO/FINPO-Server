@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -33,7 +34,11 @@ import java.util.*;
 public class YouthcenterService {
   private class Pair {
     String a, b;
-    public Pair(String a, String b) {this.a = a; this.b = b;}
+
+    public Pair(String a, String b) {
+      this.a = a;
+      this.b = b;
+    }
   }
 
   private final Map<String, Pair> regionName = new HashMap<String, Pair>() {{
@@ -197,15 +202,26 @@ public class YouthcenterService {
   private String url;
 
 
+  // 10시, 15시, 19시마다 업데이트
+  @Scheduled(cron = "0 0 10,15,19 * * *")
   public void initialize() {
     try {
+      log.debug("youthcenter batch start");
+
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
       for (Long categoryId : categoryList) {
+        log.debug("category " + categoryId + "start");
+        Boolean endFlag = false;
+
         StringBuilder bizTycdSelSb = new StringBuilder();
 
-        categories.get(categoryId).stream().forEach(name -> bizTycdSelSb.append(name));
+        categories.get(categoryId).forEach(category->{
+          bizTycdSelSb.append(category);
+          bizTycdSelSb.append(",");
+        });
+        log.debug("str: " + bizTycdSelSb.toString());
 
         for (int i = 1; ; i++) {
           UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
@@ -221,19 +237,23 @@ public class YouthcenterService {
               new HttpEntity<>(null, headers),
               String.class
           );
-
+//          log.debug(response.toString());
           JAXBContext jaxbContext = JAXBContext.newInstance(YouthcenterDto.class);
           Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
           YouthcenterDto dto = (YouthcenterDto) unmarshaller.unmarshal(new ByteArrayInputStream(response.getBody().getBytes()));
 
           if (dto.getEmp() == null) break;
 
-          Arrays.stream(dto.getEmp()).forEach(row -> {
+          for (YouthcenterDto.Emp row : dto.getEmp()) {
             log.debug(row.toString());
 
             Policy policy = row.toEntity();
-            if (policyRepository.findOneByPolicyKey(policy.getPolicyKey()).isPresent())
-              return;
+            if (policyRepository.findOneByPolicyKey(policy.getPolicyKey()).isPresent()) {
+              endFlag = true;
+              log.debug("category " + categoryId + "end");
+              break;
+            }
+            ;
 
             try {
               Region region = regionRepository.findById(RegionService.name2regionId(regionName.get(row.getPolyBizSecd()).a, regionName.get(row.getPolyBizSecd()).b)).get();
@@ -242,13 +262,15 @@ public class YouthcenterService {
               Category category = categoryRepository.findById(categoryId).get();
               policy.setCategory(category);
             } catch (Exception e) {
-              return;
+              continue;
             }
 
             policyRepository.save(policy);
-          });
+          }
+          if (endFlag) break;
         }
       }
+      log.debug("youthcenter batch end");
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
