@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class OAuthService {
 
@@ -116,13 +118,6 @@ public class OAuthService {
       HttpHeaders headers = new HttpHeaders();
       headers.set("Authorization", accessToken);
       headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-      ResponseEntity<String> res = new RestTemplate().exchange(
-          "https://kapi.kakao.com/v2/user/me",
-          HttpMethod.POST,
-          new HttpEntity<>(null, headers),
-          String.class
-      );
 
       ResponseEntity<KakaoAccountDto> response = new RestTemplate().exchange(
           "https://kapi.kakao.com/v2/user/me",
