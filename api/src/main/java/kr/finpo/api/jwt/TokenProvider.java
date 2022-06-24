@@ -53,9 +53,6 @@ public class TokenProvider {
         .compact();
 
     // Refresh Token 생성
-    System.out.println("시간: " + System.currentTimeMillis());
-    System.out.println(REFRESH_TOKEN_EXPIRE_TIME);
-    System.out.println(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME);
     Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
     String refreshToken = Jwts.builder()
         .setExpiration(refreshTokenExpiresIn)

@@ -14,6 +14,7 @@ import kr.finpo.api.repository.UserRepository;
 import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,9 @@ public class CategoryService {
   private final InterestCategoryRepository interestCategoryRepository;
   private final UserRepository userRepository;
 
+  @Value("${upload.url}")
+  private String uploadUrl;
+
   public void initialize() {
     List<String> firsts = Arrays.asList("일자리", "생활안정", "교육문화", "참여공간");
     List<String> firstImgs = Arrays.asList("work", "live", "edu", "space");
@@ -42,7 +46,7 @@ public class CategoryService {
 
     Long id = 0L;
     for (int i = 0; i < firsts.size(); i++)
-      categoryRepository.save(Category.of(++id, firsts.get(i), 1L, "https://dev.finpo.kr/upload/" + firstImgs.get(i) + ".png"));
+      categoryRepository.save(Category.of(++id, firsts.get(i), 1L, uploadUrl + firstImgs.get(i) + ".png"));
 
     for (int i = 0; i < seconds.size(); i++) {
       Category category = Category.of(++id, seconds.get(i), 2L);
