@@ -53,28 +53,28 @@ public class PolicyController {
     return DataResponse.of(policyService.getMyJoins());
   }
 
-  @PostMapping("/interest/me")
+  @PostMapping("/interest")
   public DataResponse<Object> insertMyInterest(@RequestBody InterestPolicyDto body) {
     return DataResponse.of(policyService.insertMyInterest(body));
   }
 
-  @PostMapping("/joined/me")
+  @PostMapping("/joined")
   public DataResponse<Object> insertMyJoined(@RequestBody JoinedPolicyDto body) {
     return DataResponse.of(policyService.insertMyJoined(body));
   }
 
-  @PutMapping("/joined/me")
-  public DataResponse<Object> updateMyJoined(@RequestBody JoinedPolicyDto body) {
-    return DataResponse.of(policyService.updateMyJoined(body));
+  @PutMapping("/joined/{id}")
+  public DataResponse<Object> updateMyJoined(@PathVariable Long id, @RequestBody JoinedPolicyDto body) {
+    return DataResponse.of(policyService.updateMyJoined(id, body));
   }
 
-  @DeleteMapping("/interest/me")
-  public DataResponse<Object> deleteMyInterest(@RequestParam(name = "id") Long id) {
+  @DeleteMapping("/interest/{id}")
+  public DataResponse<Object> deleteMyInterest(@PathVariable Long id) {
     return DataResponse.of(policyService.deleteMyInterest(id));
   }
 
-  @DeleteMapping("/joined/me")
-  public DataResponse<Object> deleteMyJoined(@RequestParam(name = "id") Long id) {
+  @DeleteMapping("/joined/{id}")
+  public DataResponse<Object> deleteMyJoined(@PathVariable Long id) {
     return DataResponse.of(policyService.deleteMyJoined(id));
   }
 }

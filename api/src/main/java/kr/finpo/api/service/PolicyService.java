@@ -97,9 +97,9 @@ public class PolicyService {
     }
   }
 
-  public JoinedPolicyDto updateMyJoined(JoinedPolicyDto dto) {
+  public JoinedPolicyDto updateMyJoined(Long id, JoinedPolicyDto dto) {
     try {
-      JoinedPolicy joinedPolicy = joinedPolicyRepository.findById(dto.id()).get();
+      JoinedPolicy joinedPolicy = joinedPolicyRepository.findById(id).get();
       if (!joinedPolicy.getUser().getId().equals(SecurityUtil.getCurrentUserId()))
         throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
       joinedPolicy.setMemo(dto.memo());
