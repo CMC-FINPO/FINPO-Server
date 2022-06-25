@@ -97,6 +97,18 @@ public class PolicyService {
     }
   }
 
+  public JoinedPolicyDto updateMyJoined(JoinedPolicyDto dto) {
+    try {
+      JoinedPolicy joinedPolicy = joinedPolicyRepository.findById(dto.id()).get();
+      if (!joinedPolicy.getUser().getId().equals(SecurityUtil.getCurrentUserId()))
+        throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
+      joinedPolicy.setMemo(dto.memo());
+      return JoinedPolicyDto.response(joinedPolicyRepository.save(joinedPolicy));
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
   public Boolean deleteMyInterest(Long id) {
     try {
       InterestPolicy interestPolicy = interestPolicyRepository.findById(id).get();

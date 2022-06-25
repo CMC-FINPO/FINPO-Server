@@ -1,7 +1,6 @@
 package kr.finpo.api.controller;
 
 import kr.finpo.api.dto.DataResponse;
-import kr.finpo.api.dto.InterestCategoryDto;
 import kr.finpo.api.dto.InterestPolicyDto;
 import kr.finpo.api.dto.JoinedPolicyDto;
 import kr.finpo.api.service.PolicyService;
@@ -35,8 +34,8 @@ public class PolicyController {
   @GetMapping("/search")
   public DataResponse<Object> search(
       @RequestParam(value = "title", required = false) String title,
-      @RequestParam(value = "startDate", required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-      @RequestParam(value = "endDate", required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+      @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+      @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
       @RequestParam(value = "region", required = false) List<Long> regionIds,
       @RequestParam(value = "category", required = false) List<Long> categoryIds,
       Pageable pageable
@@ -64,13 +63,18 @@ public class PolicyController {
     return DataResponse.of(policyService.insertMyJoined(body));
   }
 
+  @PutMapping("/joined/me")
+  public DataResponse<Object> updateMyJoined(@RequestBody JoinedPolicyDto body) {
+    return DataResponse.of(policyService.updateMyJoined(body));
+  }
+
   @DeleteMapping("/interest/me")
-  public DataResponse<Object> deleteMyInterest(@RequestParam(name="id") Long id) {
+  public DataResponse<Object> deleteMyInterest(@RequestParam(name = "id") Long id) {
     return DataResponse.of(policyService.deleteMyInterest(id));
   }
 
   @DeleteMapping("/joined/me")
-  public DataResponse<Object> deleteMyJoined(@RequestParam(name="id") Long id) {
+  public DataResponse<Object> deleteMyJoined(@RequestParam(name = "id") Long id) {
     return DataResponse.of(policyService.deleteMyJoined(id));
   }
 }

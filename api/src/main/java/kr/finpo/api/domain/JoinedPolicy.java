@@ -19,6 +19,7 @@ public class JoinedPolicy {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @Setter
   @Column(length = 100)
   private String memo;
 
