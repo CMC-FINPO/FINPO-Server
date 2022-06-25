@@ -69,7 +69,7 @@ public record PolicyDto(
         null,
         null,
         null,
-        policy.getCategory(),
+        null,
         policy.getRegion()
     );
   }
