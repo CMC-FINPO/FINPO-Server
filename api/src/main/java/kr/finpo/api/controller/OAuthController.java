@@ -118,6 +118,13 @@ public class OAuthController {
     return DataResponse.of(oAuthService.register(oAuthAccessToken, "google", body));
   }
 
+  @PostMapping("/register/apple")
+  public DataResponse<Object> registerWithApple(
+      @RequestHeader("Authorization") String oAuthAccessToken,
+      @ModelAttribute UserDto body
+  ) {
+    return DataResponse.of(oAuthService.register(oAuthAccessToken, "apple", body));
+  }
 
 
   @PostMapping("/reissue")

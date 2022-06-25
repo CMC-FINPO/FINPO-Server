@@ -2,6 +2,8 @@ package kr.finpo.api.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.*;
@@ -16,12 +18,19 @@ import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -34,6 +43,7 @@ public class OAuthService {
   private final TokenProvider tokenProvider;
   private final KakaoAccountRepository kakaoAccountRepository;
   private final GoogleAccountRepository googleAccountRepository;
+  private final AppleAccountRepository appleAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final UserRepository userRepository;
   private final InterestRegionRepository interestRegionRepository;
@@ -154,20 +164,59 @@ public class OAuthService {
     }
   }
 
+  private String getAppleAccount(String identityToken) {
+    try {
+      identityToken = identityToken.replace("Bearer ", "");
 
-  public Object loginWithOAuthToken(String accessToken, String oAuthType) {
+      ApplePublicKeyDto applePublicKey = new RestTemplate().exchange(
+          "https://appleid.apple.com/auth/keys",
+          HttpMethod.GET,
+          new HttpEntity<>(null, null),
+          ApplePublicKeyDto.class
+      ).getBody();
+
+      String headerOfIdentityToken = identityToken.substring(0, identityToken.indexOf("."));
+
+      Map<String, String> header = new ObjectMapper().readValue(new String(Base64Utils.decodeFromUrlSafeString(headerOfIdentityToken), "UTF-8"), Map.class);
+      ApplePublicKeyDto.Key key = applePublicKey.getMatchedKeyBy(header.get("kid"), header.get("alg"))
+          .orElseThrow(() -> new NullPointerException("Failed get public key from apple's id server."));
+
+      byte[] nBytes = Base64.getUrlDecoder().decode(key.n());
+      byte[] eBytes = Base64.getUrlDecoder().decode(key.e());
+
+      BigInteger n = new BigInteger(1, nBytes);
+      BigInteger e = new BigInteger(1, eBytes);
+
+      RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
+      KeyFactory keyFactory = KeyFactory.getInstance(key.kty());
+      PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+
+      Claims userInfo = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(identityToken).getBody();
+      return userInfo.get("sub", String.class);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.APPlE_IDENTITY_TOKEN_ERROR, e);
+    }
+  }
+
+
+  public Object loginWithOAuthToken(String oAuthAccessToken, String oAuthType) {
     try {
       Optional<User> user = null;
 
       if (oAuthType.equals("kakao")) {
-        KakaoAccountDto kakaoAccount = getKakaoAccount(accessToken);
+        KakaoAccountDto kakaoAccount = getKakaoAccount(oAuthAccessToken);
         user = userRepository.findByKakaoAccountId(kakaoAccount.id());
         if (user.isEmpty()) return kakaoAccount.toUserDto();
       }
       else if (oAuthType.equals("google")) {
-        GoogleAccountDto googleAccount = getGoogleAccount(accessToken).of();
+        GoogleAccountDto googleAccount = getGoogleAccount(oAuthAccessToken).of();
         user = userRepository.findByGoogleAccountId(googleAccount.id());
         if (user.isEmpty()) return googleAccount.toUserDto();
+      }
+      else if (oAuthType.equals("apple")) {
+        String appleId = getAppleAccount(oAuthAccessToken);
+        user = userRepository.findByAppleAccountId(appleId);
+        if (user.isEmpty()) return UserDto.appleUserDto();
       }
 
       TokenDto tokenDto = tokenProvider.generateTokenDto(user.get());
@@ -202,6 +251,12 @@ public class OAuthService {
       else if (oAuthType.equals("google")) {
         oAuthAccountId = getGoogleAccount(oAuthAccessToken).of().id();
         googleAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
+          throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
+        });
+      }
+      else if (oAuthType.equals("apple")) {
+        oAuthAccountId = getAppleAccount(oAuthAccessToken);
+        appleAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
           throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
         });
       }
@@ -246,7 +301,8 @@ public class OAuthService {
 
       // 관심카테고리 설정
       if (dto.categories() != null) {
-        List<InterestCategoryDto> categories = new ObjectMapper().readValue(dto.categories(), new TypeReference<>(){});
+        List<InterestCategoryDto> categories = new ObjectMapper().readValue(dto.categories(), new TypeReference<>() {
+        });
         categoryService.insertMyInterests(categories, user);
       }
 
@@ -258,6 +314,10 @@ public class OAuthService {
       else if (oAuthType.equals("google")) {
         GoogleAccount googleAccount = googleAccountRepository.save(GoogleAccount.of(oAuthAccountId));
         googleAccount.setUser(user);
+      }
+      else if (oAuthType.equals("apple")) {
+        AppleAccount appleAccount = appleAccountRepository.save(AppleAccount.of(oAuthAccountId));
+        appleAccount.setUser(user);
       }
 
       TokenDto tokenDto = tokenProvider.generateTokenDto(user);

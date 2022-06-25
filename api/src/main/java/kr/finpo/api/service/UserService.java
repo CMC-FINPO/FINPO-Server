@@ -40,8 +40,8 @@ public class UserService {
   private final InterestCategoryRepository interestCategoryRepository;
   private final InterestPolicyRepository interestPolicyRepository;
   private final JoinedPolicyRepository joinedPolicyRepository;
-  private final RegionRepository regionRepository;
   private final KakaoAccountRepository kakaoAccountRepository;
+  private final AppleAccountRepository appleAccountRepository;
   private final GoogleAccountRepository googleAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final S3Uploader s3Uploader;
@@ -54,7 +54,7 @@ public class UserService {
 
   public List<UserDto> getAll() {
     try {
-      return StreamSupport.stream(userRepository.findAll().spliterator(), false).map(UserDto::response).toList();
+      return userRepository.findAll().stream().map(UserDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -170,14 +170,13 @@ public class UserService {
               new HttpEntity<>(params, headers),
               String.class
           );
-
         }
-
       } catch (HttpClientErrorException | NoSuchElementException e) {
         return false;
       } finally {
         kakaoAccountRepository.deleteByUserId(id);
         googleAccountRepository.deleteByUserId(id);
+        appleAccountRepository.deleteByUserId(id);
         refreshTokenRepository.deleteByUserId(id);
         userRepository.deleteById(id);
       }
@@ -190,7 +189,7 @@ public class UserService {
 
   public Boolean isNicknameDuplicated(String nickname) {
     try {
-      if (!userRepository.findByNickname(nickname).isPresent())
+      if (userRepository.findByNickname(nickname).isEmpty())
         return false;
 
       if (SecurityUtil.isUserLogin())
@@ -205,7 +204,7 @@ public class UserService {
 
   public Boolean isEmailDuplicated(String email) {
     try {
-      if (!userRepository.findByEmail(email).isPresent())
+      if (userRepository.findByEmail(email).isEmpty())
         return false;
 
       if (SecurityUtil.isUserLogin())

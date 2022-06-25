@@ -96,6 +96,9 @@ public class User{
   @OneToOne(mappedBy = "user")
   private GoogleAccount googleAccount;
 
+  @OneToOne(mappedBy = "user")
+  private AppleAccount appleAccount;
+
   @Setter
   @OneToOne
   @NotNull

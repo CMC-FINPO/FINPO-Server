@@ -33,6 +33,7 @@ public enum ErrorCode {
   PROVIDER_TOKEN_NOT_FOUND(30002, HttpStatus.BAD_REQUEST, "Auth provider token not found"),
   KAKAO_SERVER_ERROR(30001, HttpStatus.INTERNAL_SERVER_ERROR, "Kakao authorization server may have problem"),
   GOOGLE_ACCESS_TOKEN_ERROR(30003, HttpStatus.INTERNAL_SERVER_ERROR, "Invalid google access token"),
+  APPlE_IDENTITY_TOKEN_ERROR(30004, HttpStatus.INTERNAL_SERVER_ERROR, "Invalid apple identity token"),
 
 
   ACCESS_TOKEN_NOT_FOUND(40000, HttpStatus.UNAUTHORIZED, "Access token not found"),
