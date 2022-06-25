@@ -4,7 +4,6 @@ package kr.finpo.api.service;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.*;
-import kr.finpo.api.dto.GoogleTokenDto;
 import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.dto.UserDto;
 import kr.finpo.api.dto.WithdrawDto;
@@ -39,6 +38,8 @@ public class UserService {
   private final UserPurposeRepository userPurposeRepository;
   private final InterestRegionRepository interestRegionRepository;
   private final InterestCategoryRepository interestCategoryRepository;
+  private final InterestPolicyRepository interestPolicyRepository;
+  private final JoinedPolicyRepository joinedPolicyRepository;
   private final RegionRepository regionRepository;
   private final KakaoAccountRepository kakaoAccountRepository;
   private final GoogleAccountRepository googleAccountRepository;
@@ -134,8 +135,11 @@ public class UserService {
     try {
       User user = userRepository.findById(id).get();
 
+      userPurposeRepository.deleteByUserId(id);
       interestRegionRepository.deleteByUserId(id);
       interestCategoryRepository.deleteByUserId(id);
+      interestPolicyRepository.deleteByUserId(id);
+      joinedPolicyRepository.deleteByUserId(id);
 
       try {
         HttpHeaders headers = new HttpHeaders();
