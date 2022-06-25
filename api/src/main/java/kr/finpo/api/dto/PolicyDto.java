@@ -77,4 +77,25 @@ public record PolicyDto(
 
     );
   }
+
+  public static PolicyDto previewResponse(Policy policy) {
+    return new PolicyDto(
+        policy.getId(),
+        policy.getTitle(),
+        null,
+        policy.getInstitution(),
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        policy.getCategory(),
+        policy.getRegion()
+    );
+  }
 }
