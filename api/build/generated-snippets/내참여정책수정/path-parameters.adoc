@@ -1,0 +1,8 @@
+.+/policy/joined/{id}+
+|===
+|Parameter|Description
+
+|`+id+`
+|변경할 참여정책 id
+
+|===

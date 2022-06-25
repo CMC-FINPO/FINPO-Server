@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ http GET 'https://dev.finpo.kr/policy/joined/me' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3MjYwIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cHM6Ly9kZXYuZmlucG8ua3IvdXBsb2FkL3Byb2ZpbGUvMTg1NWI0MzAtODU2ZC00ZTJmLWI4ZjAtNTU0YjY2NjA4Y2ZmLnBuZyIsImRlZmF1bHRSZWdpb24iOnsiaWQiOjE0LCJuYW1lIjoi66eI7Y-sIiwiZGVwdGgiOjIsInN0YXR1cyI6dHJ1ZSwicGFyZW50Ijp7ImlkIjowLCJuYW1lIjoi7ISc7Jq4IiwiZGVwdGgiOjEsInN0YXR1cyI6dHJ1ZSwicGFyZW50IjpudWxsfX0sIm9BdXRoVHlwZSI6IkFQUExFIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY1NjE4MDExNn0.MRDkI1ld8jMz6buXBGoQFnnEj-qpENxceVjU8_rKhLZnD5UrBz9Znux2MaKu7zQLinRO3IENl9S0ivmGDofFGg'
+----

@@ -1,0 +1,83 @@
+|===
+|필드명|타입|필수여부|설명
+|`+success+`
+|`+Boolean+`
+|true
+|성공 여부
+|`+errorCode+`
+|`+Number+`
+|true
+|응답 코드
+|`+message+`
+|`+String+`
+|true
+|응답 메시지
+|`+data.id+`
+|`+Number+`
+|true
+|정책 id
+|`+data.title+`
+|`+String+`
+|false
+|정책 제목
+|`+data.content+`
+|`+String+`
+|false
+|정책 내용
+|`+data.institution+`
+|`+String+`
+|false
+|주관 기관
+|`+data.supportScale+`
+|`+String+`
+|false
+|지원 규모
+|`+data.support+`
+|`+String+`
+|false
+|지원 내용
+|`+data.period+`
+|`+String+`
+|false
+|기간
+|`+data.startDate+`
+|`+String+`
+|false
+|시작일
+|`+data.endDate+`
+|`+String+`
+|false
+|종료일
+|`+data.process+`
+|`+String+`
+|false
+|신청 절차
+|`+data.announcement+`
+|`+String+`
+|false
+|결과 발표
+|`+data.detailUrl+`
+|`+String+`
+|false
+|상세내용 url
+|`+data.openApiType+`
+|`+String+`
+|false
+|Open API 출처
+|`+data.modifiedAt+`
+|`+String+`
+|false
+|수정일
+|`+data.category+`
+|`+Object+`
+|false
+|카테고리
+|`+data.region+`
+|`+Object+`
+|false
+|지역
+|`+data.countOfInterest+`
+|`+Number+`
+|false
+|관심정책으로 추가한 회원 수
+|===

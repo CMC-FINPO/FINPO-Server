@@ -1,0 +1,8 @@
+.+/policy/{id}+
+|===
+|Parameter|Description
+
+|`+id+`
+|조회할 정책 id
+
+|===

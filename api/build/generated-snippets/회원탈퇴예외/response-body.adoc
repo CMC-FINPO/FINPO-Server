@@ -1,0 +1,9 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "OAuth account has already withdrawn",
+  "data" : true
+}
+----

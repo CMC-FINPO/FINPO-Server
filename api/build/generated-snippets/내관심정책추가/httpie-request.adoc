@@ -1,0 +1,8 @@
+[source,bash]
+----
+$ echo '{
+  "policyId" : 41
+}' | http POST 'https://dev.finpo.kr/policy/interest' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3MzgxIiwibmlja25hbWUiOiLrqZTsnbTsiqgiLCJwcm9maWxlSW1nIjoiaHR0cHM6Ly9kZXYuZmlucG8ua3IvdXBsb2FkL3Byb2ZpbGUvMTg1NWI0MzAtODU2ZC00ZTJmLWI4ZjAtNTU0YjY2NjA4Y2ZmLnBuZyIsImRlZmF1bHRSZWdpb24iOnsiaWQiOjE0LCJuYW1lIjoi66eI7Y-sIiwiZGVwdGgiOjIsInN0YXR1cyI6dHJ1ZSwicGFyZW50Ijp7ImlkIjowLCJuYW1lIjoi7ISc7Jq4IiwiZGVwdGgiOjEsInN0YXR1cyI6dHJ1ZSwicGFyZW50IjpudWxsfX0sIm9BdXRoVHlwZSI6IkFQUExFIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY1NjE4MDExOX0.KR7lX8qzQHgFwET5eHDSqD4hW9TJhMYBbKkKZ5OzMLFt45xJ1FVMkEbI8uZeKlkkNe6WGbpfOd6HOnUbDpiqHQ'
+----

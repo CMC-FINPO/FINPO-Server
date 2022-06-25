@@ -1,0 +1,24 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "id" : 7395,
+    "policy" : {
+      "id" : 41,
+      "title" : "경기도 무료법률상담 및 무료소송 지원서비스",
+      "institution" : "경기도청",
+      "region" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "status" : true,
+        "parent" : null
+      },
+      "countOfInterest" : 1
+    }
+  }
+}
+----

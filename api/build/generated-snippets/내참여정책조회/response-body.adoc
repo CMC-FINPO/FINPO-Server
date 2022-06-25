@@ -1,0 +1,110 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 7270,
+    "policy" : {
+      "id" : 37,
+      "title" : "가평군  2022년 가평군 찾아가는 소상공인 매니저 운영",
+      "institution" : "가평군청",
+      "region" : {
+        "id" : 129,
+        "name" : "가평",
+        "depth" : 2,
+        "status" : true,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "status" : true,
+          "parent" : null
+        }
+      },
+      "countOfInterest" : 0
+    },
+    "memo" : "이건 언제언제해서 잘했음"
+  }, {
+    "id" : 7271,
+    "policy" : {
+      "id" : 47,
+      "title" : "용인시  2022 하반기 국내외전시회 개별참가 지원사업 참가기업 모집",
+      "institution" : "용인시청",
+      "region" : {
+        "id" : 119,
+        "name" : "용인",
+        "depth" : 2,
+        "status" : true,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "status" : true,
+          "parent" : null
+        }
+      },
+      "countOfInterest" : 0
+    }
+  }, {
+    "id" : 7272,
+    "policy" : {
+      "id" : 4,
+      "title" : "의왕시  2022년 새일여성인턴 참여기업 모집",
+      "institution" : "의왕시청",
+      "region" : {
+        "id" : 117,
+        "name" : "의왕",
+        "depth" : 2,
+        "status" : true,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "status" : true,
+          "parent" : null
+        }
+      },
+      "countOfInterest" : 0
+    }
+  }, {
+    "id" : 7273,
+    "policy" : {
+      "id" : 91,
+      "title" : "용인시  용인청년 희망옷장(면접정장 무료대여서비스)",
+      "institution" : "용인시청",
+      "region" : {
+        "id" : 119,
+        "name" : "용인",
+        "depth" : 2,
+        "status" : true,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "status" : true,
+          "parent" : null
+        }
+      },
+      "countOfInterest" : 0
+    }
+  }, {
+    "id" : 7274,
+    "policy" : {
+      "id" : 78,
+      "title" : "출산 전후휴가",
+      "institution" : "고용노동부",
+      "region" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "status" : true,
+        "parent" : null
+      },
+      "countOfInterest" : 0
+    },
+    "memo" : "이건 좀 아쉬웠음"
+  } ]
+}
+----

@@ -1,0 +1,39 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 473
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "id" : 7363,
+    "policy" : {
+      "id" : 24,
+      "title" : "2022년 2학기 수산후계장학금 장학생 선발",
+      "institution" : "농어촌희망재단",
+      "region" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "status" : true,
+        "parent" : null
+      },
+      "countOfInterest" : 0
+    },
+    "memo" : "이건 꽤 괜찮았던듯"
+  }
+}
+----

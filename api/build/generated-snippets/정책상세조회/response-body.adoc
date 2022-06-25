@@ -1,0 +1,49 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "id" : 413,
+    "title" : "청년면접정장무료대여사업",
+    "content" : "관내 구직 청년에게 면접 정장을 무료로 대여하여 취업 준비 부담 경감",
+    "institution" : "지자체",
+    "supportScale" : "350명",
+    "support" : "지원횟수 - 연5회(전년도 이용자 재신청 가능)\n지원품목 - (남)자켓,셔츠, 바지,구두,넥타이,벨트 (여)자켓,블라우스,스커트,구두, 반납택배비",
+    "period" : "연중(정장 필요 2,3일 전, 공휴일 미포함이므로 미리 신청)",
+    "process" : "청년해냄센터 또는 일자리통합접수시스템\n신청서 제출, 일자리센터 유선 확인 후 쿠폰 발급, 발급받은 쿠폰번호 입력(https://visit.theopencloset.net/coupon), 예약페이지이동, 방문일시 예약, 열린옷장 방문(신분증 지참-주소지 하남시 확인), 대여, 반납",
+    "announcement" : "제한없음",
+    "detailUrl" : "https://apply.jobaba.net/bsns/bsnsDetailView.do?bsnsSeq=1046",
+    "openApiType" : "YOUTHCENTER",
+    "modifiedAt" : "2022-06-25T08:24:33",
+    "category" : {
+      "id" : 6,
+      "name" : "취업",
+      "depth" : 2,
+      "img" : null,
+      "parent" : {
+        "id" : 1,
+        "name" : "일자리",
+        "depth" : 1,
+        "img" : "http://localhost:8080/upload/work.png",
+        "parent" : null
+      }
+    },
+    "region" : {
+      "id" : 118,
+      "name" : "하남",
+      "depth" : 2,
+      "status" : true,
+      "parent" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "status" : true,
+        "parent" : null
+      }
+    },
+    "countOfInterest" : 0
+  }
+}
+----

@@ -1,0 +1,45 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 609
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "id" : 7311,
+    "policy" : {
+      "id" : 312,
+      "title" : "지역산업맞춤형 일자리 창출 지원(청년)",
+      "institution" : "아주대 등 산학협력단",
+      "region" : {
+        "id" : 101,
+        "name" : "수원",
+        "depth" : 2,
+        "status" : true,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "status" : true,
+          "parent" : null
+        }
+      },
+      "countOfInterest" : 0
+    },
+    "memo" : "변경 후 메모임"
+  }
+}
+----

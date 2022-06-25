@@ -1,0 +1,29 @@
+|===
+|파라미터|필수여부|설명
+|`+title+`
+|false
+|제목 검색
+|`+startDate+`
+|false
+|시작 날짜
+|`+endDate+`
+|false
+|종료 날짜
+|`+region+`
+|false
+|지역 id(복수개 가능)
+|`+category+`
+|false
+|카테고리 id(복수개 가능)
+|`+page+`
+|false
+|페이지 위치 (0부터 시작)
+|`+size+`
+|false
+|한 페이지의 데이터 개수
+|`+sort+`
+|false
+|정렬 기준 (복수 정렬 가능)
+countOfInterest:인기순, desc:내림차순
+
+|===

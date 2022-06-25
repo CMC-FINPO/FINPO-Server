@@ -1,0 +1,8 @@
+.+/policy/interest/{id}+
+|===
+|Parameter|Description
+
+|`+id+`
+|삭제할 관심정책 id
+
+|===

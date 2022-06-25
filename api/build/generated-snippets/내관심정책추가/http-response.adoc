@@ -1,0 +1,38 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 428
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "id" : 7395,
+    "policy" : {
+      "id" : 41,
+      "title" : "경기도 무료법률상담 및 무료소송 지원서비스",
+      "institution" : "경기도청",
+      "region" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "status" : true,
+        "parent" : null
+      },
+      "countOfInterest" : 1
+    }
+  }
+}
+----

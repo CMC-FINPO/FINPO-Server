@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "policyId" : 24,
+  "memo" : "이건 꽤 괜찮았던듯"
+}
+----

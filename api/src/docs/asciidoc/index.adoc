@@ -579,7 +579,7 @@ operation::내관심정책추가[snippets='http-request,request-headers,request-
 
 ==== 삭제
 
-operation::내관심정책삭제[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+operation::내관심정책삭제[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 &nbsp;
 
@@ -617,7 +617,7 @@ db 쿼리 실행 시간의 문제로 추측되는데, 다시 api로 조회하시
 
 ==== 수정
 
-operation::내참여정책수정[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+operation::내참여정책수정[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
 
 &nbsp;
 
@@ -627,7 +627,7 @@ operation::내참여정책수정[snippets='http-request,request-headers,request-
 
 ==== 삭제
 
-operation::내참여정책삭제[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+operation::내참여정책삭제[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 &nbsp;
 

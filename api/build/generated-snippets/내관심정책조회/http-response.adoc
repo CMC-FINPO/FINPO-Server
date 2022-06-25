@@ -1,0 +1,116 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 2280
+
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : [ {
+    "id" : 7391,
+    "policy" : {
+      "id" : 21,
+      "title" : "광주시  저소득층 한시 긴급생활지원금 지급",
+      "institution" : "광주시청",
+      "region" : {
+        "id" : 125,
+        "name" : "광주",
+        "depth" : 2,
+        "status" : true,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "status" : true,
+          "parent" : null
+        }
+      },
+      "countOfInterest" : 0
+    }
+  }, {
+    "id" : 7392,
+    "policy" : {
+      "id" : 40,
+      "title" : "경기도형 착한 임대인 지원사업",
+      "institution" : "(재)경기도시장상권진흥원",
+      "region" : {
+        "id" : 131,
+        "name" : "양평",
+        "depth" : 2,
+        "status" : true,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "status" : true,
+          "parent" : null
+        }
+      },
+      "countOfInterest" : 0
+    }
+  }, {
+    "id" : 7393,
+    "policy" : {
+      "id" : 73,
+      "title" : "가정폭력 방지 및 피해자 지원",
+      "institution" : "여성가족부",
+      "region" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "status" : true,
+        "parent" : null
+      },
+      "countOfInterest" : 0
+    }
+  }, {
+    "id" : 7394,
+    "policy" : {
+      "id" : 3,
+      "title" : "의왕시  2022년 의왕여성새일센터 집단상담프로그램 참여자 모집",
+      "institution" : "의왕여성일하기센터",
+      "region" : {
+        "id" : 117,
+        "name" : "의왕",
+        "depth" : 2,
+        "status" : true,
+        "parent" : {
+          "id" : 100,
+          "name" : "경기",
+          "depth" : 1,
+          "status" : true,
+          "parent" : null
+        }
+      },
+      "countOfInterest" : 0
+    }
+  }, {
+    "id" : 7395,
+    "policy" : {
+      "id" : 41,
+      "title" : "경기도 무료법률상담 및 무료소송 지원서비스",
+      "institution" : "경기도청",
+      "region" : {
+        "id" : 100,
+        "name" : "경기",
+        "depth" : 1,
+        "status" : true,
+        "parent" : null
+      },
+      "countOfInterest" : 1
+    }
+  } ]
+}
+----
