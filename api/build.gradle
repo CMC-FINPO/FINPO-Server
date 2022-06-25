@@ -101,7 +101,7 @@ ext {
 }
 
 asciidoctor { // asciidoctor 작업 구성
-//    dependsOn test // test 작업 이후에 작동하도록 하는 설정
+    dependsOn test // test 작업 이후에 작동하도록 하는 설정
     inputs.dir snippetsDir // snippetsDir 를 입력으로 구성
     configurations 'asciidoctorExtensions' // 위에서 작성한 configuration 적용
 
