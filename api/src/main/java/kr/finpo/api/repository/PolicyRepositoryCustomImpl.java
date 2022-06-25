@@ -44,30 +44,31 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
     if (!isEmpty(pageable.getSort())) {
       for (Sort.Order order : pageable.getSort()) {
         Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
+        String fieldName = null;
         switch (order.getProperty()) {
           case "title":
-            orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "title");
-            orders.add(orderSpecifier);
+            fieldName = "title";
             break;
           case "endDate":
-            orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "endDate");
-            orders.add(orderSpecifier);
+            fieldName = "endDate";
             break;
           case "startDate":
-            orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "startDate");
-            orders.add(orderSpecifier);
+            fieldName = "startDate";
             break;
           case "modifiedAt":
-            orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "modifiedAt");
-            orders.add(orderSpecifier);
+            fieldName = "modifiedAt";
             break;
           case "institution":
-            orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, "institution");
-            orders.add(orderSpecifier);
+            fieldName = "institution";
+            break;
+          case "countOfInterest":
+            fieldName = "countOfInterest";
             break;
           default:
             break;
         }
+        orderSpecifier = QuerydslUtil.getSortedColumn(direction, QPolicy.policy, fieldName);
+        orders.add(orderSpecifier);
       }
     }
     orderSpecifier = QuerydslUtil.getSortedColumn(Order.ASC, QPolicy.policy, "id");

@@ -5,6 +5,7 @@ import kr.finpo.api.util.EmptyStringToNullConverter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -91,6 +92,9 @@ public class Policy {
   @Setter
   @Column(nullable = false)
   private Boolean status = true;
+
+  @Formula("(select count(*) from interest_policy ip where ip.policy_id = id)")
+  private Integer countOfInterest;
 
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
   @CreatedDate

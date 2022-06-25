@@ -26,7 +26,8 @@ public record PolicyDto(
     OpenApiType openApiType,
     LocalDateTime modifiedAt,
     Category category,
-    Region region
+    Region region,
+    Integer countOfInterest
 ) {
   public PolicyDto {
   }
@@ -49,7 +50,8 @@ public record PolicyDto(
         policy.getOpenApiType(),
         policy.getModifiedAt(),
         policy.getCategory(),
-        policy.getRegion()
+        policy.getRegion(),
+        policy.getCountOfInterest()
     );
   }
 
@@ -70,7 +72,9 @@ public record PolicyDto(
         null,
         null,
         null,
-        policy.getRegion()
+        policy.getRegion(),
+        policy.getCountOfInterest()
+
     );
   }
 }
