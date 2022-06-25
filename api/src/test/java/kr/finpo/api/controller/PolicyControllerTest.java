@@ -322,7 +322,7 @@ class PolicyControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
     body.put("policyId", id);
 
-    MvcResult res = mockMvc.perform(post("/policy/interest/me")
+    MvcResult res = mockMvc.perform(post("/policy/interest")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
             .content(objectMapper.writeValueAsString(body))
@@ -375,7 +375,7 @@ class PolicyControllerTest {
     body.put("policyId", id);
     if (memo != null) body.put("memo", memo);
 
-    MvcResult res = mockMvc.perform(post("/policy/joined/me")
+    MvcResult res = mockMvc.perform(post("/policy/joined")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
             .content(objectMapper.writeValueAsString(body))
@@ -485,12 +485,11 @@ class PolicyControllerTest {
 
     HashMap<String, Object> body = new HashMap<>();
     ObjectMapper objectMapper = new ObjectMapper();
-    body.put("id", id);
     body.put("memo", "변경 후 메모임");
 
     long beforeCnt = joinedPolicyRepository.count();
 
-    mockMvc.perform(put("/policy/joined/me")
+    mockMvc.perform(RestDocumentationRequestBuilders.put("/policy/joined/{id}",id)
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
             .content(objectMapper.writeValueAsString(body))
@@ -506,8 +505,10 @@ class PolicyControllerTest {
                 requestHeaders(
                     headerWithName("Authorization").description("Access Token")
                 ),
+                pathParameters(
+                    parameterWithName("id").description("변경할 참여정책 id")
+                ),
                 requestFields(
-                    fieldWithPath("id").description("메모를 변경할 참여정책 id"),
                     fieldWithPath("memo").description("변경할 메모")
                 ),
                 relaxedResponseFields(
@@ -531,7 +532,7 @@ class PolicyControllerTest {
     int id = insertMyInterest(51L);
     long beforeCnt = interestPolicyRepository.count();
 
-    mockMvc.perform(delete("/policy/interest/me?id=" + id)
+    mockMvc.perform(RestDocumentationRequestBuilders.delete("/policy/interest/{id}", id)
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
         )
@@ -546,7 +547,7 @@ class PolicyControllerTest {
                 requestHeaders(
                     headerWithName("Authorization").description("Access Token")
                 ),
-                requestParameters(
+                pathParameters(
                     parameterWithName("id").description("삭제할 관심정책 id")
                 ),
                 relaxedResponseFields(
@@ -568,7 +569,7 @@ class PolicyControllerTest {
     int id = insertMyJoined(24L, "이건 꽤 괜찮았던듯");
     long beforeCnt = joinedPolicyRepository.count();
 
-    mockMvc.perform(delete("/policy/joined/me?id=" + id)
+    mockMvc.perform(RestDocumentationRequestBuilders.delete("/policy/joined/{id}", id)
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
         )
@@ -583,7 +584,7 @@ class PolicyControllerTest {
                 requestHeaders(
                     headerWithName("Authorization").description("Access Token")
                 ),
-                requestParameters(
+                pathParameters(
                     parameterWithName("id").description("삭제할 참여정책 id")
                 ),
                 relaxedResponseFields(
