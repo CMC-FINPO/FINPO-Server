@@ -1,6 +1,11 @@
 package kr.finpo.api.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.repository.InterestPolicyRepository;
+import kr.finpo.api.repository.JoinedPolicyRepository;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,22 +14,24 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
 
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -39,6 +46,12 @@ class PolicyControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
+
+  @Autowired
+  private InterestPolicyRepository interestPolicyRepository;
+
+  @Autowired
+  private JoinedPolicyRepository joinedPolicyRepository;
 
   String accessToken, refreshToken;
 
@@ -56,6 +69,54 @@ class PolicyControllerTest {
     PolicyCategoryControllerTest cc = new PolicyCategoryControllerTest();
     cc.set(mockMvc, accessToken);
     cc.insertMyInterestCategories();
+  }
+
+  @Test
+  void gett() throws Exception {
+    Long id = 413L;
+    mockMvc.perform(RestDocumentationRequestBuilders.get("/policy/{id}", id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andExpect(jsonPath("$.data.id").value(413))
+        .andDo(
+            document("정책상세조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                pathParameters(
+                    parameterWithName("id").description("조회할 정책 id")
+                ),
+
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.id").description("정책 id"),
+                    fieldWithPath("data.title").description("정책 제목").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.content").description("정책 내용").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.institution").description("주관 기관").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.supportScale").description("지원 규모").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.support").description("지원 내용").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.period").description("기간").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.startDate").description("시작일").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.endDate").description("종료일").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.process").description("신청 절차").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.announcement").description("결과 발표").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.detailUrl").description("상세내용 url").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.openApiType").description("Open API 출처").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.modifiedAt").description("수정일").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("data.category").description("카테고리").optional().type(JsonFieldType.OBJECT),
+                    fieldWithPath("data.region").description("지역").optional().type(JsonFieldType.OBJECT)
+                )
+            )
+        );
   }
 
   @Test
@@ -87,18 +148,7 @@ class PolicyControllerTest {
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data.content.[].id").description("정책 id"),
                     fieldWithPath("data.content.[].title").description("정책 제목").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].content").description("정책 내용").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.content.[].institution").description("주관 기관").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].supportScale").description("지원 규모").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].support").description("지원 내용").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].period").description("기간").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].startDate").description("시작일").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].endDate").description("종료일").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].process").description("신청 절차").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].announcement").description("결과 발표").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].detailUrl").description("상세내용 url").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].openApiType").description("Open API 출처").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].modifiedAt").description("수정일").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
 
@@ -149,18 +199,7 @@ class PolicyControllerTest {
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data.content.[].id").description("정책 id"),
                     fieldWithPath("data.content.[].title").description("정책 제목").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].content").description("정책 내용").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.content.[].institution").description("주관 기관").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].supportScale").description("지원 규모").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].support").description("지원 내용").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].period").description("기간").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].startDate").description("시작일").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].endDate").description("종료일").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].process").description("신청 절차").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].announcement").description("결과 발표").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].detailUrl").description("상세내용 url").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].openApiType").description("Open API 출처").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].modifiedAt").description("수정일").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
 
@@ -175,7 +214,7 @@ class PolicyControllerTest {
                 )
             )
         )
-        ;
+    ;
 
     mockMvc.perform(get("/policy/search?startDate=2022-05-20&category=6&page=0&size=5&sort=startDate,asc&sort=modifiedAt,desc")
             .contentType(MediaType.APPLICATION_JSON)
@@ -209,18 +248,7 @@ class PolicyControllerTest {
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data.content.[].id").description("정책 id"),
                     fieldWithPath("data.content.[].title").description("정책 제목").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].content").description("정책 내용").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.content.[].institution").description("주관 기관").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].supportScale").description("지원 규모").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].support").description("지원 내용").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].period").description("기간").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].startDate").description("시작일").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].endDate").description("종료일").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].process").description("신청 절차").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].announcement").description("결과 발표").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].detailUrl").description("상세내용 url").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].openApiType").description("Open API 출처").optional().type(JsonFieldType.STRING),
-                    fieldWithPath("data.content.[].modifiedAt").description("수정일").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
 
@@ -236,5 +264,251 @@ class PolicyControllerTest {
             )
         )
     ;
+  }
+
+
+  @Test
+  void insertMyInterest() throws Exception {
+    insertMyInterest(21L);
+    insertMyInterest(40L);
+    insertMyInterest(73L);
+    insertMyInterest(3L);
+    insertMyInterest(41L);
+    then(5).isEqualTo(interestPolicyRepository.count());
+  }
+
+
+  int insertMyInterest(Long id) throws Exception {
+    HashMap<String, Object> body = new HashMap<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    body.put("policyId", id);
+
+    MvcResult res = mockMvc.perform(post("/policy/interest/me")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(body))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.policy.id").value(id))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내관심정책추가",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestFields(
+                    fieldWithPath("policyId").description("관심정책에 추가할 정책id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.id").description("관심정책id"),
+                    fieldWithPath("data.policy.id").description("정책id")
+                )
+            )
+        )
+        .andReturn();
+
+    JSONParser parser = new JSONParser();
+    JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
+    json = (JSONObject) parser.parse(json.get("data").toString());
+    return (int) json.get("id");
+  }
+
+  @Test
+  void insertMyJoined() throws Exception {
+    insertMyJoined(37L, "이건 언제언제해서 잘했음");
+    insertMyJoined(47L, null);
+    insertMyJoined(4L, null);
+    insertMyJoined(91L, null);
+    insertMyJoined(78L, "이건 좀 아쉬웠음");
+    then(5).isEqualTo(joinedPolicyRepository.count());
+  }
+
+  int insertMyJoined(Long id, String memo) throws Exception {
+    HashMap<String, Object> body = new HashMap<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    body.put("policyId", id);
+    if (memo != null) body.put("memo", memo);
+
+    MvcResult res = mockMvc.perform(post("/policy/joined/me")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(body))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.policy.id").value(id))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내참여정책추가",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestFields(
+                    fieldWithPath("policyId").description("참여정책에 추가할 정책id"),
+                    fieldWithPath("memo").description("메모").optional().type(JsonFieldType.STRING)
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.id").description("참여정책id"),
+                    fieldWithPath("data.policy.id").description("정책id"),
+                    fieldWithPath("data.memo").description("메모").optional().type(JsonFieldType.STRING)
+                )
+            )
+        )
+        .andReturn();
+
+    JSONParser parser = new JSONParser();
+    JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
+    json = (JSONObject) parser.parse(json.get("data").toString());
+    return (int) json.get("id");
+  }
+
+  @Test
+  void getMyInterests() throws Exception {
+    insertMyInterest();
+
+    mockMvc.perform(get("/policy/interest/me")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.length()").value(5))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내관심정책조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.[].id").description("관심정책id"),
+                    fieldWithPath("data.[].policy.id").description("정책id")
+                )
+            )
+        )
+    ;
+  }
+
+  @Test
+  void getMyJoins() throws Exception {
+    insertMyJoined();
+
+    mockMvc.perform(get("/policy/joined/me")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.length()").value(5))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내참여정책조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.[].id").description("참여정책id"),
+                    fieldWithPath("data.[].policy.id").description("정책id"),
+                    fieldWithPath("data.[].memo").description("메모").optional().type(JsonFieldType.STRING)
+                )
+            )
+        )
+    ;
+  }
+
+  @Test
+  void deleteMyInterest() throws Exception {
+    insertMyInterest(40L);
+    insertMyInterest(312L);
+    int id = insertMyInterest(51L);
+
+    mockMvc.perform(delete("/policy/interest/me?id=" + id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내관심정책삭제",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("id").description("삭제할 관심정책 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data").description("삭제 성공 여부")
+                )
+            )
+        )
+    ;
+    then(2).isEqualTo(interestPolicyRepository.count());
+  }
+
+  @Test
+  void deleteMyJoined() throws Exception {
+    insertMyJoined(40L, "그냥저냥");
+    insertMyJoined(312L, null);
+    int id = insertMyJoined(24L, "이건 꽤 괜찮았던듯");
+
+    mockMvc.perform(delete("/policy/joined/me?id=" + id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내참여정책삭제",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("id").description("삭제할 참여정책 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data").description("삭제 성공 여부")
+                )
+            )
+        )
+    ;
+    then(2).isEqualTo(joinedPolicyRepository.count());
   }
 }

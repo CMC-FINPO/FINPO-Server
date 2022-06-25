@@ -436,7 +436,19 @@ operation::내관심카테고리수정[snippets='http-request,request-headers,re
 
 
 == 정책
-=== 나의 관심 정책
+=== 상세 정보
+==== 조회
+
+operation::정책상세조회[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+=== 나의 정책
 ==== 조회
 
 저장되어 있는 관심+기본지역, 관심정책 카테고리에 해당하는 정책들을 조회합니다.
@@ -464,6 +476,69 @@ operation::정책제목검색[snippets='http-request,request-headers,request-par
 ==== 예시 (시작날짜로 검색)
 
 operation::정책날짜검색[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+=== 나의 관심정책
+==== 조회
+
+operation::내관심정책조회[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 추가
+
+operation::내관심정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 삭제
+
+operation::내관심정책삭제[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+=== 나의 참여정책
+==== 조회
+
+operation::내참여정책조회[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 추가
+
+operation::내참여정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 삭제
+
+operation::내참여정책삭제[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 &nbsp;
 
