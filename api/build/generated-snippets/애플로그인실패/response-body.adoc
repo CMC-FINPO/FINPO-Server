@@ -1,0 +1,11 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "need register",
+  "data" : {
+    "oAuthType" : "APPLE"
+  }
+}
+----

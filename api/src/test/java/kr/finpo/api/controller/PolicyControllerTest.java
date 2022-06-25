@@ -3,6 +3,7 @@ package kr.finpo.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.repository.InterestPolicyRepository;
+import kr.finpo.api.repository.InterestRegionRepository;
 import kr.finpo.api.repository.JoinedPolicyRepository;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -54,6 +55,10 @@ class PolicyControllerTest {
   @Autowired
   private JoinedPolicyRepository joinedPolicyRepository;
 
+  @Autowired
+  private InterestRegionRepository interestRegionRepository;
+
+
   String accessToken, refreshToken;
 
   @BeforeEach
@@ -64,7 +69,7 @@ class PolicyControllerTest {
     refreshToken = map.get("refreshToken");
 
     RegionControllerTest rc = new RegionControllerTest();
-    rc.set(mockMvc, accessToken);
+    rc.set(mockMvc, interestRegionRepository, accessToken);
     rc.insertMyInterestsTest();
 
     PolicyCategoryControllerTest cc = new PolicyCategoryControllerTest();

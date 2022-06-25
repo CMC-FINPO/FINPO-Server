@@ -1,0 +1,7 @@
+|===
+|Name|Description
+
+|`+Authorization+`
+|Apple Identity Token
+
+|===

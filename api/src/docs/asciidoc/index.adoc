@@ -152,7 +152,56 @@ operation::구글회원가입[snippets='http-request,request-headers,request-par
 
 &nbsp;
 
-operation::kakao-register[snippets='http-response,response-fields']
+operation::구글회원가입[snippets='http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+
+=== 애플
+
+==== 로그인
+operation::애플로그인성공[snippets='http-request,request-headers']
+&nbsp;
+
+**성공 시**
+
+operation::애플로그인성공[snippets='http-response,response-fields']
+
+&nbsp;
+&nbsp;
+
+**실패 시**
+
+애플 로그인은 가져올 수 있는 정보가 이메일밖에 없습니다.
+
+HTTP status는 202(Accepted) 입니다.
+
+operation::애플로그인실패[snippets='http-response,response-fields']
+
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 회원가입
+
+**multipart/form-data 형식으로 보내주세요**
+
+
+operation::애플회원가입[snippets='http-request,request-headers,request-parameters,request-parts']
+
+&nbsp;
+
+&nbsp;
+
+operation::애플회원가입[snippets='http-response,response-fields']
 
 &nbsp;
 

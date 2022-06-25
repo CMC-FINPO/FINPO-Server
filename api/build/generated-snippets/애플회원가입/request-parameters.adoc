@@ -1,0 +1,25 @@
+|===
+|파라미터|필수여부|설명
+|`+name+`
+|true
+|이름
+|`+nickname+`
+|true
+|닉네임
+|`+birth+`
+|true
+|생년월일(YYYY-MM-DD)
+|`+gender+`
+|true
+|성별
+(MALE, FEMALE, PRIVATE)
+|`+regionId+`
+|true
+|지역id
+|`+categories+`
+|true
+|카테고리 id들
+|`+profileImg+`
+|false
+|프로필 이미지 url
+|===

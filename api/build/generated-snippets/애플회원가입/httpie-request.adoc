@@ -1,0 +1,14 @@
+[source,bash]
+----
+$ http --multipart POST 'https://dev.finpo.kr/oauth/register/apple' \
+    'profileImgFile'@'imagefile.jpeg' \
+    'Content-Type:application/x-www-form-urlencoded;charset=UTF-8' \
+    'Authorization:Bearer eyJraWQiOiJZdXlYb1kiLCJhbGciOiJSU...' \
+    'name=김명승' \
+    'nickname=mason' \
+    'birth=1999-01-01' \
+    'gender=MALE' \
+    'regionId=8' \
+    'categories=[{"categoryId":1},{"categoryId":3}]' \
+    'profileImg=https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100'
+----

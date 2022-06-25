@@ -2,6 +2,7 @@ package kr.finpo.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.repository.InterestRegionRepository;
 import kr.finpo.api.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -46,9 +48,12 @@ class RegionControllerTest {
   private MockMvc mockMvc;
   @Autowired
   private UserService userService;
+  @Autowired
+  private InterestRegionRepository interestRegionRepository;
 
-  public void set(MockMvc mockMvc, String accessToken) {
+  public void set(MockMvc mockMvc, InterestRegionRepository interestRegionRepository, String accessToken) {
     this.mockMvc = mockMvc;
+    this.interestRegionRepository = interestRegionRepository;
     this.accessToken = accessToken;
   }
 
@@ -228,9 +233,19 @@ class RegionControllerTest {
   }
 
   @Test
+  void insertMyInterestsPassTest() throws Exception {
+    long beforeCnt = interestRegionRepository.count();
+    insertMyInterests(14L);
+    then(beforeCnt + 2).isEqualTo(interestRegionRepository.count());
+  }
+
+  @Test
   void insertMyInterestsTest() throws Exception {
+    long beforeCnt = interestRegionRepository.count();
+    insertMyInterests(12L);
     insertMyInterests(102L);
     insertMyInterests(3L);
+    then(beforeCnt + 5).isEqualTo(interestRegionRepository.count());
   }
 
   void insertMyInterests(Long regionId) throws Exception {
@@ -258,8 +273,6 @@ class RegionControllerTest {
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.data[0].region.id").value(regionId))
-        .andExpect(jsonPath("$.data[0].isDefault").value(false))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(

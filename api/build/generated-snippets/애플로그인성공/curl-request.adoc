@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ curl 'https://dev.finpo.kr/oauth/login/apple' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer eyJraWQiOiJZdXlYb1kiLCJhbGciOiJSU...'
+----

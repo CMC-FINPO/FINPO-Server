@@ -1,0 +1,14 @@
+[source,options="nowrap"]
+----
+{
+  "success" : true,
+  "errorCode" : 0,
+  "message" : "Ok",
+  "data" : {
+    "grantType" : "bearer",
+    "accessToken" : "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2NDAwIiwibmlja25hbWUiOiJtYXNvbiIsInByb2ZpbGVJbWciOiJodHRwOi8vbG9jYWxob3N0OjgwODAvdXBsb2FkL3Byb2ZpbGUvNTJkNzk2ODAtZmZmYS00MjZjLTg1NjQtYzEyMGRhM2YwNzhkLmpwZWciLCJkZWZhdWx0UmVnaW9uIjp7ImlkIjo4LCJuYW1lIjoi7ISx67aBIiwiZGVwdGgiOjIsInN0YXR1cyI6dHJ1ZSwicGFyZW50Ijp7ImlkIjowLCJuYW1lIjoi7ISc7Jq4IiwiZGVwdGgiOjEsInN0YXR1cyI6dHJ1ZSwicGFyZW50IjpudWxsfX0sIm9BdXRoVHlwZSI6IkFQUExFIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY1NjE3NTg0N30.RCZFobNuRdYNy6IZdWC5SCSm2jNe3XijQFxOxwjQCkqSDWvhU0wpKHwZ_dX0vpWYAt5mMOM4ftQ81cd3osB3fQ",
+    "refreshToken" : "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NTg3Njc2Njd9.DLF5bz9k1wfu0LsxQANH_71ZFYsg6k2DrvKrXq4PRaAQY_NForJqIGEZudfJQtfneYlSh7-G9S7ZARYzKSdxLA",
+    "accessTokenExpiresIn" : 1656175847366
+  }
+}
+----

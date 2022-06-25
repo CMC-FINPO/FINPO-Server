@@ -9,7 +9,6 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,8 +53,9 @@ class OAuthControllerTest {
   @Autowired
   private UserService userService;
 
-  String kakaoToken = "Sxj4FaTy5FcsFypvuwsTLwv7srDurijX4-B-CycgCilvVAAAAYGRHn-W";
-  String googleToken = "ya29.a0ARrdaM_fkJnzk1Fe2OJv7Esqld454mi5mnvsfgcmzQS07QnIEZidWgYVCKDYJlvEcICf7U_4KUzOJHxupyQMSyrzlY7DjxZMTjZOM1LYQ6zZTdjrm1MoY_czQ-Vf1UBy014uqmcVnARPytqLvE7M7WKXx0x-";
+  String kakaoToken = "",
+      googleToken = "",
+      appleToken = "";
 
 
   @BeforeEach
@@ -188,6 +188,142 @@ class OAuthControllerTest {
                 preprocessResponse(prettyPrint()),
                 requestHeaders(
                     headerWithName("Authorization").description("Google Access Token")
+                ),
+                responseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.grantType").description("Authorization Header 타입"),
+                    fieldWithPath("data.accessToken").description("Access Token"),
+                    fieldWithPath("data.refreshToken").description("Refresh Token"),
+                    fieldWithPath("data.accessTokenExpiresIn").description("Access Token 만료시각")
+                )
+            )
+        )
+    ;
+  }
+
+  @Test
+  void loginWithAppleTokenFail() throws Exception {
+    mockMvc.perform(get("/oauth/login/apple")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + appleToken)
+        )
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message").value("need register"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andDo(
+            document("애플로그인실패",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Google Access Token")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("로그인 성공 여부\n회원가입 하지 않았다면 [need register]"),
+                    fieldWithPath("data.oAuthType").description("소셜 로그인 타입\nKAKAO/GOOGLE/APPLE").optional().type(JsonFieldType.STRING)
+                )
+            )
+        )
+    ;
+  }
+
+  @Test
+  void loginWithAppleTokenSuccess() throws Exception {
+    registerByAppleTest();
+
+    mockMvc.perform(get("/oauth/login/apple")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + appleToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message").value("Ok"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("애플로그인성공",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Google Access Token")
+                ),
+                responseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.grantType").description("Authorization Header 타입"),
+                    fieldWithPath("data.accessToken").description("Access Token"),
+                    fieldWithPath("data.refreshToken").description("Refresh Token"),
+                    fieldWithPath("data.accessTokenExpiresIn").description("Access Token 만료시각")
+                )
+            )
+        )
+    ;
+  }
+
+
+
+  @Test
+  void registerByAppleTest() throws Exception {
+    MockMultipartFile image = new MockMultipartFile("profileImgFile", "imagefile.jpeg", "image/jpeg", new FileInputStream(System.getProperty("user.dir") + "/" + "test.png"));
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    HashMap<String, Object> body = new HashMap<>() {{
+      put("categoryId", 1);
+    }};
+
+    HashMap<String, Object> body2 = new HashMap<>() {{
+      put("categoryId", 3);
+    }};
+
+    ArrayList<Object> arr = new ArrayList<>() {{
+      add(body);
+      add(body2);
+    }};
+
+    mockMvc.perform(RestDocumentationRequestBuilders.fileUpload("/oauth/register/apple")
+                .file(image)
+                .param("name", "김명승")
+                .param("nickname", "mason")
+                .param("birth", "1999-01-01")
+                .param("gender", Gender.MALE.toString())
+//            .param("email", "mskim9967@naver.com")
+                .param("regionId", "8")
+                .param("categories", objectMapper.writeValueAsString(arr))
+                .param("profileImg", "https://lh3.googleusercontent.com/a-/AOh14GgQFwmk2DXogeGilkeY_X1TJAk4gtYcHiHMI68Y=s100")
+
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header("Authorization", "Bearer " + appleToken)
+        )
+
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.grantType").value("bearer"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("애플회원가입",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Apple Identity Token")
+                ),
+                requestParameters(
+                    parameterWithName("name").description("이름")
+                    , parameterWithName("nickname").description("닉네임")
+                    , parameterWithName("birth").description("생년월일(YYYY-MM-DD)")
+                    , parameterWithName("gender").description("성별\n(MALE, FEMALE, PRIVATE)")
+//                    , parameterWithName("email").description("메일주소")
+                    , parameterWithName("regionId").description("지역id")
+                    , parameterWithName("categories").description("카테고리 id들")
+
+                    , parameterWithName("profileImg").description("프로필 이미지 url").optional()
+                )
+                , requestParts(
+                    partWithName("profileImgFile").description("프로필 이미지 파일").optional()
                 ),
                 responseFields(
                     fieldWithPath("success").description("성공 여부"),
