@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -113,7 +114,8 @@ class PolicyControllerTest {
                     fieldWithPath("data.openApiType").description("Open API 출처").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.modifiedAt").description("수정일").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.category").description("카테고리").optional().type(JsonFieldType.OBJECT),
-                    fieldWithPath("data.region").description("지역").optional().type(JsonFieldType.OBJECT)
+                    fieldWithPath("data.region").description("지역").optional().type(JsonFieldType.OBJECT),
+                    fieldWithPath("data.countOfInterest").description("관심정책으로 추가한 회원 수").optional().type(JsonFieldType.NUMBER)
                 )
             )
         );
@@ -140,7 +142,7 @@ class PolicyControllerTest {
                 requestParameters(
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
-                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt]").optional()
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt, countOfInterest, countOfInterest]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -151,6 +153,7 @@ class PolicyControllerTest {
                     fieldWithPath("data.content.[].institution").description("주관 기관").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
+                    fieldWithPath("data.content.[].countOfInterest").description("관심정책으로 추가한 회원 수").optional().type(JsonFieldType.NUMBER),
 
                     fieldWithPath("data.last").description("현재가 마지막 페이지인가"),
                     fieldWithPath("data.first").description("현재가 첫 페이지인가"),
@@ -191,7 +194,7 @@ class PolicyControllerTest {
 
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
-                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt]").optional()
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt, countOfInterest]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -202,6 +205,7 @@ class PolicyControllerTest {
                     fieldWithPath("data.content.[].institution").description("주관 기관").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
+                    fieldWithPath("data.content.[].countOfInterest").description("관심정책으로 추가한 회원 수").optional().type(JsonFieldType.NUMBER),
 
                     fieldWithPath("data.last").description("현재가 마지막 페이지인가"),
                     fieldWithPath("data.first").description("현재가 첫 페이지인가"),
@@ -240,7 +244,7 @@ class PolicyControllerTest {
 
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
-                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt]").optional()
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt, countOfInterest]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -251,6 +255,7 @@ class PolicyControllerTest {
                     fieldWithPath("data.content.[].institution").description("주관 기관").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
+                    fieldWithPath("data.content.[].countOfInterest").description("관심정책으로 추가한 회원 수").optional().type(JsonFieldType.NUMBER),
 
                     fieldWithPath("data.last").description("현재가 마지막 페이지인가"),
                     fieldWithPath("data.first").description("현재가 첫 페이지인가"),
@@ -264,17 +269,46 @@ class PolicyControllerTest {
             )
         )
     ;
+
+    mockMvc.perform(get("/policy/search?title=무료&page=0&size=5&sort=countOfInterest,desc")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("정책인기순검색",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("title").description("제목 검색").optional(),
+                    parameterWithName("startDate").description("시작 날짜").optional(),
+                    parameterWithName("endDate").description("종료 날짜").optional(),
+                    parameterWithName("region").description("지역 id(복수개 가능)").optional(),
+                    parameterWithName("category").description("카테고리 id(복수개 가능)").optional(),
+
+                    parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
+                    parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\ncountOfInterest:인기순, desc:내림차순\n").optional()
+                )));
   }
 
 
   @Test
   void insertMyInterest() throws Exception {
+    long beforeCnt = interestPolicyRepository.count();
+
     insertMyInterest(21L);
     insertMyInterest(40L);
     insertMyInterest(73L);
     insertMyInterest(3L);
     insertMyInterest(41L);
-    then(5).isEqualTo(interestPolicyRepository.count());
+    then(beforeCnt + 5).isEqualTo(interestPolicyRepository.count());
   }
 
 
@@ -441,10 +475,56 @@ class PolicyControllerTest {
   }
 
   @Test
+  void updateMyJoined() throws Exception {
+    int id = insertMyJoined(312L, "변경 전 메모안ㅇㄴ맒ㄴ알ㅇㄴ말ㅇㄴㅁ");
+
+    HashMap<String, Object> body = new HashMap<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    body.put("id", id);
+    body.put("memo", "변경 후 메모임");
+
+    long beforeCnt = joinedPolicyRepository.count();
+
+    mockMvc.perform(put("/policy/joined/me")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(body))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내참여정책수정",
+               preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestFields(
+                    fieldWithPath("id").description("메모를 변경할 참여정책 id"),
+                    fieldWithPath("memo").description("변경할 메모")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.id").description("참여정책id"),
+                    fieldWithPath("data.policy.id").description("정책id"),
+                    fieldWithPath("data.memo").description("메모").optional().type(JsonFieldType.STRING)
+                )
+            )
+        )
+    ;
+    then(beforeCnt).isEqualTo(joinedPolicyRepository.count());
+  }
+
+  @Test
   void deleteMyInterest() throws Exception {
     insertMyInterest(40L);
     insertMyInterest(312L);
     int id = insertMyInterest(51L);
+    long beforeCnt = interestPolicyRepository.count();
 
     mockMvc.perform(delete("/policy/interest/me?id=" + id)
             .contentType(MediaType.APPLICATION_JSON)
@@ -473,7 +553,7 @@ class PolicyControllerTest {
             )
         )
     ;
-    then(2).isEqualTo(interestPolicyRepository.count());
+    then(beforeCnt - 1).isEqualTo(interestPolicyRepository.count());
   }
 
   @Test
@@ -481,6 +561,7 @@ class PolicyControllerTest {
     insertMyJoined(40L, "그냥저냥");
     insertMyJoined(312L, null);
     int id = insertMyJoined(24L, "이건 꽤 괜찮았던듯");
+    long beforeCnt = joinedPolicyRepository.count();
 
     mockMvc.perform(delete("/policy/joined/me?id=" + id)
             .contentType(MediaType.APPLICATION_JSON)
@@ -509,6 +590,6 @@ class PolicyControllerTest {
             )
         )
     ;
-    then(2).isEqualTo(joinedPolicyRepository.count());
+    then(beforeCnt - 1).isEqualTo(joinedPolicyRepository.count());
   }
 }

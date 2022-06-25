@@ -235,6 +235,16 @@ operation::회원탈퇴[snippets='http-request,request-fields,request-headers,ht
 
 &nbsp;
 
+==== OAuth 연결 해제 후 탈퇴
+operation::회원탈퇴예외[snippets='http-response']
+
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 
 
 
@@ -483,6 +493,18 @@ operation::정책날짜검색[snippets='http-request,request-headers,request-par
 
 &nbsp;
 
+=== 정렬
+
+==== 예시 (인기순으로 정렬)
+
+operation::정책인기순검색[snippets='http-request,request-headers,http-response']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 
 === 나의 관심정책
 ==== 조회
@@ -504,6 +526,7 @@ operation::내관심정책추가[snippets='http-request,request-headers,request-
 &nbsp;
 
 &nbsp;
+
 
 ==== 삭제
 
@@ -529,6 +552,17 @@ operation::내참여정책조회[snippets='http-request,request-headers,http-res
 ==== 추가
 
 operation::내참여정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+==== 수정
+
+operation::내참여정책수정[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 &nbsp;
 
