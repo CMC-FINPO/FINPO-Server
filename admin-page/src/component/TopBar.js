@@ -177,7 +177,7 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
       // <AppleButton sx={{ fontSize: 16 }} variant='contained' size='small' startIcon={<AppleIcon />} onClick={() => {}}>
       //   {'준비 중'}
       // </AppleButton>
-      <MyAppleSigninButton />
+      <>{user ? <button onClick={() => logout()}>`${user.nickname} (로그아웃)`</button> : <MyAppleSigninButton />}</>
     );
   };
 
