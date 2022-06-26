@@ -218,7 +218,9 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
                     onClick={(e) => {
                       e.stopPropagation();
                       setDetailOpen(true);
-                      setUserDetail(row);
+                      axiosInstance.get(`policy/${row.id}`).then((res) => {
+                        setUserDetail(res.data.data);
+                      });
                     }}
                   >
                     <TableCell align='center'>{row.id}</TableCell>
