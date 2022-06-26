@@ -10,6 +10,8 @@ import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import HomeIcon from '@mui/icons-material/Home';
 
+import AppleSignin from 'react-apple-signin-auth';
+import { appleAuthHelpers } from 'react-apple-signin-auth';
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -106,6 +108,46 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
     },
   }));
 
+  const MyAppleSigninButton = () => (
+    <AppleSignin
+      /** Auth options passed to AppleID.auth.init() */
+      authOptions={{
+        /** Client ID - eg: 'com.example.com' */
+        clientId: 'LeePaper.FINPO',
+        /** Requested scopes, seperated by spaces - eg: 'email name' */
+        // scope: 'email name',
+        /** Apple's redirectURI - must be one of the URIs you added to the serviceID - the undocumented trick in apple docs is that you should call auth from a page that is listed as a redirectURI, localhost fails */
+        // redirectURI: 'https://example.com',
+        /** State string that is returned with the apple response */
+        state: 'state',
+        redirectURI: 'https://admin.finpo.kr',
+        /** Nonce */
+        // nonce: 'nonce',
+        /** Uses popup auth instead of redirection */
+        usePopup: true,
+      }} // REQUIRED
+      /** General props */
+      uiType='dark'
+      /** className */
+      className='apple-auth-btn'
+      /** Removes default style tag */
+      noDefaultStyle={false}
+      /** Allows to change the button's children, eg: for changing the button text */
+      buttonExtraChildren='Continue with Apple'
+      /** Extra controlling props */
+      /** Called upon signin success in case authOptions.usePopup = true -- which means auth is handled client side */
+      onSuccess={(response) => console.log(response)} // default = undefined
+      /** Called upon signin error */
+      onError={(error) => console.error(error)} // default = undefined
+      /** Skips loading the apple script if true */
+      skipScript={false} // default = undefined
+      /** Apple image props */
+      iconProp={{ style: { marginTop: '10px' } }} // default = undefined
+      /** render function - called with all props - can be used to fully customize the UI by rendering your own component  */
+      render={(props) => <button {...props}>My Custom Button</button>}
+    />
+  );
+
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
@@ -131,9 +173,10 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
 
   const AppleLogin = () => {
     return (
-      <AppleButton sx={{ fontSize: 16 }} variant='contained' size='small' startIcon={<AppleIcon />} onClick={() => {}}>
-        {'준비 중'}
-      </AppleButton>
+      // <AppleButton sx={{ fontSize: 16 }} variant='contained' size='small' startIcon={<AppleIcon />} onClick={() => {}}>
+      //   {'준비 중'}
+      // </AppleButton>
+      <MyAppleSigninButton />
     );
   };
 
