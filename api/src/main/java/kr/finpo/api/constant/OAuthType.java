@@ -1,5 +1,5 @@
 package kr.finpo.api.constant;
 
 public enum OAuthType {
-  KAKAO, APPLE, GOOGLE
+  KAKAO, APPLE, GOOGLE, TEST
 }

@@ -46,7 +46,6 @@ public class OAuthController {
     return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER); // redirect
   }
 
-
   @GetMapping(path = "/googleloginurl")
   public ResponseEntity<Object> temp(
       @Value("${oauth.google.redirect-uri}") String googleRedirectUrl,
@@ -83,6 +82,26 @@ public class OAuthController {
     return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER); // redirect
   }
 
+  @PostMapping(path = "/login/apple")
+  public ResponseEntity<Object> loginWithAppleId(
+      AppleAuthDto appleAuthDto,
+      @Value("${admin-page.url}") String url
+  ) throws URISyntaxException {
+    log.debug("애플 인증: " + appleAuthDto.toString());
+    Object loginRes = oAuthService.loginWithOAuthToken(appleAuthDto.id_token(), "apple");
+
+    log.debug("loginRes: " + loginRes);
+    HttpHeaders headers = new HttpHeaders();
+    if (loginRes.getClass() == UserDto.class) { // not registered
+      UserDto userDto = (UserDto) loginRes;
+
+      headers.setLocation(new URI(String.format("%s/register/apple?%s&token=%s", url, userDto.toUrlParameter(), appleAuthDto.id_token())));
+    } else {
+      TokenDto tokenDto = (TokenDto) loginRes;
+      headers.setLocation(new URI(String.format("%s?access-token=%s&refresh-token=%s", url, tokenDto.getAccessToken(), tokenDto.getRefreshToken())));
+    }
+    return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER); // redirect
+  }
 
   @GetMapping("/login/{oAuthType}")
   public Object loginWithOAuthToken(@RequestHeader("Authorization") String kakaoAccessToken, @PathVariable String oAuthType) {

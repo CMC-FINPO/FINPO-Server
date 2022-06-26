@@ -288,7 +288,7 @@ public class OAuthService {
       );
       User user = dto.toEntity();
       user.setProfileImg(profileImgUrl);
-      user.setOAuthType(oAuthType.equals("kakao") ? OAuthType.KAKAO : oAuthType.equals("google") ? OAuthType.GOOGLE : OAuthType.APPLE);
+      user.setOAuthType(oAuthType.equals("kakao") ? OAuthType.KAKAO : oAuthType.equals("google") ? OAuthType.GOOGLE : oAuthType.equals("apple") ? OAuthType.APPLE :OAuthType.TEST );
 
       // 기본 지역 설정
       InterestRegion defaultRegion = InterestRegion.of(null, region, true);

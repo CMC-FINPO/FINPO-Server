@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @Transactional
@@ -55,7 +54,7 @@ public class RegionService {
 
   public static final List<String> regions1 = new ArrayList<>(regions2.keySet());
 
-  public static final Long name2regionId (String region1, String region2){
+  public static Long name2regionId (String region1, String region2){
       return regions1.indexOf(region1) * REGION2_MAX + (StringUtils.isNullOrEmpty(region2) ? 0 : (regions2.get(region1).indexOf(region2) + 1));
   }
 
@@ -80,7 +79,7 @@ public class RegionService {
 
   public List<InterestRegionDto> getAllInterest() {
     try {
-      return StreamSupport.stream(interestRegionRepository.findAll().spliterator(), false).map(InterestRegionDto::response).toList();
+      return interestRegionRepository.findAll().stream().map(InterestRegionDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -116,9 +115,7 @@ public class RegionService {
       ArrayList<InterestRegionDto> res = new ArrayList<>();
       User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
 
-      dtos.stream().forEach(dto -> {
-        log.debug("삽입할 지역" + " " + dto.regionId());
-
+      dtos.forEach(dto -> {
         // 중복 지역 넘기기
         if (interestRegionRepository.findOneByUserIdAndRegionId(SecurityUtil.getCurrentUserId(), dto.regionId()).isPresent())
           return;
@@ -167,9 +164,7 @@ public class RegionService {
 
   public Boolean deleteMyInterestByParams(List<Long> ids) {
     try {
-      ids.stream().forEach(id -> {
-        deleteMyInterest(id);
-      });
+      ids.forEach(this::deleteMyInterest);
       return true;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
@@ -188,7 +183,7 @@ public class RegionService {
 
   public List<InterestRegionDto> getMyInterests() {
     try {
-      return StreamSupport.stream(interestRegionRepository.findByUserId(SecurityUtil.getCurrentUserId()).spliterator(), false).map(InterestRegionDto::response).toList();
+      return interestRegionRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(InterestRegionDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

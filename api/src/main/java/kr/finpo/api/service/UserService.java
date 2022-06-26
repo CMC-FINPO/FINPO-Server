@@ -1,9 +1,12 @@
 package kr.finpo.api.service;
 
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.*;
+import kr.finpo.api.dto.AppleTokenDto;
 import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.dto.UserDto;
 import kr.finpo.api.dto.WithdrawDto;
@@ -12,7 +15,11 @@ import kr.finpo.api.repository.*;
 import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +29,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.security.PrivateKey;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @Transactional
@@ -51,6 +64,15 @@ public class UserService {
 
   @Value("${oauth.kakao.admin-key}")
   private String kakaoAdminKey;
+
+  @Value("${oauth.apple.team-id}")
+  private String appleTeamId;
+  @Value("${oauth.apple.client-id}")
+  private String appleClientId;
+  @Value("${oauth.apple.key-id}")
+  private String appleKeyId;
+  @Value("${oauth.apple.private-key}")
+  private String applePrivatekey;
 
   public List<UserDto> getAll() {
     try {
@@ -171,7 +193,34 @@ public class UserService {
               String.class
           );
         }
+        else if (user.getOAuthType().equals(OAuthType.APPLE)) {
+          headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+          params.add("client_id", appleClientId);
+          params.add("client_secret", getClientSecret());
+          params.add("code", dto.code());
+          params.add("grant_type", "authorization_code");
+
+          AppleTokenDto appleTokenDto = new RestTemplate().exchange(
+              "https://appleid.apple.com/auth/token",
+              HttpMethod.POST,
+              new HttpEntity<>(params, headers),
+              AppleTokenDto.class
+          ).getBody();
+
+          log.debug("애플 토큰 응답" + appleTokenDto);
+
+          params.add("token", appleTokenDto.access_token());
+          params.add("token_type_hint", "access_token");
+
+          new RestTemplate().exchange(
+              "https://appleid.apple.com/auth/revoke",
+              HttpMethod.POST,
+              new HttpEntity<>(params, headers),
+              String.class
+          );
+        }
       } catch (HttpClientErrorException | NoSuchElementException e) {
+        e.printStackTrace();
         return false;
       } finally {
         kakaoAccountRepository.deleteByUserId(id);
@@ -182,10 +231,10 @@ public class UserService {
       }
       return true;
     } catch (Exception e) {
+      e.printStackTrace();
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
 
   public Boolean isNicknameDuplicated(String nickname) {
     try {
@@ -215,6 +264,32 @@ public class UserService {
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
+  }
+
+  public String getClientSecret() throws IOException {
+    long now = (new Date()).getTime();
+
+    Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
+    return Jwts.builder()
+        .setHeaderParam("kid", appleKeyId)
+        .setHeaderParam("alg", "ES256")
+        .setIssuer(appleTeamId)
+        .setIssuedAt(new Date(System.currentTimeMillis()))
+        .setExpiration(expirationDate)
+        .setAudience("https://appleid.apple.com")
+        .setSubject(appleClientId)
+        .signWith(SignatureAlgorithm.ES256, getPrivateKey())
+        .compact();
+  }
+
+  private PrivateKey getPrivateKey() throws IOException {
+    ClassPathResource resource = new ClassPathResource(applePrivatekey);
+    String privateKey = new String(resource.getInputStream().readAllBytes());
+    Reader pemReader = new StringReader(privateKey);
+    PEMParser pemParser = new PEMParser(pemReader);
+    JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+    PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
+    return converter.getPrivateKey(object);
   }
 }
 
