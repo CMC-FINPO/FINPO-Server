@@ -119,11 +119,11 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
         // redirectURI: 'https://example.com',
         /** State string that is returned with the apple response */
         state: 'state',
-        redirectURI: 'https://admin.finpo.kr/',
+        redirectURI: process.env.REACT_APP_SERVER_URL + '/oauth/login/apple',
         /** Nonce */
         nonce: 'nonce',
         /** Uses popup auth instead of redirection */
-        usePopup: true,
+        usePopup: false,
       }} // REQUIRED
       /** General props */
       uiType='dark'
@@ -135,7 +135,9 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
       buttonExtraChildren='Continue with Apple'
       /** Extra controlling props */
       /** Called upon signin success in case authOptions.usePopup = true -- which means auth is handled client side */
-      onSuccess={(response) => console.log(response)} // default = undefined
+      onSuccess={(response) => {
+        console.log(response);
+      }} // default = undefined
       /** Called upon signin error */
       onError={(error) => console.error('에러', error)} // default = undefined
       /** Skips loading the apple script if true */
@@ -143,7 +145,7 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
       /** Apple image props */
       iconProp={{ style: { marginTop: '10px' } }} // default = undefined
       /** render function - called with all props - can be used to fully customize the UI by rendering your own component  */
-      render={(props) => <button {...props}>My Custom Button</button>}
+      render={(props) => <button {...props}>애플로그인</button>}
     />
   );
 
@@ -172,38 +174,10 @@ export default function TopBar({ user, setUser, fetch, fetchData }) {
 
   const AppleLogin = () => {
     return (
-      <AppleButton
-        sx={{ fontSize: 16 }}
-        variant='contained'
-        size='small'
-        startIcon={<AppleIcon />}
-        onClick={() => {
-          /**
-           * perform apple signIn operation
-           */
-          appleAuthHelpers.signIn({
-            authOptions: {
-              clientId: process.env.REACT_APP_APPLE_CLIENT_ID,
-              /** Requested scopes, seperated by spaces - eg: 'email name' */
-              scope: 'email',
-              /** Apple's redirectURI - must be one of the URIs you added to the serviceID - the undocumented trick in apple docs is that you should call auth from a page that is listed as a redirectURI, localhost fails */
-              // redirectURI: 'https://example.com',
-              /** State string that is returned with the apple response */
-              state: 'state',
-              redirectURI: 'https://admin.finpo.kr/',
-              /** Nonce */
-              nonce: 'nonce',
-              /** Uses popup auth instead of redirection */
-              usePopup: true,
-            },
-            onSuccess: (response) => console.log(response),
-            onError: (error) => console.error(error),
-          });
-        }}
-      >
-        {'준비 중'}
-      </AppleButton>
-      // <MyAppleSigninButton />
+      // <AppleButton sx={{ fontSize: 16 }} variant='contained' size='small' startIcon={<AppleIcon />} onClick={() => {}}>
+      //   {'준비 중'}
+      // </AppleButton>
+      <MyAppleSigninButton />
     );
   };
 

@@ -120,7 +120,7 @@ export default function UserCard({ fetch, fetchData }) {
                         variant='contained'
                         color='error'
                         onClick={(e) => {
-                          let access_token;
+                          let access_token, code;
 
                           e.stopPropagation();
                           if (!window.confirm('정말 삭제하시겠습니까?')) return;
@@ -128,11 +128,14 @@ export default function UserCard({ fetch, fetchData }) {
                           if (user.oAuthType === 'GOOGLE') {
                             access_token = prompt('구글 access token 입력');
                           }
-
+                          if (user.oAuthType === 'APPLE') {
+                            code = prompt('애플 code 입력');
+                          }
                           axiosInstance
                             .delete(`user/${user.id}`, {
                               data: {
                                 access_token,
+                                code,
                               },
                             })
                             .then(() => {
