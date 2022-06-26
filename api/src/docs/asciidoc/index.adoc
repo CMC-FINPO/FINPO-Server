@@ -570,6 +570,8 @@ operation::내관심정책조회[snippets='http-request,request-headers,http-res
 
 operation::내관심정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
+policyId가 중복된다면 data에 null을 반환합니다.
+
 &nbsp;
 
 &nbsp;
@@ -601,6 +603,8 @@ operation::내참여정책조회[snippets='http-request,request-headers,http-res
 ==== 추가
 
 operation::내참여정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+policyId가 중복된다면 data에 null을 반환합니다.
 
 &nbsp;
 

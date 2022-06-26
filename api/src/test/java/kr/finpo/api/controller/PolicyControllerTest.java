@@ -80,6 +80,9 @@ class PolicyControllerTest {
   @Test
   void gett() throws Exception {
     Long id = 413L;
+
+    insertMyInterest(id);
+
     mockMvc.perform(RestDocumentationRequestBuilders.get("/policy/{id}", id)
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
@@ -89,6 +92,8 @@ class PolicyControllerTest {
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andExpect(jsonPath("$.data.id").value(413))
+        .andExpect(jsonPath("$.data.isInterest").value(true))
+
         .andDo(
             document("정책상세조회",
                 preprocessRequest(prettyPrint()),
@@ -120,7 +125,9 @@ class PolicyControllerTest {
                     fieldWithPath("data.modifiedAt").description("수정일").optional().type(JsonFieldType.STRING),
                     fieldWithPath("data.category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.region").description("지역").optional().type(JsonFieldType.OBJECT),
-                    fieldWithPath("data.countOfInterest").description("관심정책으로 추가한 회원 수").optional().type(JsonFieldType.NUMBER)
+                    fieldWithPath("data.countOfInterest").description("관심정책으로 추가한 회원 수").optional().type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.hits").description("조회수").type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.isInterest").description("관심정책 등록여부")
                 )
             )
         );
@@ -159,6 +166,7 @@ class PolicyControllerTest {
                     fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].countOfInterest").description("관심정책으로 추가한 회원 수").optional().type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.content.[].isInterest").description("관심정책 등록여부"),
 
                     fieldWithPath("data.last").description("현재가 마지막 페이지인가"),
                     fieldWithPath("data.first").description("현재가 첫 페이지인가"),
@@ -211,6 +219,7 @@ class PolicyControllerTest {
                     fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].countOfInterest").description("관심정책으로 추가한 회원 수").optional().type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.content.[].isInterest").description("관심정책 등록여부"),
 
                     fieldWithPath("data.last").description("현재가 마지막 페이지인가"),
                     fieldWithPath("data.first").description("현재가 첫 페이지인가"),
@@ -261,6 +270,7 @@ class PolicyControllerTest {
                     fieldWithPath("data.content.[].category").description("카테고리").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].region").description("지역").optional().type(JsonFieldType.OBJECT),
                     fieldWithPath("data.content.[].countOfInterest").description("관심정책으로 추가한 회원 수").optional().type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.content.[].isInterest").description("관심정책 등록여부"),
 
                     fieldWithPath("data.last").description("현재가 마지막 페이지인가"),
                     fieldWithPath("data.first").description("현재가 첫 페이지인가"),
