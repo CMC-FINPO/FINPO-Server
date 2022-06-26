@@ -231,7 +231,6 @@ public class UserService {
       }
       return true;
     } catch (Exception e) {
-      e.printStackTrace();
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
@@ -267,8 +266,6 @@ public class UserService {
   }
 
   public String getClientSecret() throws IOException {
-    long now = (new Date()).getTime();
-
     Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
         .setHeaderParam("kid", appleKeyId)
