@@ -274,7 +274,7 @@ operation::프로필이미지업데이트[snippets='http-request,request-headers
 
 ==== 탈퇴
 
-구글 회원일 시 access_token을 body에 넣어 보내주세요.
+구글 회원일 시 access_token을, 애플 회원일 시 code를 body에 넣어 보내주세요.
 
 operation::회원탈퇴[snippets='http-request,request-fields,request-headers,http-response,response-fields']
 
@@ -601,12 +601,6 @@ operation::내참여정책조회[snippets='http-request,request-headers,http-res
 ==== 추가
 
 operation::내참여정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
-&nbsp;
-
-참여정책을 추가하였는데 응답의 countOfInterest는 1이 증가되어 반환되지 않습니다.
-&nbsp;
-
-db 쿼리 실행 시간의 문제로 추측되는데, 다시 api로 조회하시면 1 증가한 것을 확인하실 수 있습니다.
 
 &nbsp;
 

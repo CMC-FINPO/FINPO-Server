@@ -217,7 +217,7 @@ class OAuthControllerTest {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestHeaders(
-                    headerWithName("Authorization").description("Google Access Token")
+                    headerWithName("Authorization").description("Apple Identity Token")
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -248,7 +248,7 @@ class OAuthControllerTest {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestHeaders(
-                    headerWithName("Authorization").description("Google Access Token")
+                    headerWithName("Authorization").description("Apple Identity Token")
                 ),
                 responseFields(
                     fieldWithPath("success").description("성공 여부"),

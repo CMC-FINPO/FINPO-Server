@@ -276,7 +276,8 @@ class UserControllerTest {
                     headerWithName("Authorization").description("Access Token")
                 ),
                 requestFields(
-                    fieldWithPath("access_token").description("구글 access token").optional().type(JsonFieldType.STRING)
+                    fieldWithPath("access_token").description("구글 access token").optional().type(JsonFieldType.STRING),
+                    fieldWithPath("code").description("애플 authorization code").optional().type(JsonFieldType.STRING)
                 ),
                 responseFields(
                     fieldWithPath("success").description("성공 여부"),
