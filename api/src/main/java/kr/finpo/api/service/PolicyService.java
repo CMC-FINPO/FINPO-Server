@@ -31,7 +31,8 @@ public class PolicyService {
 
   public PolicyDto get(Long id) {
     try {
-      return PolicyDto.response(policyRepository.findById(id).get());
+      policyRepository.increaseHits(id);
+      return PolicyDto.response(policyRepository.findById(id).get(), interestPolicyRepository.findOneByUserIdAndPolicyId(SecurityUtil.getCurrentUserId(), id).isPresent());
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -42,7 +43,7 @@ public class PolicyService {
       List<InterestCategoryDto> myCategoryDtos = categoryService.getMyInterests();
       List<InterestRegionDto> myRegionDtos = regionService.getMyInterests();
 
-      return policyRepository.querydslFindMy(myCategoryDtos, myRegionDtos, pageable);
+      return policyRepository.querydslFindMy(myCategoryDtos, myRegionDtos, pageable).map(e -> PolicyDto.previewResponse(e, interestPolicyRepository.findOneByUserIdAndPolicyId(SecurityUtil.getCurrentUserId(), e.getId()).isPresent()));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -50,7 +51,7 @@ public class PolicyService {
 
   public Page<PolicyDto> search(String title, LocalDate startDate, LocalDate endDate, List<Long> regionIds, List<Long> categoryIds, Pageable pageable) {
     try {
-      return policyRepository.querydslFindbyTitle(title, startDate, endDate, categoryIds, regionIds, pageable);
+      return policyRepository.querydslFindbyTitle(title, startDate, endDate, categoryIds, regionIds, pageable).map(e -> PolicyDto.previewResponse(e, interestPolicyRepository.findOneByUserIdAndPolicyId(SecurityUtil.getCurrentUserId(), e.getId()).isPresent()));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -78,6 +79,8 @@ public class PolicyService {
       log.debug(dto.toString());
       User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
       Policy policy = policyRepository.findById(dto.policyId()).get();
+      if (interestPolicyRepository.findOneByUserIdAndPolicyId(user.getId(), policy.getId()).isPresent())
+        return null;
       InterestPolicy interestPolicy = InterestPolicy.of(user, policy);
       log.debug(interestPolicy.getPolicy().toString());
       return InterestPolicyDto.response(interestPolicyRepository.save(interestPolicy));
@@ -91,6 +94,8 @@ public class PolicyService {
       User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
       Policy policy = policyRepository.findById(dto.policyId()).get();
       JoinedPolicy joinedPolicy = JoinedPolicy.of(user, policy, dto.memo());
+      if (joinedPolicyRepository.findOneByUserIdAndPolicyId(user.getId(), policy.getId()).isPresent())
+        return null;
       return JoinedPolicyDto.response(joinedPolicyRepository.save(joinedPolicy));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);

@@ -18,6 +18,6 @@ public record JoinedPolicyDto(
     return new JoinedPolicyDto(null, policyId, null, memo);
   }
   public static JoinedPolicyDto response(JoinedPolicy joinedPolicy) {
-    return new JoinedPolicyDto(joinedPolicy.getId(), null, PolicyDto.previewResponse(joinedPolicy.getPolicy()), joinedPolicy.getMemo());
+    return new JoinedPolicyDto(joinedPolicy.getId(), null, PolicyDto.previewResponse(joinedPolicy.getPolicy(), null), joinedPolicy.getMemo());
   }
 }

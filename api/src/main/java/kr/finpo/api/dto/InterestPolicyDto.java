@@ -19,6 +19,6 @@ public record InterestPolicyDto(
     return new InterestPolicyDto(null, id, null);
   }
   public static InterestPolicyDto response(InterestPolicy interestPolicy) {
-    return new InterestPolicyDto(interestPolicy.getId(), null, PolicyDto.previewResponse(interestPolicy.getPolicy()));
+    return new InterestPolicyDto(interestPolicy.getId(), null, PolicyDto.previewResponse(interestPolicy.getPolicy(), null));
   }
 }

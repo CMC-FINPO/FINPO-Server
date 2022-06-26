@@ -9,7 +9,6 @@ import kr.finpo.api.domain.Policy;
 import kr.finpo.api.domain.QPolicy;
 import kr.finpo.api.dto.InterestCategoryDto;
 import kr.finpo.api.dto.InterestRegionDto;
-import kr.finpo.api.dto.PolicyDto;
 import kr.finpo.api.util.QuerydslUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -79,7 +77,7 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
 
 
   @Override
-  public Page<PolicyDto> querydslFindMy(List<InterestCategoryDto> myCategoryDtos, List<InterestRegionDto> myRegionDtos, Pageable pageable) {
+  public Page<Policy> querydslFindMy(List<InterestCategoryDto> myCategoryDtos, List<InterestRegionDto> myRegionDtos, Pageable pageable) {
 
     List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
 
@@ -103,14 +101,14 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
         .limit(pageable.getPageSize())
         .fetchResults();
 
-    List<PolicyDto> content = results.getResults().stream().map(PolicyDto::previewResponse).toList();
+    List<Policy> content = results.getResults();
     ;
 
     return new PageImpl<>(content, pageable, results.getTotal());
   }
 
   @Override
-  public Page<PolicyDto> querydslFindbyTitle(String title, LocalDate startDate, LocalDate endDate, List<Long> categoryIds, List<Long> regionIds, Pageable pageable) {
+  public Page<Policy> querydslFindbyTitle(String title, LocalDate startDate, LocalDate endDate, List<Long> categoryIds, List<Long> regionIds, Pageable pageable) {
 
     System.out.println(title);
 
@@ -143,8 +141,7 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
         .limit(pageable.getPageSize())
         .fetchResults();
 
-    List<PolicyDto> content = results.getResults().stream().map(PolicyDto::previewResponse).toList();
-    ;
+    List<Policy> content = results.getResults();
 
     return new PageImpl<>(content, pageable, results.getTotal());
   }
