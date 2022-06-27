@@ -28,6 +28,25 @@ public class PolicyService {
   private final InterestPolicyRepository interestPolicyRepository;
   private final JoinedPolicyRepository joinedPolicyRepository;
   private final UserRepository userRepository;
+  private final RegionRepository regionRepository;
+  private final CategoryRepository categoryRepository;
+
+
+  public PolicyDto insertCustom(List<PolicyDto> policyDtos) {
+    try {
+      policyDtos.forEach(dto -> {
+        log.debug(dto.toString());
+        Policy policy = Policy.of(dto.title(), Integer.toString(dto.title().hashCode()), dto.institution(), dto.content(), null, null, null, null, null, null, null, null, null, null);
+        policy.setRegion(regionRepository.findById(dto.region().getId()).get());
+        policy.setCategory(categoryRepository.findById(dto.category().getId()).get());
+        log.debug(policyRepository.save(policy).toString());
+
+      });
+      return null;
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
 
   public PolicyDto get(Long id) {
     try {

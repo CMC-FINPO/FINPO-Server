@@ -55,7 +55,7 @@ public class CategoryController {
   }
 
   @DeleteMapping("")
-  public DataResponse<Object> deleteByParams(@RequestParam(name="id") List<Long> ids) {
+  public DataResponse<Object> deleteByParams(@RequestParam(name = "id") List<Long> ids) {
     return DataResponse.of(categoryService.deleteByParams(ids));
   }
 }

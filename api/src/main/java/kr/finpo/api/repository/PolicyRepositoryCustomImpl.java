@@ -69,7 +69,7 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
         orders.add(orderSpecifier);
       }
     }
-    orderSpecifier = QuerydslUtil.getSortedColumn(Order.ASC, QPolicy.policy, "id");
+    orderSpecifier = QuerydslUtil.getSortedColumn(Order.DESC, QPolicy.policy, "id");
     orders.add(orderSpecifier);
 
     return orders;

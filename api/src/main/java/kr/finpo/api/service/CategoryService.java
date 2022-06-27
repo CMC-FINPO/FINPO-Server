@@ -57,7 +57,7 @@ public class CategoryService {
 
   public List<CategoryDto> getByParentId(Long parentId) {
     try {
-      return StreamSupport.stream(categoryRepository.findByParentId(parentId).spliterator(), false).map(CategoryDto::response).toList();
+      return categoryRepository.findByParentId(parentId).stream().map(CategoryDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -66,7 +66,7 @@ public class CategoryService {
   public List<CategoryDto> getAllByChildFormat() {
     try {
       return categoryRepository.findByDepth(1L).stream().map(e ->
-          CategoryDto.childsResponse(e, StreamSupport.stream(categoryRepository.findByParentId(e.getId()).spliterator(), false).map(ee -> CategoryDto.childsResponse(ee, null)).toList())
+          CategoryDto.childsResponse(e, categoryRepository.findByParentId(e.getId()).stream().map(ee -> CategoryDto.childsResponse(ee, null)).toList())
       ).toList();
 
     } catch (Exception e) {
@@ -76,7 +76,7 @@ public class CategoryService {
 
   public List<CategoryDto> getByDepth(Long depth) {
     try {
-      return StreamSupport.stream(categoryRepository.findByDepth(depth).spliterator(), false).map(CategoryDto::response).toList();
+      return categoryRepository.findByDepth(depth).stream().map(CategoryDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -92,7 +92,7 @@ public class CategoryService {
 
   public List<InterestCategoryDto> getMyInterests() {
     try {
-      return StreamSupport.stream(interestCategoryRepository.findByUserId(SecurityUtil.getCurrentUserId()).spliterator(), false).map(InterestCategoryDto::response).toList();
+      return interestCategoryRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(InterestCategoryDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -109,18 +109,15 @@ public class CategoryService {
   }
 
   public List<InterestCategoryDto> insertMyInterests(List<InterestCategoryDto> dtos) {
-    return insertMyInterests(dtos, null);
+    User user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
+        () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
+    );
+    return insertMyInterests(dtos, user);
   }
 
   public List<InterestCategoryDto> insertMyInterests(List<InterestCategoryDto> dtos, User user) {
     try {
       ArrayList<InterestCategoryDto> res = new ArrayList<InterestCategoryDto>();
-
-      if (user == null)
-        user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
-            () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
-        );
-      User finalUser = user;
 
       List<InterestCategoryDto> cowDtos = new CopyOnWriteArrayList<>() {{
         addAll(dtos);
@@ -141,11 +138,11 @@ public class CategoryService {
       cowDtos.forEach(dto -> {
         log.debug("dto: " + dto.toString());
         // 관심카테고리 이미 존재 시 넘어감
-        if (interestCategoryRepository.findByUserIdAndCategoryId(finalUser.getId(), dto.categoryId()).isPresent())
+        if (interestCategoryRepository.findByUserIdAndCategoryId(user.getId(), dto.categoryId()).isPresent())
           return;
 
         Category category = categoryRepository.findById(dto.categoryId()).get();
-        InterestCategory interestCategory = InterestCategory.of(finalUser, category);
+        InterestCategory interestCategory = InterestCategory.of(user, category);
         interestCategory = interestCategoryRepository.save(interestCategory);
         res.add(InterestCategoryDto.response(interestCategory));
       });
@@ -159,9 +156,7 @@ public class CategoryService {
 
   public Boolean deleteByParams(List<Long> ids) {
     try {
-      ids.stream().forEach(id -> {
-        delete(id);
-      });
+      ids.forEach(this::delete);
       return true;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);

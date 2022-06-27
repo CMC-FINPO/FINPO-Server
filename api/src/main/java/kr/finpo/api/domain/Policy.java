@@ -95,8 +95,7 @@ public class Policy {
   private Boolean status = true;
 
   @Column(nullable = false)
-  @ColumnDefault("0")
-  private Long hits;
+  private Long hits = 0L;
 
   @Formula("(select count(*) from interest_policy ip where ip.policy_id = id)")
   private Integer countOfInterest;

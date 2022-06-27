@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface InterestRegionRepository extends JpaRepository<InterestRegion, Long> {
   public List<InterestRegion> findByUserId(Long id);
   public Long deleteByUserId(Long id);
-  public Long deleteByUserIdAndIsDefault(Long id, Boolean isDefault);
+  public void deleteByUserIdAndIsDefault(Long id, Boolean isDefault);
 
   public Optional<InterestRegion> findOneByUserIdAndIsDefault(Long userId, Boolean isDefault);
   public Optional<InterestRegion> findOneByUserIdAndRegionId(Long userId, Long regionId);
