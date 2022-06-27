@@ -3,14 +3,13 @@ package kr.finpo.api.service.openapi;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.Category;
 import kr.finpo.api.domain.Policy;
-import kr.finpo.api.domain.InterestRegion;
 import kr.finpo.api.domain.Region;
-import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.dto.YouthcenterDto;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.CategoryRepository;
 import kr.finpo.api.repository.PolicyRepository;
 import kr.finpo.api.repository.RegionRepository;
+import kr.finpo.api.service.FcmService;
 import kr.finpo.api.service.RegionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -195,6 +194,7 @@ public class YouthcenterService {
   private final PolicyRepository policyRepository;
   private final CategoryRepository categoryRepository;
   private final RegionRepository regionRepository;
+  private final FcmService fcmService;
 
   @Value("${youthcenter.key}")
   private String apiKey;
@@ -217,7 +217,7 @@ public class YouthcenterService {
 
         StringBuilder bizTycdSelSb = new StringBuilder();
 
-        categories.get(categoryId).forEach(category->{
+        categories.get(categoryId).forEach(category -> {
           bizTycdSelSb.append(category);
           bizTycdSelSb.append(",");
         });
@@ -253,7 +253,6 @@ public class YouthcenterService {
               log.debug("category " + categoryId + "end");
               break;
             }
-            ;
 
             try {
               Region region = regionRepository.findById(RegionService.name2regionId(regionName.get(row.getPolyBizSecd()).a, regionName.get(row.getPolyBizSecd()).b)).get();
@@ -266,6 +265,7 @@ public class YouthcenterService {
             }
 
             policyRepository.save(policy);
+            fcmService.sendPolicyPush(policy);
           }
           if (endFlag) break;
         }

@@ -9,6 +9,7 @@ src/docs
 static/docs
 test.png
 *.p8
+*.json
 
 # Created by https://www.toptal.com/developers/gitignore/api/gradle,intellij,intellij+iml,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=gradle,intellij,intellij+iml,java

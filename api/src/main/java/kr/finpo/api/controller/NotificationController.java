@@ -8,12 +8,14 @@ import kr.finpo.api.service.NotificationService;
 import kr.finpo.api.service.PolicyService;
 import kr.finpo.api.service.openapi.YouthcenterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 @RequestMapping("/notification")
 public class NotificationController {
 

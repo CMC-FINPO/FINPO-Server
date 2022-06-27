@@ -57,6 +57,7 @@ public class UserService {
   private final AppleAccountRepository appleAccountRepository;
   private final GoogleAccountRepository googleAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
+  private final FcmRepository fcmRepository;
   private final S3Uploader s3Uploader;
 
   @Value("${upload.url}")
@@ -162,6 +163,8 @@ public class UserService {
       interestCategoryRepository.deleteByUserId(id);
       interestPolicyRepository.deleteByUserId(id);
       joinedPolicyRepository.deleteByUserId(id);
+      refreshTokenRepository.deleteByUserId(id);
+      fcmRepository.deleteByUserId(id);
 
       try {
         HttpHeaders headers = new HttpHeaders();
@@ -226,7 +229,6 @@ public class UserService {
         kakaoAccountRepository.deleteByUserId(id);
         googleAccountRepository.deleteByUserId(id);
         appleAccountRepository.deleteByUserId(id);
-        refreshTokenRepository.deleteByUserId(id);
         userRepository.deleteById(id);
       }
       return true;

@@ -30,17 +30,17 @@ public class PolicyService {
   private final UserRepository userRepository;
   private final RegionRepository regionRepository;
   private final CategoryRepository categoryRepository;
+  private final FcmService fcmService;
 
 
   public PolicyDto insertCustom(List<PolicyDto> policyDtos) {
     try {
       policyDtos.forEach(dto -> {
-        log.debug(dto.toString());
         Policy policy = Policy.of(dto.title(), Integer.toString(dto.title().hashCode()), dto.institution(), dto.content(), null, null, null, null, null, null, null, null, null, null);
         policy.setRegion(regionRepository.findById(dto.region().getId()).get());
         policy.setCategory(categoryRepository.findById(dto.category().getId()).get());
-        log.debug(policyRepository.save(policy).toString());
-
+        policyRepository.save(policy);
+        fcmService.sendPolicyPush(policy);
       });
       return null;
     } catch (Exception e) {

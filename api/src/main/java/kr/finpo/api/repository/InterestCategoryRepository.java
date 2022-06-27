@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface InterestCategoryRepository extends JpaRepository<InterestCategory, Long> {
   public List<InterestCategory> findByUserId(Long id);
+  public List<InterestCategory> findByCategoryIdAndSubscribe(Long categoryId, Boolean subscribe);
   public Optional<InterestCategory> findByUserIdAndCategoryId(Long id, Long categoryId);
   public Long deleteByUserId(Long id);
 }

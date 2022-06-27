@@ -117,7 +117,7 @@ public class CategoryService {
 
   public List<InterestCategoryDto> insertMyInterests(List<InterestCategoryDto> dtos, User user) {
     try {
-      ArrayList<InterestCategoryDto> res = new ArrayList<InterestCategoryDto>();
+      ArrayList<InterestCategoryDto> res = new ArrayList<>();
 
       List<InterestCategoryDto> cowDtos = new CopyOnWriteArrayList<>() {{
         addAll(dtos);

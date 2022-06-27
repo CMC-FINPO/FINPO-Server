@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.Policy;
-import kr.finpo.api.domain.InterestRegion;
 import kr.finpo.api.domain.Region;
 import kr.finpo.api.dto.GgdataDto;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.CategoryRepository;
 import kr.finpo.api.repository.PolicyRepository;
 import kr.finpo.api.repository.RegionRepository;
+import kr.finpo.api.service.FcmService;
 import kr.finpo.api.service.RegionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +76,7 @@ public class GgdataService {
   private final PolicyRepository policyRepository;
   private final CategoryRepository categoryRepository;
   private final RegionRepository regionRepository;
-
+  private final FcmService fcmService;
 
   @Value("${ggdata.key}")
   private String apiKey;
@@ -130,6 +130,7 @@ public class GgdataService {
 
           categoryRepository.findById(categoryName.get(row.DIV_CD())).ifPresent(policy::setCategory);
           policyRepository.save(policy);
+          fcmService.sendPolicyPush(policy);
         }
         ;
       }
