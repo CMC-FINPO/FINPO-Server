@@ -9,15 +9,16 @@ import kr.finpo.api.domain.User;
 public record InterestCategoryDto(
     Long id,
     Long categoryId,
-    Category category
+    Category category,
+    Boolean subscribe
 ) {
   public InterestCategoryDto {
   }
 
   public static InterestCategoryDto of(Long id) {
-    return new InterestCategoryDto(null, id, null);
+    return new InterestCategoryDto(null, id, null, null);
   }
   public static InterestCategoryDto response(InterestCategory interestCategory) {
-    return new InterestCategoryDto(interestCategory.getId(), null, interestCategory.getCategory());
+    return new InterestCategoryDto(interestCategory.getId(), null, interestCategory.getCategory(), interestCategory.getSubscribe());
   }
 }
