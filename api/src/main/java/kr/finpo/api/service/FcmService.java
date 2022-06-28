@@ -32,7 +32,7 @@ public class FcmService {
   public void sendPolicyPush(Policy policy) {
     List<String> registrationTokens = new ArrayList<>();
 
-    List<Long> interestRegionUsers = interestRegionRepository.findByRegionId(policy.getRegion().getId()).stream().map(InterestRegion::getUser).map(User::getId).toList();
+    List<Long> interestRegionUsers = interestRegionRepository.findByRegionIdAndSubscribe(policy.getRegion().getId(), true).stream().map(InterestRegion::getUser).map(User::getId).toList();
     List<Long> interestCategoryUsers = interestCategoryRepository.findByCategoryIdAndSubscribe(policy.getCategory().getId(), true).stream().map(InterestCategory::getUser).map(User::getId).toList();
 
     // intersection

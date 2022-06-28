@@ -22,6 +22,7 @@ public class NotificationService {
 
   private final FcmRepository fcmRepository;
   private final InterestCategoryRepository interestCategoryRepository;
+  private final InterestRegionRepository interestRegionRepository;
   private final UserRepository userRepository;
 
   public User getMe() {
@@ -35,7 +36,8 @@ public class NotificationService {
       User user = getMe();
       Fcm fcm = fcmRepository.findOneByUserId(user.getId()).orElse(null);
       List<InterestCategory> interestCategories = interestCategoryRepository.findByUserId(user.getId());
-      return NotificationDto.response(fcm, interestCategories);
+      List<InterestRegion> interestRegions = interestRegionRepository.findByUserId(user.getId());
+      return NotificationDto.response(fcm, interestCategories, interestRegions);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -48,7 +50,7 @@ public class NotificationService {
 
       if (fcm.isEmpty()) { // insert
         if (dto.registrationToken() == null)
-          throw new GeneralException(ErrorCode.BAD_REQUEST, "There's no registeration token");
+          throw new GeneralException(ErrorCode.BAD_REQUEST, "There's no registration token");
         fcmRepository.deleteByUserId(user.getId());
         insertMy(dto);
       }
@@ -65,6 +67,13 @@ public class NotificationService {
           interestCategoryRepository.save(interestCategory);
         });
 
+      if (dto.interestRegions() != null)
+        dto.interestRegions().forEach(interestRegionDto -> {
+          InterestRegion interestRegion = interestRegionRepository.findById(interestRegionDto.id()).get();
+          interestRegion.setSubscribe(interestRegionDto.subscribe());
+          interestRegionRepository.save(interestRegion);
+        });
+
       return getMy();
     } catch (Exception e) {
       log.debug(dto.toString());
@@ -72,12 +81,12 @@ public class NotificationService {
     }
   }
 
-  public NotificationDto insertMy(NotificationDto dto) {
+  public void insertMy(NotificationDto dto) {
     try {
       User user = getMe();
       Fcm fcm = Fcm.of(dto.subscribe(), dto.registrationToken());
       fcm.setUser(user);
-      return NotificationDto.response(fcmRepository.save(fcm), interestCategoryRepository.findByUserId(user.getId()));
+      fcmRepository.save(fcm);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

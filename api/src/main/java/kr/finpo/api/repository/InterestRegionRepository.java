@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface InterestRegionRepository extends JpaRepository<InterestRegion, Long> {
   public List<InterestRegion> findByUserId(Long id);
   public List<InterestRegion> findByRegionId(Long id);
+  public List<InterestRegion> findByRegionIdAndSubscribe(Long id, Boolean subscribe);
   public Long deleteByUserId(Long id);
   public void deleteByUserIdAndIsDefault(Long id, Boolean isDefault);
 

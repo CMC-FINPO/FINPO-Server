@@ -24,6 +24,10 @@ public class InterestRegion {
   @Column(nullable = false)
   private Boolean isDefault = false;
 
+  @Setter
+  @Column(nullable = false)
+  private Boolean subscribe = true;
+
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
   @CreatedDate
   private LocalDateTime createdAt;
