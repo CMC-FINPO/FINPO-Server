@@ -6,6 +6,9 @@ import kr.finpo.api.dto.InterestCategoryDto;
 import kr.finpo.api.repository.CategoryRepository;
 import kr.finpo.api.repository.InterestCategoryRepository;
 import kr.finpo.api.service.UserService;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import org.json.JSONArray;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,9 +21,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -210,7 +215,8 @@ class PolicyCategoryControllerTest {
                     fieldWithPath("data.[].category.id").description("카테고리 id"),
                     fieldWithPath("data.[].category.name").description("카테고리 이름"),
                     fieldWithPath("data.[].category.depth").description("카테고리 깊이"),
-                    fieldWithPath("data.[].category.parent").description("카테고리 부모")
+                    fieldWithPath("data.[].category.parent").description("카테고리 부모"),
+                    fieldWithPath("data.[].subscribe").description("카테고리 알림 구독 여부")
                 )
             )
         );
@@ -253,7 +259,7 @@ class PolicyCategoryControllerTest {
     insertMyInterestCategories();
   }
 
-  void insertMyInterestCategories() throws Exception {
+  List<InterestCategoryDto> insertMyInterestCategories() throws Exception {
     ObjectMapper objectMapper = new ObjectMapper();
     HashMap<String, Object> body = new HashMap<>(){{
       put("categoryId", 5);
@@ -274,7 +280,7 @@ class PolicyCategoryControllerTest {
       add(body3);
     }};
 
-    mockMvc.perform(post("/policy/category/me")
+    MvcResult res = mockMvc.perform(post("/policy/category/me")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
             .content(objectMapper.writeValueAsString(arr))
@@ -308,10 +314,17 @@ class PolicyCategoryControllerTest {
                     fieldWithPath("data.[].category.id").description("카테고리 id"),
                     fieldWithPath("data.[].category.name").description("카테고리 이름"),
                     fieldWithPath("data.[].category.depth").description("카테고리 깊이"),
-                    fieldWithPath("data.[].category.parent").description("카테고리 부모")
+                    fieldWithPath("data.[].category.parent").description("카테고리 부모"),
+                    fieldWithPath("data.[].subscribe").description("카테고리 알림 구독 여부")
                 )
             )
-        );
+        ).andReturn();
+
+
+    JSONParser parser = new JSONParser();
+    JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
+    return Arrays.asList(new ObjectMapper().readValue(json.get("data").toString(), InterestCategoryDto[].class));
+
   }
 
   @Test
@@ -373,7 +386,8 @@ class PolicyCategoryControllerTest {
                     fieldWithPath("data.[].category").description("카테고리 정보"),
                     fieldWithPath("data.[].category.id").description("카테고리 id"),
                     fieldWithPath("data.[].category.name").description("카테고리 이름"),
-                    fieldWithPath("data.[].category.depth").description("카테고리 깊이")
+                    fieldWithPath("data.[].category.depth").description("카테고리 깊이"),
+                    fieldWithPath("data.[].subscribe").description("카테고리 알림 구독 여부")
 //                    fieldWithPath("data.[].category.parent").description("카테고리 부모")
                 )
             )

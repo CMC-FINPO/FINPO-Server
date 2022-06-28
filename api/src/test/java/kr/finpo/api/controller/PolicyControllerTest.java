@@ -371,12 +371,13 @@ class PolicyControllerTest {
 
   @Test
   void insertMyJoined() throws Exception {
+    long beforeCnt = joinedPolicyRepository.count();
     insertMyJoined(37L, "이건 언제언제해서 잘했음");
     insertMyJoined(47L, null);
     insertMyJoined(4L, null);
     insertMyJoined(91L, null);
     insertMyJoined(78L, "이건 좀 아쉬웠음");
-    then(5).isEqualTo(joinedPolicyRepository.count());
+    then(beforeCnt + 5).isEqualTo(joinedPolicyRepository.count());
   }
 
   int insertMyJoined(Long id, String memo) throws Exception {
@@ -608,4 +609,81 @@ class PolicyControllerTest {
     ;
     then(beforeCnt - 1).isEqualTo(joinedPolicyRepository.count());
   }
+
+  @Test
+  void deleteMyInterestByPolicyId() throws Exception {
+    Long policyId = 32L;
+    insertMyInterest(40L);
+    insertMyInterest(312L);
+    int id = insertMyInterest(policyId);
+    long beforeCnt = interestPolicyRepository.count();
+
+    mockMvc.perform(RestDocumentationRequestBuilders.delete("/policy/interest/me?policyId="+policyId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내관심정책삭제정책id",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("policyId").description("삭제할 정책 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data").description("삭제 성공 여부")
+                )
+            )
+        )
+    ;
+    then(beforeCnt - 1).isEqualTo(interestPolicyRepository.count());
+  }
+
+  @Test
+  void deleteMyJoinedByPolicyId() throws Exception {
+    Long policyId = 24L;
+    insertMyJoined(40L, "그냥저냥");
+    insertMyJoined(312L, null);
+    int id = insertMyJoined(policyId, "이건 꽤 괜찮았던듯");
+    long beforeCnt = joinedPolicyRepository.count();
+
+    mockMvc.perform(RestDocumentationRequestBuilders.delete("/policy/joined/me?policyId="+policyId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내참여정책삭제정책id",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("policyId").description("삭제할 정책 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data").description("삭제 성공 여부")
+                )
+            )
+        )
+    ;
+    then(beforeCnt - 1).isEqualTo(joinedPolicyRepository.count());
+  }
+
 }

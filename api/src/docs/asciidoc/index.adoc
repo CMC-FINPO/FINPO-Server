@@ -494,6 +494,51 @@ operation::내관심카테고리수정[snippets='http-request,request-headers,re
 //&nbsp;
 
 
+== 알림
+
+=== 내 알림
+
+==== 조회
+
+operation::내알림조회[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 전체 알림 받기
+
+operation::알림받기[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 전체 알림 끄기
+
+operation::알림끊기[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 상세 카테고리 알림 수정
+
+operation::알림수정[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
 == 정책
 === 상세 정보
 ==== 조회
@@ -579,9 +624,19 @@ policyId가 중복된다면 data에 null을 반환합니다.
 &nbsp;
 
 
-==== 삭제
+==== 관심정책 id로 삭제
 
 operation::내관심정책삭제[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 정책 id로 삭제
+
+operation::내관심정책삭제정책id[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 &nbsp;
 
@@ -623,9 +678,19 @@ operation::내참여정책수정[snippets='http-request,request-headers,path-par
 
 &nbsp;
 
-==== 삭제
+==== 참여정책 id로 삭제
 
 operation::내참여정책삭제[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 정책 id로 삭제
+
+operation::내참여정책삭제정책id[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 &nbsp;
 

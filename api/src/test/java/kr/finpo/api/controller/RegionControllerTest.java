@@ -2,8 +2,12 @@ package kr.finpo.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.dto.InterestCategoryDto;
+import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.repository.InterestRegionRepository;
 import kr.finpo.api.service.UserService;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,10 +20,13 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -248,7 +255,7 @@ class RegionControllerTest {
     then(beforeCnt + 5).isEqualTo(interestRegionRepository.count());
   }
 
-  void insertMyInterests(Long regionId) throws Exception {
+  List<InterestRegionDto> insertMyInterests(Long regionId) throws Exception {
     ObjectMapper objectMapper = new ObjectMapper();
     HashMap<String, Object> body = new HashMap<>();
     body.put("regionId", regionId);
@@ -266,7 +273,7 @@ class RegionControllerTest {
       add(body3);
     }};
 
-    mockMvc.perform(post("/region/me")
+    MvcResult res = mockMvc.perform(post("/region/me")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
             .content(objectMapper.writeValueAsString(arr))
@@ -297,7 +304,11 @@ class RegionControllerTest {
                     fieldWithPath("data.[].isDefault").description("거주지역이면 true\n관심지역이면 false")
                 )
             )
-        );
+        ).andReturn();
+
+    JSONParser parser = new JSONParser();
+    JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
+    return Arrays.asList(new ObjectMapper().readValue(json.get("data").toString(), InterestRegionDto[].class));
   }
 
   @Test
