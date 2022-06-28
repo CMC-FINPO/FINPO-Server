@@ -8,6 +8,7 @@ import InterestRegionCard from '../component/InterestRegionCard';
 import MyInterestRegionCard from '../component/MyInterestRegionCard';
 import MyInterestCategoryCard from '../component/MyInterestCategoryCard';
 import PolicyCard from '../component/PolicyCard';
+import MyNotification from '../component/MyNotification';
 
 export default function MainScreen({ user, setUser, fetch, fetchData }) {
   return (
@@ -27,6 +28,9 @@ export default function MainScreen({ user, setUser, fetch, fetchData }) {
           </Grid>
           <Grid item xs='auto'>
             <PolicyCard fetch={fetch} fetchData={fetchData} />
+          </Grid>
+          <Grid item xs='auto'>
+            <MyNotification fetch={fetch} fetchData={fetchData} />
           </Grid>
           <Grid item xs='auto'>
             <ApiTestCard fetch={fetch} fetchData={fetchData} />

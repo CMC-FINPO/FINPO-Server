@@ -10,6 +10,7 @@ import MyInterestCategoryCard from '../component/MyInterestCategoryCard';
 import PolicyCard from '../component/PolicyCard';
 import Pagination from '@mui/material/Pagination';
 import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
 
 import {
   Button,
@@ -46,6 +47,13 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
   const [text, setText] = useState('');
   const [region, setRegion] = useState([]);
   const [category, setCategory] = useState([]);
+
+  const [title, setTitle] = useState('');
+  const [institution, setInstitution] = useState('');
+  const [content, setContent] = useState('');
+
+  const [pregion, setPregion] = useState();
+  const [pcategory, setPcategory] = useState();
 
   useEffect(() => {
     let reg = '';
@@ -120,6 +128,10 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
 
             <Button variant='contained' onClick={() => reloadTrigger()}>
               검색
+            </Button>
+
+            <Button variant='contained' onClick={() => setOpen(true)}>
+              정책 추가
             </Button>
           </div>
           <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
@@ -279,9 +291,106 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
               {userDetail &&
                 Object.entries(userDetail).map(([key, value]) => (
                   <div>
-                    {key}:{' ' + value}
+                    {key}:{' ' + JSON.stringify(value)}
                   </div>
                 ))}
+            </Box>
+          </Modal>
+
+          <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+            <Box sx={style}>
+              <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, marginTop: 30 }}>
+                <div style={{ width: '100%', display: 'flex', gap: 20 }}>
+                  <div style={{ width: '40%', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <FormControl>
+                      <InputLabel id='demo-simple-select-label'>지역</InputLabel>
+                      <Select size='small' value={region1} onChange={(e) => setRegion1(e.target.value)}>
+                        {regions1.map((region, idx) => {
+                          return <MenuItem value={region.id}>{region.name}</MenuItem>;
+                        })}
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel id='demo-simple-select-label'>상세 지역</InputLabel>
+                      <Select size='small' value={region2} onChange={(e) => setPregion(e.target.value)}>
+                        {regions2.map((region, idx) => {
+                          return <MenuItem value={region.id}>{region.name}</MenuItem>;
+                        })}
+                      </Select>
+                    </FormControl>
+                  </div>
+
+                  <div style={{ width: '40%', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <FormControl>
+                      <InputLabel id='demo-simple-select-label'>상위카테</InputLabel>
+                      <Select size='small' sx={{ width: 100 }} value={ca1} onChange={(e) => setCa1(e.target.value)}>
+                        {cas1.map((region, idx) => {
+                          return <MenuItem value={region.id}>{region.name}</MenuItem>;
+                        })}
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <InputLabel id='demo-simple-select-label'>하위카테</InputLabel>
+                      <Select
+                        size='small'
+                        sx={{ width: 100 }}
+                        value={ca2}
+                        onChange={(e) => {
+                          setPcategory(e.target.value);
+                        }}
+                      >
+                        {cas2.map((region, idx) => {
+                          return <MenuItem value={region}>{region.name}</MenuItem>;
+                        })}
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
+
+                <TextField
+                  label='제목'
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
+                ></TextField>
+
+                <TextField
+                  label='기관'
+                  value={institution}
+                  onChange={(e) => {
+                    setInstitution(e.target.value);
+                  }}
+                ></TextField>
+
+                <TextField
+                  label='내용'
+                  value={content}
+                  onChange={(e) => {
+                    setContent(e.target.value);
+                  }}
+                ></TextField>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: 20 }}>
+                  <Button
+                    variant='contained'
+                    sx={{ marginBottom: 0.5 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClose();
+                      axiosInstance
+                        .post(`policy`, [{ title, institution, content, region: { id: pregion }, category: { id: pcategory.id } }])
+                        .then(() => {
+                          fetchData();
+                        })
+                        .catch((res) => {
+                          alert(res.response.data.message);
+                        });
+                    }}
+                  >
+                    정책 추가
+                  </Button>
+                </div>
+              </div>
             </Box>
           </Modal>
         </>
