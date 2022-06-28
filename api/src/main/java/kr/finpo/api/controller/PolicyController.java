@@ -43,6 +43,7 @@ public class PolicyController {
     return DataResponse.of(policyService.search(title, startDate, endDate, regionIds, categoryIds, pageable));
   }
 
+
   @GetMapping("/interest/me")
   public DataResponse<Object> getMyInterests() {
     return DataResponse.of(policyService.getMyInterests());
@@ -52,6 +53,7 @@ public class PolicyController {
   public DataResponse<Object> getMyJoins() {
     return DataResponse.of(policyService.getMyJoins());
   }
+
 
   @PostMapping("/interest")
   public DataResponse<Object> insertMyInterest(@RequestBody InterestPolicyDto body) {
@@ -63,9 +65,21 @@ public class PolicyController {
     return DataResponse.of(policyService.insertMyJoined(body));
   }
 
+
   @PutMapping("/joined/{id}")
   public DataResponse<Object> updateMyJoined(@PathVariable Long id, @RequestBody JoinedPolicyDto body) {
     return DataResponse.of(policyService.updateMyJoined(id, body));
+  }
+
+
+  @DeleteMapping("/interest/me")
+  public DataResponse<Object> deleteMyInterestByPolicyId(@RequestParam("policyId") Long policyId) {
+    return DataResponse.of(policyService.deleteMyInterestByPolicyId(policyId));
+  }
+
+  @DeleteMapping("/joined/me")
+  public DataResponse<Object> deleteMyJoinedByPolicyId(@RequestParam("policyId") Long policyId) {
+    return DataResponse.of(policyService.deleteMyJoinedByPolicyId(policyId));
   }
 
   @DeleteMapping("/interest/{id}")

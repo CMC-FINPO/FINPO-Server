@@ -32,6 +32,16 @@ public class PolicyService {
   private final CategoryRepository categoryRepository;
   private final FcmService fcmService;
 
+  public User getMe() {
+    return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
+        () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
+    );
+  }
+
+  public void authorizeMe(Long id) {
+    if (!id.equals(SecurityUtil.getCurrentUserId()))
+      throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
+  }
 
   public PolicyDto insertCustom(List<PolicyDto> policyDtos) {
     try {
@@ -95,8 +105,7 @@ public class PolicyService {
 
   public InterestPolicyDto insertMyInterest(InterestPolicyDto dto) {
     try {
-      log.debug(dto.toString());
-      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
+      User user = getMe();
       Policy policy = policyRepository.findById(dto.policyId()).get();
       if (interestPolicyRepository.findOneByUserIdAndPolicyId(user.getId(), policy.getId()).isPresent())
         return null;
@@ -110,7 +119,7 @@ public class PolicyService {
 
   public JoinedPolicyDto insertMyJoined(JoinedPolicyDto dto) {
     try {
-      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
+      User user = getMe();
       Policy policy = policyRepository.findById(dto.policyId()).get();
       JoinedPolicy joinedPolicy = JoinedPolicy.of(user, policy, dto.memo());
       if (joinedPolicyRepository.findOneByUserIdAndPolicyId(user.getId(), policy.getId()).isPresent())
@@ -124,10 +133,29 @@ public class PolicyService {
   public JoinedPolicyDto updateMyJoined(Long id, JoinedPolicyDto dto) {
     try {
       JoinedPolicy joinedPolicy = joinedPolicyRepository.findById(id).get();
-      if (!joinedPolicy.getUser().getId().equals(SecurityUtil.getCurrentUserId()))
-        throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
+      authorizeMe(joinedPolicy.getUser().getId());
       joinedPolicy.setMemo(dto.memo());
       return JoinedPolicyDto.response(joinedPolicyRepository.save(joinedPolicy));
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public Boolean deleteMyInterestByPolicyId(Long policyId) {
+    try {
+      InterestPolicy interestPolicy = interestPolicyRepository.findOneByUserIdAndPolicyId(SecurityUtil.getCurrentUserId(), policyId).get();
+      interestPolicyRepository.delete(interestPolicy);
+      return true;
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public Boolean deleteMyJoinedByPolicyId(Long policyId) {
+    try {
+      JoinedPolicy joinedPolicy = joinedPolicyRepository.findOneByUserIdAndPolicyId(SecurityUtil.getCurrentUserId(), policyId).get();
+      joinedPolicyRepository.delete(joinedPolicy);
+      return true;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -136,8 +164,7 @@ public class PolicyService {
   public Boolean deleteMyInterest(Long id) {
     try {
       InterestPolicy interestPolicy = interestPolicyRepository.findById(id).get();
-      if (!interestPolicy.getUser().getId().equals(SecurityUtil.getCurrentUserId()))
-        throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
+      authorizeMe(interestPolicy.getUser().getId());
       interestPolicyRepository.delete(interestPolicy);
       return true;
     } catch (Exception e) {
@@ -148,8 +175,7 @@ public class PolicyService {
   public Boolean deleteMyJoined(Long id) {
     try {
       JoinedPolicy joinedPolicy = joinedPolicyRepository.findById(id).get();
-      if (!joinedPolicy.getUser().getId().equals(SecurityUtil.getCurrentUserId()))
-        throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
+      authorizeMe(joinedPolicy.getUser().getId());
       joinedPolicyRepository.delete(joinedPolicy);
       return true;
     } catch (Exception e) {
