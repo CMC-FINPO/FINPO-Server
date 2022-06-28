@@ -46,18 +46,18 @@ public class NotificationService {
       User user = getMe();
       Optional<Fcm> fcm = fcmRepository.findOneByUserId(user.getId());
 
-      if (dto.subscribe() != null) {
-        if (dto.subscribe().equals(true)) { // 알림 구독 설정
-          if (fcm.isPresent() && dto.registrationToken() != null) {
-            fcm.get().setRegistrationToken(dto.registrationToken());
-            fcmRepository.save(fcm.get());
-          }
-          else if (fcm.isEmpty()) // insert
-            insertMy(dto);
-        }
-        else  // 알림 구독 해제
-          fcmRepository.deleteByUserId(user.getId());
+      if (fcm.isEmpty()) { // insert
+        if (dto.registrationToken() == null)
+          throw new GeneralException(ErrorCode.BAD_REQUEST, "There's no registeration token");
+        fcmRepository.deleteByUserId(user.getId());
+        insertMy(dto);
       }
+      else { // update
+        if (dto.subscribe() != null) fcm.get().setSubscribe(dto.subscribe());
+        if (dto.registrationToken() != null) fcm.get().setRegistrationToken(dto.registrationToken());
+        fcmRepository.save(fcm.get());
+      }
+
       if (dto.interestCategories() != null)
         dto.interestCategories().forEach(interestCategoryDto -> {
           InterestCategory interestCategory = interestCategoryRepository.findById(interestCategoryDto.id()).get();
@@ -67,6 +67,7 @@ public class NotificationService {
 
       return getMy();
     } catch (Exception e) {
+      log.debug(dto.toString());
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
@@ -74,7 +75,7 @@ public class NotificationService {
   public NotificationDto insertMy(NotificationDto dto) {
     try {
       User user = getMe();
-      Fcm fcm = Fcm.of(dto.registrationToken());
+      Fcm fcm = Fcm.of(dto.subscribe(), dto.registrationToken());
       fcm.setUser(user);
       return NotificationDto.response(fcmRepository.save(fcm), interestCategoryRepository.findByUserId(user.getId()));
     } catch (Exception e) {

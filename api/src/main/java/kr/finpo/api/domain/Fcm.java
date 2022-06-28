@@ -24,6 +24,10 @@ public class Fcm {
   @Column(nullable = false)
   private String registrationToken;
 
+  @Setter
+  @Column(nullable = false)
+  private Boolean subscribe = false;
+
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
   @CreatedDate
   private LocalDateTime createdAt;
@@ -35,12 +39,13 @@ public class Fcm {
   protected Fcm() {
   }
 
-  protected Fcm(String registrationToken) {
+  protected Fcm(Boolean subscribe, String registrationToken) {
+    this.subscribe = subscribe;
     this.registrationToken = registrationToken;
   }
 
-  public static Fcm of(String registrationToken) {
-    return new Fcm(registrationToken);
+  public static Fcm of(Boolean subscribe, String registrationToken) {
+    return new Fcm(subscribe, registrationToken);
   }
 
   @Setter

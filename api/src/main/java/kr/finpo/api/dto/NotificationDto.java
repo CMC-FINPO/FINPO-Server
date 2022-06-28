@@ -18,6 +18,6 @@ public record NotificationDto(
   }
 
   public static NotificationDto response(Fcm fcm, List<InterestCategory> interestCategories) {
-    return new NotificationDto(null, null, fcm != null, interestCategories.stream().map(InterestCategoryDto::response).toList());
+    return new NotificationDto(null, null, fcm.getSubscribe(), interestCategories.stream().map(InterestCategoryDto::response).toList());
   }
 }
