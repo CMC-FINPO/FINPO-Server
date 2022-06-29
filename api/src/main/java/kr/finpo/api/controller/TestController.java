@@ -123,6 +123,13 @@ public class TestController {
     return DataResponse.of(policyService.insertCustom(body));
   }
 
+  @DeleteMapping("/policy/{id}")
+  public DataResponse<Object> deleteCustom(
+      @PathVariable Long id
+  ) {
+    return DataResponse.of(policyService.deleteCustom(id));
+  }
+
 }
 
 

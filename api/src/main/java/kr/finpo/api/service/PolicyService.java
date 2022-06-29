@@ -58,6 +58,15 @@ public class PolicyService {
     }
   }
 
+  public Boolean deleteCustom(Long id) {
+    try {
+      policyRepository.deleteById(id);
+      return true;
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
   public PolicyDto get(Long id) {
     try {
       policyRepository.increaseHits(id);
