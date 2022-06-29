@@ -65,7 +65,7 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
     axiosInstance.get(`policy/search?title=${text}&region=${reg}&category=${cat}&page=${page - 1}&size=10`).then((res) => {
       setData({ ...res.data.data });
     });
-  }, [page, reload]);
+  }, [page, reload, fetch]);
 
   const [region1, setRegion1] = useState();
   const [region2, setRegion2] = useState();
@@ -215,11 +215,7 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
                   <TableCell align='center'>제목</TableCell>
                   <TableCell align='center'>주관기관</TableCell>
                   <TableCell align='center'>지역</TableCell>
-                  <TableCell align='center'>카테고리</TableCell>
-                  <TableCell align='center'>시작일</TableCell>
-                  <TableCell align='center'>종료일</TableCell>
-                  <TableCell align='center'>기간</TableCell>
-                  <TableCell align='center'>API 출처</TableCell>
+                  <TableCell align='center'></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -245,12 +241,7 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
                       <div>{user.email.substring(10)}</div>
                     </TableCell> */}
                     <TableCell align='center'>{row.region?.parent?.name + ' ' + row.region?.name}</TableCell>
-                    <TableCell align='center'>{row.category?.parent?.name + ' ' + row.category?.name}</TableCell>
-                    <TableCell align='center'>{row.startDate}</TableCell>
-                    <TableCell align='center'>{row.endDate}</TableCell>
-                    <TableCell align='center'>{row.period}</TableCell>
-                    <TableCell align='center'>{row.openApiType}</TableCell>
-                    {/* <TableCell align='center' width={'20px'}>
+                    <TableCell align='center' width={'20px'}>
                       <Button
                         size='small'
                         variant='contained'
@@ -260,7 +251,7 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
                           if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
                           axiosInstance
-                            .delete(`user/${row.id}`)
+                            .delete(`policy/${row.id}`)
                             .then(() => {
                               fetchData();
                             })
@@ -271,7 +262,7 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
                       >
                         삭제
                       </Button>
-                    </TableCell> */}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
