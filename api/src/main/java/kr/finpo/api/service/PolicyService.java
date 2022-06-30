@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -43,16 +44,17 @@ public class PolicyService {
       throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
   }
 
-  public PolicyDto insertCustom(List<PolicyDto> policyDtos) {
+  public String insertCustom(List<PolicyDto> policyDtos) {
     try {
+      List<List<Long>> ret = new ArrayList<>();
       policyDtos.forEach(dto -> {
         Policy policy = Policy.of(dto.title(), Integer.toString(dto.title().hashCode()), dto.institution(), dto.content(), null, null, null, null, null, null, null, null, null, null);
         policy.setRegion(regionRepository.findById(dto.region().getId()).get());
         policy.setCategory(categoryRepository.findById(dto.category().getId()).get());
         policyRepository.save(policy);
-        fcmService.sendPolicyPush(policy);
+        ret.add(fcmService.sendPolicyPush(policy));
       });
-      return null;
+      return ret.toString();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

@@ -29,7 +29,7 @@ public class FcmService {
   private final InterestRegionRepository interestRegionRepository;
 
 
-  public void sendPolicyPush(Policy policy) {
+  public List<Long> sendPolicyPush(Policy policy) {
     List<String> registrationTokens = new ArrayList<>();
 
     List<Long> interestRegionUsers = interestRegionRepository.findByRegionIdAndSubscribe(policy.getRegion().getId(), true).stream().map(InterestRegion::getUser).map(User::getId).toList();
@@ -38,7 +38,7 @@ public class FcmService {
     // intersection
     List<Long> userIds = interestCategoryUsers.stream().filter(interestRegionUsers::contains).toList();
 
-    if (userIds.size() == 0) return;
+    if (userIds.size() == 0) return null;
 
     userIds.forEach(userId -> {
       Fcm fcm = fcmRepository.findOneByUserId(userId).get();
@@ -62,6 +62,7 @@ public class FcmService {
         log.error(e.toString());
       }
     });
+    return userIds;
   }
 }
 

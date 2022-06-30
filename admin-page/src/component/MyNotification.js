@@ -122,7 +122,6 @@ export default function MyNotification({ fetchData, fetch }) {
               variant='contained'
               sx={{ marginBottom: 0.5 }}
               onClick={(e) => {
-                console.log(localStorage.getItem('fcm'));
                 axiosInstance
                   .put(`notification/me`, {
                     subscribe: allNotice,

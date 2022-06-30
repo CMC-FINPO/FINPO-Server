@@ -370,7 +370,8 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
                       handleClose();
                       axiosInstance
                         .post(`policy`, [{ title, institution, content, region: { id: pregion }, category: { id: pcategory.id } }])
-                        .then(() => {
+                        .then((res) => {
+                          alert('send to ' + res.data.data);
                           fetchData();
                         })
                         .catch((res) => {
