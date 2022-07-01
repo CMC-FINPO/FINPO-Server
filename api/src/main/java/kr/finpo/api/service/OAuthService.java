@@ -303,7 +303,7 @@ public class OAuthService {
       if (dto.categories() != null) {
         List<InterestCategoryDto> categories = new ObjectMapper().readValue(dto.categories(), new TypeReference<>() {
         });
-        categoryService.insertMyInterests(categories, user);
+        categoryService.insertInterests(categories, user);
       }
 
 

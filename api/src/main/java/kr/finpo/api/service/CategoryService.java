@@ -6,7 +6,6 @@ import kr.finpo.api.domain.InterestCategory;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.dto.CategoryDto;
 import kr.finpo.api.dto.InterestCategoryDto;
-import kr.finpo.api.dto.UserDto;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.CategoryRepository;
 import kr.finpo.api.repository.InterestCategoryRepository;
@@ -23,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @Transactional
@@ -37,6 +35,17 @@ public class CategoryService {
 
   @Value("${upload.url}")
   private String uploadUrl;
+
+  public User getMe() {
+    return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
+        () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
+    );
+  }
+
+  public void authorizeMe(Long id) {
+    if (!id.equals(SecurityUtil.getCurrentUserId()))
+      throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
+  }
 
   public void initialize() {
     List<String> firsts = Arrays.asList("일자리", "생활안정", "교육문화", "참여공간");
@@ -86,7 +95,7 @@ public class CategoryService {
     try {
       return categoryRepository.findById(id).map(CategoryDto::response);
     } catch (Exception e) {
-      throw new GeneralException(ErrorCode.BAD_REQUEST, "id not valid");
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
@@ -98,32 +107,35 @@ public class CategoryService {
     }
   }
 
-  public List<InterestCategoryDto> updateMyInterests(List<InterestCategoryDto> dtos) {
+  public List<CategoryDto> getMyInterestsByDepth() {
     try {
-      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
-      interestCategoryRepository.deleteByUserId(user.getId());
-      return insertMyInterests(dtos);
+      return interestCategoryRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(InterestCategory::getCategory).map(Category::getParent).distinct().map(CategoryDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
-  public List<InterestCategoryDto> insertMyInterests(List<InterestCategoryDto> dtos) {
-    User user = userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
-        () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
-    );
-    return insertMyInterests(dtos, user);
+  public List<InterestCategoryDto> updateMyInterests(List<InterestCategoryDto> dtos) {
+    try {
+      User user = getMe();
+      interestCategoryRepository.deleteByUserId(user.getId());
+      return insertInterests(dtos);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
   }
 
-  public List<InterestCategoryDto> insertMyInterests(List<InterestCategoryDto> dtos, User user) {
+  public List<InterestCategoryDto> insertInterests(List<InterestCategoryDto> dtos) {
+    return insertInterests(dtos, getMe());
+  }
+
+  public List<InterestCategoryDto> insertInterests(List<InterestCategoryDto> dtos, User user) {
     try {
       ArrayList<InterestCategoryDto> res = new ArrayList<>();
 
       List<InterestCategoryDto> cowDtos = new CopyOnWriteArrayList<>() {{
         addAll(dtos);
       }};
-
-      log.debug("cowDtos: " + cowDtos);
 
       cowDtos.forEach(dto -> {
         // 부모 카테고리 지정 시 자식 카테고리 전부 추가
@@ -136,7 +148,6 @@ public class CategoryService {
       });
 
       cowDtos.forEach(dto -> {
-        log.debug("dto: " + dto.toString());
         // 관심카테고리 이미 존재 시 넘어감
         if (interestCategoryRepository.findByUserIdAndCategoryId(user.getId(), dto.categoryId()).isPresent())
           return;
@@ -149,7 +160,6 @@ public class CategoryService {
 
       return res;
     } catch (Exception e) {
-      e.printStackTrace();
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
@@ -166,9 +176,7 @@ public class CategoryService {
   public Boolean delete(Long id) {
     try {
       InterestCategory interestCategory = interestCategoryRepository.findById(id).get();
-      if (!interestCategory.getUser().getId().equals(SecurityUtil.getCurrentUserId()))
-        throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
-
+      authorizeMe(interestCategory.getUser().getId());
       interestCategoryRepository.deleteById(id);
       return true;
     } catch (Exception e) {

@@ -34,6 +34,11 @@ public class CategoryController {
     return DataResponse.of(categoryService.getAllByChildFormat());
   }
 
+  @GetMapping("/me/parent")
+  public DataResponse<Object> getMyByDepth() {
+    return DataResponse.of(categoryService.getMyInterestsByDepth());
+  }
+
   @GetMapping("/me")
   public DataResponse<Object> getMy() {
     return DataResponse.of(categoryService.getMyInterests());
@@ -46,7 +51,7 @@ public class CategoryController {
 
   @PostMapping("/me")
   public DataResponse<Object> insertMyInterests(@RequestBody List<InterestCategoryDto> body) {
-    return DataResponse.of(categoryService.insertMyInterests(body));
+    return DataResponse.of(categoryService.insertInterests(body));
   }
 
   @PutMapping("/me")
