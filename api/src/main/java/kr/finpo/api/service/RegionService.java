@@ -211,6 +211,12 @@ public class RegionService {
           () -> new GeneralException(ErrorCode.BAD_REQUEST, "region id not valid")
       );
 
+      // delete interest if new region is interest
+      interestRegionRepository.findOneByUserIdAndRegionIdAndIsDefault(SecurityUtil.getCurrentUserId(), dto.regionId(), false)
+          .ifPresent(interestRegion -> {
+            interestRegionRepository.deleteById(interestRegion.getId());
+          });
+
       InterestRegion defaultRegion = interestRegionRepository.findOneByUserIdAndIsDefault(SecurityUtil.getCurrentUserId(), true).get();
       defaultRegion.updateDefault(newRegion);
       User user = getMe();

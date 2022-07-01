@@ -18,5 +18,6 @@ public interface InterestRegionRepository extends JpaRepository<InterestRegion, 
 
   public Optional<InterestRegion> findOneByUserIdAndIsDefault(Long userId, Boolean isDefault);
   public Optional<InterestRegion> findOneByUserIdAndRegionId(Long userId, Long regionId);
+  public Optional<InterestRegion> findOneByUserIdAndRegionIdAndIsDefault(Long userId, Long regionId, Boolean isDefault);
 }
 
