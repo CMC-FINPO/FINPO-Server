@@ -456,6 +456,15 @@ operation::내관심카테고리[snippets='http-request,request-headers,http-res
 
 &nbsp;
 
+==== 부모 카테고리만 조회
+operation::내관심카테고리부모[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 ==== 수정
 
 기존 관심카테고리는 삭제되고 요청주신 카테고리id들이 관심카테고리로 등록됩니다.

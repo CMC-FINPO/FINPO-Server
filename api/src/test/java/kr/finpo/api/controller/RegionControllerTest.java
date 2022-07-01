@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.dto.InterestCategoryDto;
 import kr.finpo.api.dto.InterestRegionDto;
+import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.InterestRegionRepository;
 import kr.finpo.api.service.UserService;
 import net.minidev.json.JSONObject;
@@ -29,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -240,6 +242,32 @@ class RegionControllerTest {
   }
 
   @Test
+  void updateMyDefaultRegionInInterest() throws Exception {
+    Long id = 3L;
+    insertMyInterests(id);
+    long beforeCnt = interestRegionRepository.count();
+    HashMap<String, Object> body = new HashMap<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    body.put("regionId", id);
+
+    mockMvc.perform(put("/region/my-default")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(body))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.region.id").value(id))
+        .andExpect(jsonPath("$.data.isDefault").value(true))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode())
+        )
+    ;
+    then(beforeCnt - 1).isEqualTo(interestRegionRepository.count());
+
+  }
+
+  @Test
   void insertMyInterestsPassTest() throws Exception {
     long beforeCnt = interestRegionRepository.count();
     insertMyInterests(14L);
@@ -382,7 +410,7 @@ class RegionControllerTest {
   }
 
 
-//  @Test
+  //  @Test
   void deleteRegions() throws Exception {
 
     mockMvc.perform(RestDocumentationRequestBuilders.delete("/region?id=4&id=6")

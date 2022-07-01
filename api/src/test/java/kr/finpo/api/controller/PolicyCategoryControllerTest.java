@@ -222,6 +222,40 @@ class PolicyCategoryControllerTest {
         );
   }
 
+  @Test
+  void getMyParentInterestCategories() throws Exception{
+    insertMyInterestCategories();
+    mockMvc.perform(get("/policy/category/me/parent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.size()").value(2))
+        .andExpect(jsonPath("$.data[0].id").value(1))
+        .andExpect(jsonPath("$.data[0].name").value("일자리"))
+        .andExpect(jsonPath("$.data[1].id").value(3))
+        .andExpect(jsonPath("$.data[1].name").value("교육문화"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내관심카테고리부모",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.[].id").description("카테고리 id"),
+                    fieldWithPath("data.[].name").description("카테고리 이름")
+                )
+            )
+        );
+  }
+
     // @Test
   void deleteMyInterestRegion() throws Exception {
     insertMyInterestCategories();
