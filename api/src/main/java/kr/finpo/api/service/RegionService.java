@@ -54,16 +54,27 @@ public class RegionService {
 
   public static final List<String> regions1 = new ArrayList<>(regions2.keySet());
 
-  public static Long name2regionId (String region1, String region2){
-      return regions1.indexOf(region1) * REGION2_MAX + (StringUtils.isNullOrEmpty(region2) ? 0 : (regions2.get(region1).indexOf(region2) + 1));
+  public static Long name2regionId(String region1, String region2) {
+    return regions1.indexOf(region1) * REGION2_MAX + (StringUtils.isNullOrEmpty(region2) ? 0 : (regions2.get(region1).indexOf(region2) + 1));
+  }
+
+  public User getMe() {
+    return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
+        () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
+    );
+  }
+
+  public void authorizeMe(Long id) {
+    if (!id.equals(SecurityUtil.getCurrentUserId()))
+      throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
   }
 
   public void initialize() {
     for (int i = 0; i < regions1.size(); i++) {
       Boolean status = regions2.get(regions1.get(i)) != null;
-      Region parent = regionRepository.save(Region.of( i * REGION2_MAX, regions1.get(i), 1L, status));
+      Region parent = regionRepository.save(Region.of(i * REGION2_MAX, regions1.get(i), 1L, status));
 
-      if(!status) continue;
+      if (!status) continue;
 
       for (int j = 0; j < regions2.get(regions1.get(i)).size(); j++) {
         Region region = Region.of(i * REGION2_MAX + j + 1, regions2.get(regions1.get(i)).get(j), 2L, true);
@@ -112,8 +123,11 @@ public class RegionService {
 
   public List<InterestRegionDto> insertMyInterests(List<InterestRegionDto> dtos) {
     try {
+      if (dtos.size() > 5)
+        throw new GeneralException(ErrorCode.BAD_REQUEST, "Interest region should be less than or equal to 5");
+
       ArrayList<InterestRegionDto> res = new ArrayList<>();
-      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
+      User user = getMe();
 
       dtos.forEach(dto -> {
         // 중복 지역 넘기기
@@ -137,7 +151,7 @@ public class RegionService {
 
   public List<InterestRegionDto> updateMyInterests(List<InterestRegionDto> dtos) {
     try {
-      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
+      User user = getMe();
       interestRegionRepository.deleteByUserIdAndIsDefault(user.getId(), false);
       return insertMyInterests(dtos);
     } catch (Exception e) {
@@ -199,7 +213,7 @@ public class RegionService {
 
       InterestRegion defaultRegion = interestRegionRepository.findOneByUserIdAndIsDefault(SecurityUtil.getCurrentUserId(), true).get();
       defaultRegion.updateDefault(newRegion);
-      User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
+      User user = getMe();
       user.setDefaultRegion(defaultRegion);
 
       return InterestRegionDto.response(interestRegionRepository.save(defaultRegion));
