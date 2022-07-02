@@ -18,7 +18,6 @@ public class OAuthController {
 
   @GetMapping("/login/{oAuthType}")
   public Object loginWithOAuthToken(@RequestHeader("Authorization") String kakaoAccessToken, @PathVariable String oAuthType) {
-
     Object loginRes = oAuthService.loginWithOAuthToken(kakaoAccessToken, oAuthType);
     if (loginRes.getClass() == UserDto.class) // not registered
       return new ResponseEntity<>(DataResponse.of(loginRes, "need register"), HttpStatus.ACCEPTED);
@@ -26,34 +25,19 @@ public class OAuthController {
   }
 
 
-  @PostMapping("/register/kakao")
+  @PostMapping("/register/{oAuth}")
   public DataResponse<Object> registerWithKakao(
       @RequestHeader("Authorization") String oAuthAccessToken,
-      @ModelAttribute UserDto body
+      @ModelAttribute UserDto body,
+      @PathVariable String oAuth
   ) {
-    return DataResponse.of(oAuthService.register(oAuthAccessToken, "kakao", body));
+    return DataResponse.of(oAuthService.register(oAuthAccessToken, oAuth, body));
   }
 
-  @PostMapping("/register/google")
-  public DataResponse<Object> registerWithGoogle(
-      @RequestHeader("Authorization") String oAuthAccessToken,
-      @ModelAttribute UserDto body
-  ) {
-    return DataResponse.of(oAuthService.register(oAuthAccessToken, "google", body));
-  }
-
-  @PostMapping("/register/apple")
-  public DataResponse<Object> registerWithApple(
-      @RequestHeader("Authorization") String oAuthAccessToken,
-      @ModelAttribute UserDto body
-  ) {
-    return DataResponse.of(oAuthService.register(oAuthAccessToken, "apple", body));
-  }
 
   @PostMapping("/reissue")
   public DataResponse<Object> reissueTokens(@RequestBody TokenDto tokenDto) {
     return DataResponse.of(oAuthService.reissueTokens(tokenDto));
   }
-
 }
 
