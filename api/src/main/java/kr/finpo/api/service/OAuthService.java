@@ -67,9 +67,6 @@ public class OAuthService {
   @Value("${oauth.google.auth-scope}")
   private String googleScopes;
 
-  @Value("${upload.url}")
-  private String uploadUrl;
-
 
   public KakaoTokenDto getKakaoToken(String code) {
     try {
@@ -281,7 +278,7 @@ public class OAuthService {
       // region check
       String profileImgUrl = dto.profileImg();
       if (dto.profileImgFile() != null)
-        profileImgUrl = uploadUrl + s3Uploader.uploadFile("profile", dto.profileImgFile());
+        profileImgUrl = s3Uploader.uploadFile("profile", dto.profileImgFile());
 
       Region region = regionRepository.findById(dto.regionId()).orElseThrow(
           () -> new GeneralException(ErrorCode.BAD_REQUEST, "region id not valid")

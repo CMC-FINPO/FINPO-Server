@@ -1,5 +1,7 @@
 package kr.finpo.api.controller;
 
+import kr.finpo.api.dto.DataResponse;
+import kr.finpo.api.dto.ImgUploadDto;
 import kr.finpo.api.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -30,4 +32,11 @@ public class UploadController {
     return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
   }
 
+  @PostMapping("/{path}")
+  public DataResponse<Object> upload(
+      @ModelAttribute ImgUploadDto body,
+      @PathVariable("path") String path
+  ) {
+    return DataResponse.of(s3Uploader.uploadImg(body, path));
+  }
 }

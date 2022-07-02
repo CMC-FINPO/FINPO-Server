@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.util.IOUtils;
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.dto.ImgUploadDto;
 import kr.finpo.api.exception.GeneralException;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -21,6 +22,8 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,15 +35,29 @@ public class S3Uploader {
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
 
+  @Value("${upload.url}")
+  private String uploadUrl;
+
   public S3Uploader(AmazonS3Client amazonS3Client) {
     this.amazonS3Client = amazonS3Client;
+  }
+
+  public ImgUploadDto uploadImg(ImgUploadDto dto, String path) {
+    try {
+      List<String> imgUrls = new ArrayList<>();
+      dto.imgFiles().forEach(imgFile->{
+        imgUrls.add(uploadFile(path, imgFile));
+      });
+      return ImgUploadDto.response(imgUrls);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
   }
 
   public Resource downloadFile(String fileName) throws IOException {
     S3Object s3Object = amazonS3Client.getObject(bucket, fileName);
     byte[] content = IOUtils.toByteArray(s3Object.getObjectContent());
-    Resource resource = new ByteArrayResource(content);
-    return resource;
+    return new ByteArrayResource(content);
   }
 
   public String uploadFile(String filePath, MultipartFile multipartFile) {
@@ -58,7 +75,7 @@ public class S3Uploader {
 
     String uploadImageUrl = putS3(uploadFile, newFileName);
     removeNewFile(uploadFile);
-    return newFileName;
+    return uploadUrl + newFileName;
   }
 
   private String putS3(File uploadFile, String fileName) {
@@ -71,11 +88,6 @@ public class S3Uploader {
   }
 
   private Optional<File> convert(MultipartFile file) {
-//    File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
-//    convertFile.createNewFile();
-//    try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-//      fos.write(file.getBytes());
-//    }
     try {
       File convertFile = resizeImageFile(file, System.getProperty("user.dir") + "/" + file.getOriginalFilename(), "png");
       return Optional.of(convertFile);
@@ -97,7 +109,7 @@ public class S3Uploader {
       Graphics graphics = newImage.getGraphics();
       graphics.drawImage(resizeImage, 0, 0, null);
       graphics.dispose();
-      // 이미지 저장
+
       File newFile = new File(filePath);
       ImageIO.write(newImage, formatName, newFile);
       return newFile;

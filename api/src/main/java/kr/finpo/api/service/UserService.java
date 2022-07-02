@@ -60,9 +60,6 @@ public class UserService {
   private final FcmRepository fcmRepository;
   private final S3Uploader s3Uploader;
 
-  @Value("${upload.url}")
-  private String uploadUrl;
-
   @Value("${oauth.kakao.admin-key}")
   private String kakaoAdminKey;
 
@@ -138,7 +135,7 @@ public class UserService {
 
   public UserDto updateMyProfileImg(UserDto dto) {
     try {
-      String profileImgUrl = uploadUrl + s3Uploader.uploadFile("profile", dto.profileImgFile());
+      String profileImgUrl = s3Uploader.uploadFile("profile", dto.profileImgFile());
 
       User user = userRepository.findById(SecurityUtil.getCurrentUserId()).get();
       user.setProfileImg(profileImgUrl);

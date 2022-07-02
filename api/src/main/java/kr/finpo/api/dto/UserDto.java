@@ -72,6 +72,10 @@ public record UserDto(
     return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatusId(), user.getProfileImg(), user.getOAuthType(), null, null, user.getDefaultRegion().getRegion(), null, null);
   }
 
+  public static UserDto postResponse(User user) {
+    return new UserDto(user.getId(), null, user.getNickname(), null, null, null, null, null, null, null, null, null, null, null);
+  }
+
   public static UserDto appleUserDto() {
     return new UserDto(null,null,null,null,null,null,null,null,OAuthType.APPLE,null,null,null,null,null);
   }
