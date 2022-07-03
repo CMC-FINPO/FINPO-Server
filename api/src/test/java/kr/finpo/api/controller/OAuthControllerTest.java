@@ -541,11 +541,12 @@ class OAuthControllerTest {
   }
 
   public HashMap<String, String> registerAndGetToken(MockMvc mockMvc) throws Exception {
-
-
+    return registerAndGetToken(mockMvc, "메이슨");
+  }
+  public HashMap<String, String> registerAndGetToken(MockMvc mockMvc, String nickname) throws Exception {
     MvcResult res = mockMvc.perform(RestDocumentationRequestBuilders.fileUpload("/oauth/register/test")
                 .param("name", "김명승")
-                .param("nickname", "메이슨")
+                .param("nickname", nickname)
                 .param("birth", "1999-01-01")
                 .param("gender", Gender.MALE.toString())
 //            .param("email", "ksksksk@gmail.com")
