@@ -1,11 +1,10 @@
 package kr.finpo.api.service;
 
 import com.google.common.collect.Lists;
-import com.google.firebase.messaging.BatchResponse;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.MulticastMessage;
+import com.google.firebase.messaging.*;
+import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.*;
+import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.FcmRepository;
 import kr.finpo.api.repository.InterestCategoryRepository;
 import kr.finpo.api.repository.InterestRegionRepository;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -63,6 +63,52 @@ public class FcmService {
       }
     });
     return userIds;
+  }
+
+  public List<Long> sendCommentPush(Comment comment) {
+    List<Long> userIds = new ArrayList<>();
+
+    try {
+      Optional.ofNullable(comment.getParent()).flatMap(parentComment -> Optional.ofNullable(parentComment.getUser())).ifPresent(parentUser -> {
+
+        String parentRegistrationToken = fcmRepository.findOneByUserId(parentUser.getId()).get().getRegistrationToken();
+
+        Message message = Message.builder()
+            .putData("type", "childComment")
+            .putData("id", Long.toString(comment.getId()))
+            .putData("content", comment.getContent().substring(0, Math.min(10, comment.getContent().length())))
+            .setToken(parentRegistrationToken)
+            .build();
+
+        try {
+          FirebaseMessaging.getInstance().send(message);
+          userIds.add(parentUser.getId());
+        } catch (FirebaseMessagingException e) {
+          log.error(e.toString());
+        }
+      });
+
+      Optional.ofNullable(comment.getPost().getUser()).ifPresent(postUser -> {
+
+        String parentRegistrationToken = fcmRepository.findOneByUserId(postUser.getId()).get().getRegistrationToken();
+
+        Message message = Message.builder()
+            .putData("type", "comment")
+            .putData("id", Long.toString(comment.getId()))
+            .putData("content", comment.getContent().substring(0, Math.min(10, comment.getContent().length())))
+            .setToken(parentRegistrationToken)
+            .build();
+        try {
+          FirebaseMessaging.getInstance().send(message);
+          userIds.add(postUser.getId());
+        } catch (FirebaseMessagingException e) {
+          log.error(e.toString());
+        }
+      });
+      return userIds;
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
   }
 }
 

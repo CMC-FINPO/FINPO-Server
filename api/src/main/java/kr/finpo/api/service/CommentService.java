@@ -27,6 +27,7 @@ public class CommentService {
   private final UserRepository userRepository;
   private final CommentRepository commentRepository;
   private final PostService postService;
+  private final FcmService fcmService;
 
   private User getMe() {
     return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
@@ -84,6 +85,8 @@ public class CommentService {
       comment.setUser(getMe());
       comment.setPost(post);
       comment = commentRepository.save(comment);
+
+      log.debug("sendCommentPush: " + fcmService.sendCommentPush(comment).toString());
 
       return CommentDto.response(comment, true, null);
     } catch (Exception e) {
