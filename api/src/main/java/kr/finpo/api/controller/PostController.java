@@ -28,6 +28,21 @@ public class PostController {
     return DataResponse.of(postService.getMy(pageable));
   }
 
+  @GetMapping("/like/me")
+  public DataResponse<Object> getMyLikes(Pageable pageable) {
+    return DataResponse.of(postService.getMyLikes(pageable));
+  }
+
+  @GetMapping("/bookmark/me")
+  public DataResponse<Object> getMyBookmarks(Pageable pageable) {
+    return DataResponse.of(postService.getMyBookmarks(pageable));
+  }
+
+  @GetMapping("/comment/me")
+  public DataResponse<Object> getMyCommentPosts(Pageable pageable) {
+    return DataResponse.of(postService.getMyCommentPosts(pageable));
+  }
+
   @GetMapping("/search")
   public DataResponse<Object> search(
       @RequestParam(value = "content", required = false) String content,
@@ -57,6 +72,7 @@ public class PostController {
     return DataResponse.of(postService.delete(id));
   }
 
+
   @PostMapping("/{id}/like")
   public DataResponse<Object> like(@PathVariable Long id) {
     return DataResponse.of(postService.like(id));
@@ -65,6 +81,16 @@ public class PostController {
   @DeleteMapping("/{id}/like")
   public DataResponse<Object> deleteLike(@PathVariable Long id) {
     return DataResponse.of(postService.deleteLike(id));
+  }
+
+  @PostMapping("/{id}/bookmark")
+  public DataResponse<Object> bookmark(@PathVariable Long id) {
+    return DataResponse.of(postService.bookmark(id));
+  }
+
+  @DeleteMapping("/{id}/bookmark")
+  public DataResponse<Object> deleteBookmark(@PathVariable Long id) {
+    return DataResponse.of(postService.deleteBookmark(id));
   }
 
 

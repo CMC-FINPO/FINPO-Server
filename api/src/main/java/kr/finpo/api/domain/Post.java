@@ -40,6 +40,9 @@ public class Post {
   @Formula("(select count(*) from like_post lp where lp.post_id = id)")
   private Integer likes = 0;
 
+  @Formula("(select count(*) from comment c where c.post_id = id)")
+  private Integer countOfComment = 0;
+
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
   @CreatedDate
   private LocalDateTime createdAt;

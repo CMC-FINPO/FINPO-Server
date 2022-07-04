@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -26,6 +27,8 @@ public class PostService {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final LikePostRepository likePostRepository;
+  private final BookmarkPostRepository bookmarkPostRepository;
+  private final CommentRepository commentRepository;
   private final PostImgRepository postImgRepository;
 
   private User getMe() {
@@ -63,6 +66,30 @@ public class PostService {
     }
   }
 
+  public Page<PostDto> getMyLikes(Pageable pageable) {
+    try {
+      return likePostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost()));
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public Page<PostDto> getMyBookmarks(Pageable pageable) {
+    try {
+      return bookmarkPostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost()));
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public Page<PostDto> getMyCommentPosts(Pageable pageable) {
+    try {
+      return commentRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(comment -> PostDto.previewResponse(comment.getPost()));
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
   public Page<PostDto> search(String content, Pageable pageable) {
     try {
       return postRepository.querydslFindbyContent(content, pageable).map(PostDto::previewResponse);
@@ -85,10 +112,11 @@ public class PostService {
 
   private List<PostImg> insertPostImg(PostDto dto, Post post) {
     List<PostImg> postImgs = new ArrayList<>();
-    if (dto.imgs() != null)
-      dto.imgs().forEach(imgDto ->
-          postImgs.add(postImgRepository.save(PostImg.of(imgDto.img(), imgDto.order(), post)))
-      );
+    Optional.ofNullable(dto.imgs()).ifPresent(imgDtos ->
+        imgDtos.forEach(imgDto ->
+            postImgs.add(postImgRepository.save(PostImg.of(imgDto.img(), imgDto.order(), post)))
+        )
+    );
     return postImgs;
   }
 
@@ -97,12 +125,12 @@ public class PostService {
       Post post = dto.updateEntity(postRepository.findById(id).get());
       authorizeMe(post.getUser().getId());
       checkStatus(id);
-      post = postRepository.save(post);
+      Post finalPost = postRepository.save(post);
 
-      if (dto.imgs() != null) {
+      Optional.ofNullable(dto.imgs()).ifPresent((e) -> {
         postImgRepository.deleteByPostId(id);
-        insertPostImg(dto, post);
-      }
+        insertPostImg(dto, finalPost);
+      });
 
       return PostDto.response(post, postImgRepository.findByPostId(id));
     } catch (Exception e) {
@@ -151,6 +179,36 @@ public class PostService {
       checkStatus(id);
 
       likePostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresent(likePostRepository::delete);
+
+      return PostDto.previewResponse(post);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public PostDto bookmark(Long id) {
+    try {
+      Post post = postRepository.findById(id).get();
+      User user = getMe();
+      checkStatus(id);
+
+      bookmarkPostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresentOrElse(null, () -> {
+        bookmarkPostRepository.save(BookmarkPost.of(user, post));
+      });
+
+      return PostDto.previewResponse(post);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public PostDto deleteBookmark(Long id) {
+    try {
+      Post post = postRepository.findById(id).get();
+      User user = getMe();
+      checkStatus(id);
+
+      bookmarkPostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresent(bookmarkPostRepository::delete);
 
       return PostDto.previewResponse(post);
     } catch (Exception e) {
