@@ -98,17 +98,17 @@ public class PolicyService {
   }
 
 
-  public List<InterestPolicyDto> getMyInterests() {
+  public Page<InterestPolicyDto> getMyInterests(Pageable pageable) {
     try {
-      return interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(InterestPolicyDto::response).toList();
+      return interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(InterestPolicyDto::response);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
-  public List<JoinedPolicyDto> getMyJoins() {
+  public Page<JoinedPolicyDto> getMyJoins(Pageable pageable) {
     try {
-      return joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(JoinedPolicyDto::response).toList();
+      return joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(JoinedPolicyDto::response);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

@@ -45,13 +45,13 @@ public class PolicyController {
 
 
   @GetMapping("/interest/me")
-  public DataResponse<Object> getMyInterests() {
-    return DataResponse.of(policyService.getMyInterests());
+  public DataResponse<Object> getMyInterests(Pageable pageable) {
+    return DataResponse.of(policyService.getMyInterests(pageable));
   }
 
   @GetMapping("/joined/me")
-  public DataResponse<Object> getMyJoins() {
-    return DataResponse.of(policyService.getMyJoins());
+  public DataResponse<Object> getMyJoins(Pageable pageable) {
+    return DataResponse.of(policyService.getMyJoins(pageable));
   }
 
 
