@@ -3,7 +3,6 @@ package kr.finpo.api.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @ToString
-public class Post {
+public class Comment {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,14 +30,12 @@ public class Post {
   private Boolean anonymity;
 
   @Setter
+  @Column
+  private Integer anonymityId = 0;
+
+  @Setter
   @Column(nullable = false)
   private Boolean status = true;
-
-  @Column(nullable = false)
-  private Long hits = 0L;
-
-  @Formula("(select count(*) from like_post lp where lp.post_id = id)")
-  private Integer likes = 0;
 
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
   @CreatedDate
@@ -48,20 +45,20 @@ public class Post {
   @LastModifiedDate
   private LocalDateTime modifiedAt;
 
-  protected Post() {
+  protected Comment() {
   }
 
-  protected Post(String content, Boolean anonymity) {
+  protected Comment(String content, Boolean anonymity) {
     this.content = content;
     this.anonymity = anonymity;
   }
 
-  public static Post of() {
-    return new Post();
+  public static Comment of() {
+    return new Comment();
   }
 
-  public static Post of(String content, Boolean anonymity) {
-    return new Post(content, anonymity);
+  public static Comment of(String content, Boolean anonymity) {
+    return new Comment(content, anonymity);
   }
 
   @Setter
@@ -69,4 +66,14 @@ public class Post {
   @Nullable
   @JoinColumn
   private User user;
+
+  @Setter
+  @ManyToOne
+  @JoinColumn
+  private Post post;
+
+  @Setter
+  @ManyToOne
+  @JoinColumn
+  private Comment parent;
 }

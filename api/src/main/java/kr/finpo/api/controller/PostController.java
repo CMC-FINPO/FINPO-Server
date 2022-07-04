@@ -1,6 +1,7 @@
 package kr.finpo.api.controller;
 
 import kr.finpo.api.dto.*;
+import kr.finpo.api.service.CommentService;
 import kr.finpo.api.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
   private final PostService postService;
+  private final CommentService commentService;
 
   @GetMapping("/{id}")
   public DataResponse<Object> get(@PathVariable Long id) {
@@ -63,5 +65,16 @@ public class PostController {
   @DeleteMapping("/{id}/like")
   public DataResponse<Object> deleteLike(@PathVariable Long id) {
     return DataResponse.of(postService.deleteLike(id));
+  }
+
+
+  @GetMapping("/{id}/comment")
+  public DataResponse<Object> getComments(@PathVariable Long id, Pageable pageable) {
+    return DataResponse.of(commentService.getByPostId(id, pageable));
+  }
+
+  @PostMapping("/{id}/comment")
+  public DataResponse<Object> insertComment(@PathVariable Long id, @RequestBody CommentDto body) {
+    return DataResponse.of(commentService.insert(id, body));
   }
 }

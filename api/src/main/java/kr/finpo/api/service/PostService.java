@@ -28,21 +28,27 @@ public class PostService {
   private final LikePostRepository likePostRepository;
   private final PostImgRepository postImgRepository;
 
-  public User getMe() {
+  private User getMe() {
     return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
         () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
     );
   }
 
-  public void authorizeMe(Long id) {
+  private void authorizeMe(Long id) {
     if (!id.equals(SecurityUtil.getCurrentUserId()))
       throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
   }
 
+  public void checkStatus(Long id) {
+    if (!postRepository.findById(id).get().getStatus())
+      throw new GeneralException(ErrorCode.BAD_REQUEST, "This post already had been deleted");
+  }
+
   public PostDto get(Long id) {
     try {
-      postRepository.increaseHits(id);
       Post post = postRepository.findById(id).get();
+      checkStatus(id);
+      postRepository.increaseHits(id);
       return PostDto.response(post, postImgRepository.findByPostId(post.getId()));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
@@ -90,6 +96,7 @@ public class PostService {
     try {
       Post post = dto.updateEntity(postRepository.findById(id).get());
       authorizeMe(post.getUser().getId());
+      checkStatus(id);
       post = postRepository.save(post);
 
       if (dto.imgs() != null) {
@@ -105,9 +112,12 @@ public class PostService {
 
   public Boolean delete(Long id) {
     try {
-      authorizeMe(postRepository.findById(id).get().getUser().getId());
-      postRepository.deleteById(id);
-      postImgRepository.deleteByPostId(id);
+      Post post = postRepository.findById(id).get();
+      authorizeMe(post.getUser().getId());
+      checkStatus(id);
+      post.setStatus(false);
+      postRepository.save(post);
+      likePostRepository.deleteByPostId(id);
       return true;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
@@ -118,6 +128,7 @@ public class PostService {
     try {
       Post post = postRepository.findById(id).get();
       User user = getMe();
+      checkStatus(id);
 
       // 자추 금지
       if (post.getUser().getId().equals(user.getId()))
@@ -137,6 +148,7 @@ public class PostService {
     try {
       Post post = postRepository.findById(id).get();
       User user = getMe();
+      checkStatus(id);
 
       likePostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresent(likePostRepository::delete);
 

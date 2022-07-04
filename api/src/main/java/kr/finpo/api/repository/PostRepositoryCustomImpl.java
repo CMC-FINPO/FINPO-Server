@@ -44,6 +44,9 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
           case "createdAt":
             fieldName = "createdAt";
             break;
+          case "id":
+            fieldName = "id";
+            break;
           case "likes":
             fieldName = "likes";
             break;
@@ -65,7 +68,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
     BooleanBuilder builder = new BooleanBuilder();
     builder.and(p.user.id.eq(SecurityUtil.getCurrentUserId()));
-    log.debug("userid: " + SecurityUtil.getCurrentUserId());
+    builder.and(p.status.eq(true));
 
     QueryResults<Post> results = jpaQueryFactory
         .selectFrom(p)
@@ -86,6 +89,7 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
 
     BooleanBuilder builder = new BooleanBuilder();
     if (!isEmpty(keyword)) builder.and(p.content.contains(keyword));
+    builder.and(p.status.eq(true));
 
     QueryResults<Post> results = jpaQueryFactory
         .selectFrom(p)

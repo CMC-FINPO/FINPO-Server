@@ -58,6 +58,9 @@ public class UserService {
   private final GoogleAccountRepository googleAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final FcmRepository fcmRepository;
+  private final PostRepository postRepository;
+  private final LikePostRepository likePostRepository;
+  private final CommentRepository commentRepository;
   private final S3Uploader s3Uploader;
 
   @Value("${oauth.kakao.admin-key}")
@@ -70,7 +73,7 @@ public class UserService {
   @Value("${oauth.apple.key-id}")
   private String appleKeyId;
   @Value("${oauth.apple.private-key}")
-  private String applePrivatekey;
+  private String applePrivateKey;
 
   public List<UserDto> getAll() {
     try {
@@ -155,6 +158,15 @@ public class UserService {
     try {
       User user = userRepository.findById(id).get();
 
+      likePostRepository.deleteByUserId(id);
+      commentRepository.findByUserId(id).forEach(comment -> {
+        comment.setUser(null);
+        commentRepository.save(comment);
+      });
+      postRepository.findByUserId(id).forEach(post -> {
+        post.setUser(null);
+        postRepository.save(post);
+      });
       userPurposeRepository.deleteByUserId(id);
       interestRegionRepository.deleteByUserId(id);
       interestCategoryRepository.deleteByUserId(id);
@@ -162,6 +174,8 @@ public class UserService {
       joinedPolicyRepository.deleteByUserId(id);
       refreshTokenRepository.deleteByUserId(id);
       fcmRepository.deleteByUserId(id);
+
+
 
       try {
         HttpHeaders headers = new HttpHeaders();
@@ -220,7 +234,6 @@ public class UserService {
           );
         }
       } catch (HttpClientErrorException | NoSuchElementException e) {
-        e.printStackTrace();
         return false;
       } finally {
         kakaoAccountRepository.deleteByUserId(id);
@@ -279,7 +292,7 @@ public class UserService {
   }
 
   private PrivateKey getPrivateKey() throws IOException {
-    ClassPathResource resource = new ClassPathResource(applePrivatekey);
+    ClassPathResource resource = new ClassPathResource(applePrivateKey);
     String privateKey = new String(resource.getInputStream().readAllBytes());
     Reader pemReader = new StringReader(privateKey);
     PEMParser pemParser = new PEMParser(pemReader);
