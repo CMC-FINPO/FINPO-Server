@@ -17,7 +17,7 @@ public record JoinedPolicyDto(
   public static JoinedPolicyDto of(Long policyId, String memo) {
     return new JoinedPolicyDto(null, policyId, null, memo);
   }
-  public static JoinedPolicyDto response(JoinedPolicy joinedPolicy) {
-    return new JoinedPolicyDto(joinedPolicy.getId(), null, PolicyDto.previewResponse(joinedPolicy.getPolicy(), null), joinedPolicy.getMemo());
+  public static JoinedPolicyDto response(JoinedPolicy joinedPolicy, Boolean isInterest) {
+    return new JoinedPolicyDto(joinedPolicy.getId(), null, PolicyDto.previewResponse(joinedPolicy.getPolicy(), isInterest), joinedPolicy.getMemo());
   }
 }
