@@ -339,7 +339,6 @@ public class OAuthService {
 
       RefreshToken refreshToken = refreshTokenRepository.findOneByUserId(userId)
           .orElseThrow(() -> new GeneralException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
-      log.debug("토큰비교: " + refreshToken.getRefreshToken() + " " + tokenDto.getRefreshToken());
       if (!refreshToken.getRefreshToken().equals(tokenDto.getRefreshToken()))
         throw new GeneralException(ErrorCode.INVALID_REFRESH_TOKEN);
 

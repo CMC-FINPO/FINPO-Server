@@ -62,6 +62,9 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
           case "countOfInterest":
             fieldName = "countOfInterest";
             break;
+          case "id":
+            fieldName = "id";
+            break;
           default:
             break;
         }

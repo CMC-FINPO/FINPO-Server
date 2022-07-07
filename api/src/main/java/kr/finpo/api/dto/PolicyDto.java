@@ -5,7 +5,6 @@ import kr.finpo.api.constant.OpenApiType;
 import kr.finpo.api.domain.Category;
 import kr.finpo.api.domain.Policy;
 import kr.finpo.api.domain.Region;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,8 +31,6 @@ public record PolicyDto(
     Long hits,
     Boolean isInterest
 ) {
-  public PolicyDto {
-  }
 
   public static PolicyDto response(Policy policy, Boolean isInterest) {
     return new PolicyDto(
