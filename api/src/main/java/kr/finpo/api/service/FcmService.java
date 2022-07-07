@@ -8,6 +8,7 @@ import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.FcmRepository;
 import kr.finpo.api.repository.InterestCategoryRepository;
 import kr.finpo.api.repository.InterestRegionRepository;
+import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -70,40 +71,48 @@ public class FcmService {
 
     try {
       Optional.ofNullable(comment.getParent()).flatMap(parentComment -> Optional.ofNullable(parentComment.getUser())).ifPresent(parentUser -> {
+        if(parentUser.getId().equals(SecurityUtil.getCurrentUserId())) return;
 
-        String parentRegistrationToken = fcmRepository.findOneByUserId(parentUser.getId()).get().getRegistrationToken();
+        fcmRepository.findOneByUserId(parentUser.getId()).ifPresent(parentUserFcm -> {
+          String parentRegistrationToken = parentUserFcm.getRegistrationToken();
 
-        Message message = Message.builder()
-            .putData("type", "childComment")
-            .putData("id", Long.toString(comment.getId()))
-            .putData("content", comment.getContent().substring(0, Math.min(10, comment.getContent().length())))
-            .setToken(parentRegistrationToken)
-            .build();
+          Message message = Message.builder()
+              .putData("type", "childComment")
+              .putData("id", Long.toString(comment.getId()))
+              .putData("content", comment.getContent().substring(0, Math.min(10, comment.getContent().length())))
+              .setToken(parentRegistrationToken)
+              .build();
 
-        try {
-          FirebaseMessaging.getInstance().send(message);
-          userIds.add(parentUser.getId());
-        } catch (FirebaseMessagingException e) {
-          log.error(e.toString());
-        }
+          try {
+            FirebaseMessaging.getInstance().send(message);
+            userIds.add(parentUser.getId());
+          } catch (FirebaseMessagingException e) {
+            log.error(e.toString());
+          }
+        });
       });
 
       Optional.ofNullable(comment.getPost().getUser()).ifPresent(postUser -> {
+        if(postUser.getId().equals(SecurityUtil.getCurrentUserId()) || userIds.contains(postUser.getId())) return;
 
-        String parentRegistrationToken = fcmRepository.findOneByUserId(postUser.getId()).get().getRegistrationToken();
 
-        Message message = Message.builder()
-            .putData("type", "comment")
-            .putData("id", Long.toString(comment.getId()))
-            .putData("content", comment.getContent().substring(0, Math.min(10, comment.getContent().length())))
-            .setToken(parentRegistrationToken)
-            .build();
-        try {
-          FirebaseMessaging.getInstance().send(message);
-          userIds.add(postUser.getId());
-        } catch (FirebaseMessagingException e) {
-          log.error(e.toString());
-        }
+        fcmRepository.findOneByUserId(postUser.getId()).ifPresent(postUserFcm -> {
+
+          String postUserRegistrationToken = postUserFcm.getRegistrationToken();
+
+          Message message = Message.builder()
+              .putData("type", "comment")
+              .putData("id", Long.toString(comment.getId()))
+              .putData("content", comment.getContent().substring(0, Math.min(10, comment.getContent().length())))
+              .setToken(postUserRegistrationToken)
+              .build();
+          try {
+            FirebaseMessaging.getInstance().send(message);
+            userIds.add(postUser.getId());
+          } catch (FirebaseMessagingException e) {
+            log.error(e.toString());
+          }
+        });
       });
       return userIds;
     } catch (Exception e) {
