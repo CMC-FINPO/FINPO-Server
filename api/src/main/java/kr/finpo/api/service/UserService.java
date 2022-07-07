@@ -6,10 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.*;
-import kr.finpo.api.dto.AppleTokenDto;
-import kr.finpo.api.dto.InterestRegionDto;
-import kr.finpo.api.dto.UserDto;
-import kr.finpo.api.dto.WithdrawDto;
+import kr.finpo.api.dto.*;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.*;
 import kr.finpo.api.util.SecurityUtil;
@@ -101,6 +98,14 @@ public class UserService {
     }
   }
 
+  public List<Long> getMyPurpose() {
+    try {
+      return userPurposeRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(UserPurpose::getUserPurposeId).toList();
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
 
   public UserDto updateMe(UserDto dto) {
     return update(SecurityUtil.getCurrentUserId(), dto);
@@ -119,7 +124,6 @@ public class UserService {
       if (dto.regionId() != null)
         regionService.updateMyDefault(InterestRegionDto.of(dto.regionId(), true));
 
-      log.debug("purposeId: : " + dto.purposeIds());
       if (dto.purposeIds() != null) {
         userPurposeRepository.deleteByUserId(user.getId());
 
@@ -174,8 +178,6 @@ public class UserService {
       joinedPolicyRepository.deleteByUserId(id);
       refreshTokenRepository.deleteByUserId(id);
       fcmRepository.deleteByUserId(id);
-
-
 
       try {
         HttpHeaders headers = new HttpHeaders();

@@ -46,15 +46,10 @@ public class UserController {
     return DataResponse.of(userService.getMyInfo());
   }
 
-
-  @PutMapping("/{id}")
-  public DataResponse<Object> update(
-      @PathVariable Long id,
-      @RequestBody UserDto body
-  ) {
-    return DataResponse.of(userService.update(id, body));
+  @GetMapping(path = "/me/purpose")
+  public DataResponse<Object> getMyPurpose() {
+    return DataResponse.of(userService.getMyPurpose());
   }
-
 
   @PutMapping("/me")
   public DataResponse<Object> updateMe(
