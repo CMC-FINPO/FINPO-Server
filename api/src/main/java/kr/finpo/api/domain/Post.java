@@ -23,7 +23,7 @@ public class Post {
   private Long id;
 
   @Setter
-  @Column(length = 100, nullable = false)
+  @Column(length = 1000, nullable = false)
   private String content;
 
   @Setter

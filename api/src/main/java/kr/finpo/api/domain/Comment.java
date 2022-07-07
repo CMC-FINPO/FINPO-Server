@@ -22,7 +22,7 @@ public class Comment {
   private Long id;
 
   @Setter
-  @Column(length = 100, nullable = false)
+  @Column(length = 200, nullable = false)
   private String content;
 
   @Setter

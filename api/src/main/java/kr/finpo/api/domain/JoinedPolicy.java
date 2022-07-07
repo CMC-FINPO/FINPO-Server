@@ -20,7 +20,7 @@ public class JoinedPolicy {
   private Long id;
 
   @Setter
-  @Column(length = 100)
+  @Column(length = 200)
   private String memo;
 
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")

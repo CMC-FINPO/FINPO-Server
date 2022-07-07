@@ -112,10 +112,13 @@ public class PostService {
 
   private List<PostImg> insertPostImg(PostDto dto, Post post) {
     List<PostImg> postImgs = new ArrayList<>();
-    Optional.ofNullable(dto.imgs()).ifPresent(imgDtos ->
-        imgDtos.forEach(imgDto ->
-            postImgs.add(postImgRepository.save(PostImg.of(imgDto.img(), imgDto.order(), post)))
-        )
+    Optional.ofNullable(dto.imgs()).ifPresent(imgDtos -> {
+          if (imgDtos.size() > 5)
+            throw new GeneralException(ErrorCode.BAD_REQUEST, "Images must equal or less than 5");
+          imgDtos.forEach(imgDto ->
+              postImgs.add(postImgRepository.save(PostImg.of(imgDto.img(), imgDto.order(), post)))
+          );
+        }
     );
     return postImgs;
   }

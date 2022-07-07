@@ -45,8 +45,11 @@ public class S3Uploader {
   public ImgUploadDto uploadImg(ImgUploadDto dto, String path) {
     try {
       List<String> imgUrls = new ArrayList<>();
-      dto.imgFiles().forEach(imgFile->{
-        imgUrls.add(uploadFile(path, imgFile));
+
+      Optional.ofNullable(dto.imgFiles()).ifPresent(imgFiles -> {
+        imgFiles.forEach(imgFile -> {
+          imgUrls.add(uploadFile(path, imgFile));
+        });
       });
       return ImgUploadDto.response(imgUrls);
     } catch (Exception e) {
