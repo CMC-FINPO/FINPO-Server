@@ -52,7 +52,7 @@ public class PostService {
       Post post = postRepository.findById(id).get();
       checkStatus(id);
       postRepository.increaseHits(id);
-      return PostDto.response(post, postImgRepository.findByPostId(post.getId()));
+      return PostDto.response(post, postImgRepository.findByPostId(post.getId()), likePostRepository, bookmarkPostRepository);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -60,7 +60,7 @@ public class PostService {
 
   public Page<PostDto> getMy(Pageable pageable) {
     try {
-      return postRepository.querydslFindMy(pageable).map(PostDto::previewResponse);
+      return postRepository.querydslFindMy(pageable).map(e -> PostDto.previewResponse(e, likePostRepository, bookmarkPostRepository));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -68,7 +68,7 @@ public class PostService {
 
   public Page<PostDto> getMyLikes(Pageable pageable) {
     try {
-      return likePostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost()));
+      return likePostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost(), likePostRepository, bookmarkPostRepository));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -76,7 +76,7 @@ public class PostService {
 
   public Page<PostDto> getMyBookmarks(Pageable pageable) {
     try {
-      return bookmarkPostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost()));
+      return bookmarkPostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost(), likePostRepository, bookmarkPostRepository));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -84,7 +84,7 @@ public class PostService {
 
   public Page<PostDto> getMyCommentPosts(Pageable pageable) {
     try {
-      return commentRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(comment -> PostDto.previewResponse(comment.getPost()));
+      return commentRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(comment -> PostDto.previewResponse(comment.getPost(), likePostRepository, bookmarkPostRepository));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -92,7 +92,7 @@ public class PostService {
 
   public Page<PostDto> search(String content, Pageable pageable) {
     try {
-      return postRepository.querydslFindbyContent(content, pageable).map(PostDto::previewResponse);
+      return postRepository.querydslFindbyContent(content, pageable).map(e -> PostDto.previewResponse(e, likePostRepository, bookmarkPostRepository));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -104,7 +104,7 @@ public class PostService {
       post.setUser(getMe());
       post = postRepository.save(post);
       List<PostImg> postImgs = insertPostImg(dto, post);
-      return PostDto.response(post, postImgs);
+      return PostDto.response(post, postImgs, likePostRepository, bookmarkPostRepository);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -132,7 +132,7 @@ public class PostService {
         insertPostImg(dto, finalPost);
       });
 
-      return PostDto.response(post, postImgRepository.findByPostId(id));
+      return PostDto.response(post, postImgRepository.findByPostId(id), likePostRepository, bookmarkPostRepository);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -159,14 +159,17 @@ public class PostService {
       checkStatus(id);
 
       // 자추 금지
-      if (post.getUser().getId().equals(user.getId()))
-        throw new GeneralException(ErrorCode.BAD_REQUEST, "You're the writer of this post");
+      Optional.ofNullable(post.getUser()).ifPresent(postUser -> {
+        if (postUser.getId().equals(user.getId()))
+          throw new GeneralException(ErrorCode.BAD_REQUEST, "You're the writer of this post");
+      });
+
 
       likePostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresentOrElse(null, () -> {
         likePostRepository.save(LikePost.of(user, post));
       });
 
-      return PostDto.previewResponse(post);
+      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -180,7 +183,7 @@ public class PostService {
 
       likePostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresent(likePostRepository::delete);
 
-      return PostDto.previewResponse(post);
+      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -196,7 +199,7 @@ public class PostService {
         bookmarkPostRepository.save(BookmarkPost.of(user, post));
       });
 
-      return PostDto.previewResponse(post);
+      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -210,7 +213,7 @@ public class PostService {
 
       bookmarkPostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresent(bookmarkPostRepository::delete);
 
-      return PostDto.previewResponse(post);
+      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

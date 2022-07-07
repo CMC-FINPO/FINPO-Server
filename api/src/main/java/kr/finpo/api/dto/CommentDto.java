@@ -21,13 +21,18 @@ public record CommentDto(
     Integer anonymityId,
     Boolean isWriter,
     Boolean isMine,
+    Boolean isModified,
     LocalDateTime createdAt,
     LocalDateTime modifiedAt,
     PostDto post,
     List<CommentDto> childs
 ) {
   public Comment updateEntity(Comment comment) {
-    if (content != null) comment.setContent(content);
+    if (content != null) {
+      comment.setContent(content);
+      comment.setIsModified(true);
+    }
+
     return comment;
   }
 
@@ -45,6 +50,7 @@ public record CommentDto(
         comment.getAnonymityId().equals(0) ? null : comment.getAnonymityId(),
         comment.getUser().getId().equals(Optional.ofNullable(comment.getPost().getUser()).map(User::getId).orElse(null)),
         comment.getUser().getId().equals(SecurityUtil.getCurrentUserId()),
+        comment.getIsModified(),
         comment.getCreatedAt(),
         comment.getModifiedAt(),
         showPost ? PostDto.previewResponse(comment.getPost()) : null,
@@ -56,6 +62,7 @@ public record CommentDto(
     return new CommentDto(
         comment.getStatus(),
         comment.getId(),
+        null,
         null,
         null,
         null,
@@ -83,6 +90,7 @@ public record CommentDto(
         null,
         null,
         null,
+        comment.getIsModified(),
         null,
         null,
         showPost ? PostDto.previewResponse(comment.getPost()) : null,
@@ -102,6 +110,7 @@ public record CommentDto(
         comment.getAnonymityId().equals(0) ? null : comment.getAnonymityId(),
         null,
         null,
+        comment.getIsModified(),
         comment.getCreatedAt(),
         comment.getModifiedAt(),
         showPost ? PostDto.previewResponse(comment.getPost()) : null,

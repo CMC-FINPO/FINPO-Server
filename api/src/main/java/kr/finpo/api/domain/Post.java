@@ -43,6 +43,10 @@ public class Post {
   @Formula("(select count(*) from comment c where c.post_id = id)")
   private Integer countOfComment = 0;
 
+  @Setter
+  @Column(nullable = false)
+  private Boolean isModified = false;
+
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
   @CreatedDate
   private LocalDateTime createdAt;

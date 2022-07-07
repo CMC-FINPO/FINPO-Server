@@ -37,6 +37,10 @@ public class Comment {
   @Column(nullable = false)
   private Boolean status = true;
 
+  @Setter
+  @Column(nullable = false)
+  private Boolean isModified = false;
+
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
   @CreatedDate
   private LocalDateTime createdAt;
