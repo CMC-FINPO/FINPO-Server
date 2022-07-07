@@ -19,7 +19,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
   public Optional<Comment> findFirst1ByPostIdAndUserIdAndAnonymity(Long id, Long userId, Boolean anonymity);
 
-  public Optional<Comment> findTop1ByPostIdAndAnonymity(Long userId, Boolean anonymity);
+  public Optional<Comment> findFirst1ByPostIdAndAnonymity(Long userId, Boolean anonymity);
 
   public List<Comment> findByUserId(Long userId);
 

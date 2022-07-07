@@ -69,10 +69,10 @@ public class CommentService {
       Comment comment = Comment.of(dto.content(), dto.anonymity());
 
       // 익명 id 배정
-      if (!post.getUser().getId().equals(SecurityUtil.getCurrentUserId()) && dto.anonymity()) {
+      if (post.getUser() != null && !post.getUser().getId().equals(SecurityUtil.getCurrentUserId()) && dto.anonymity()) {
         Optional<Comment> beforeComment = commentRepository.findFirst1ByPostIdAndUserIdAndAnonymity(postId, SecurityUtil.getCurrentUserId(), true);
 
-        Optional<Comment> latestAnonymityComment = commentRepository.findTop1ByPostIdAndAnonymity(postId, true);
+        Optional<Comment> latestAnonymityComment = commentRepository.findFirst1ByPostIdAndAnonymity(postId, true);
 
         comment.setAnonymityId(
             beforeComment.map(Comment::getAnonymityId)
