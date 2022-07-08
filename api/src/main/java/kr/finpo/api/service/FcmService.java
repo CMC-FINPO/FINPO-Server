@@ -53,6 +53,11 @@ public class FcmService {
           .putData("type", "policy")
           .putData("id", Long.toString(policy.getId()))
           .putData("title", policy.getTitle())
+          .putData("region2", policy.getRegion().getName())
+          .putData("region1", Optional.ofNullable(policy.getRegion()).map(region -> region.getParent().getName()).orElse(null))
+          .putData("category2", policy.getCategory().getName())
+          .putData("category1", policy.getCategory().getParent().getName())
+          .putData("title", policy.getTitle())
           .addAllTokens(registrationTokens)
           .build();
 
@@ -79,7 +84,8 @@ public class FcmService {
           Message message = Message.builder()
               .putData("type", "childComment")
               .putData("id", Long.toString(comment.getId()))
-              .putData("content", comment.getContent().substring(0, Math.min(10, comment.getContent().length())))
+              .putData("content", comment.getContent().substring(0, Math.min(100, comment.getContent().length())) + (comment.getContent().length() > 100 ? "..." : ""))
+              .putData("postId", Long.toString(comment.getPost().getId()))
               .setToken(parentRegistrationToken)
               .build();
 
@@ -103,7 +109,8 @@ public class FcmService {
           Message message = Message.builder()
               .putData("type", "comment")
               .putData("id", Long.toString(comment.getId()))
-              .putData("content", comment.getContent().substring(0, Math.min(10, comment.getContent().length())))
+              .putData("content", comment.getContent().substring(0, Math.min(100, comment.getContent().length())) + (comment.getContent().length() > 100 ? "..." : ""))
+              .putData("postId", Long.toString(comment.getPost().getId()))
               .setToken(postUserRegistrationToken)
               .build();
           try {

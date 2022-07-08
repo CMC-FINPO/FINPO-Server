@@ -74,7 +74,7 @@ public record PostDto(
     return new PostDto(
         post.getStatus(),
         post.getId(),
-        post.getContent().substring(0, Math.min(10, post.getContent().length())) + (post.getContent().length() > 10 ? "..." : ""),
+        post.getContent().substring(0, Math.min(100, post.getContent().length())) + (post.getContent().length() > 100 ? "..." : ""),
         post.getAnonymity(),
         post.getLikes(),
         post.getHits(),
