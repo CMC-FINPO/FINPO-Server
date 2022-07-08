@@ -566,11 +566,9 @@ operation::알림수정[snippets='http-request,request-headers,request-fields,ht
 
 ==== 정책
     data:
-        category1: "일자리"
-        category2: "진로"
+        category: "일자리 진로"
         id: "5343"
-        region1: "서울"
-        region2: "마포"
+        region: "서울 마포"
         title: "마포구 뭐시기머시기"
         type: "policy"
     fcmMessageId: "bc252c00-bf36-46e3-b051-ac7c2d92dd25"
@@ -579,15 +577,17 @@ operation::알림수정[snippets='http-request,request-headers,request-fields,ht
 
 ==== 댓글
 
-댓글 100자 넘어갈 시 뒤에 ... 붙음
+댓글 100자 넘어갈 시 100자까지 보여주고 뒤에 ... 붙음
 
     data:
         content: "댓글댓글대대대대 개대ㅐㄷ슥"
         id: "5345"
+        postComment:"글내용내용내용"
         postId: "5333"
         type: "comment"
     fcmMessageId: "60301125-b076-4809-8168-8efac06ae4fa"
     from: "612456786880"
+    priority: "normal"
 
 
 ==== 대댓글
@@ -595,6 +595,7 @@ operation::알림수정[snippets='http-request,request-headers,request-fields,ht
     data:
         content: "대댓글글글  ㄹㄴㄹㅇㄴㄹㅇㅁ너"
         id: "5348"
+        postComment:"글내용내용내용"
         postId: "5309"
         type: "childComment"
     fcmMessageId: "cc503903-15da-4819-956e-27cd6ba8c7c7"
@@ -683,6 +684,8 @@ operation::내관심정책조회[snippets='http-request,request-headers,http-res
 
 policyId가 중복된다면 data에 null을 반환합니다.
 
+최대 개수는 20개입니다.
+
 operation::내관심정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 &nbsp;
@@ -727,9 +730,11 @@ operation::내참여정책조회[snippets='http-request,request-headers,http-res
 
 메모 최대 글자 수는 200자 입니다.
 
-operation::내참여정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
-
 policyId가 중복된다면 data에 null을 반환합니다.
+
+최대 개수는 20개입니다.
+
+operation::내참여정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 &nbsp;
 
