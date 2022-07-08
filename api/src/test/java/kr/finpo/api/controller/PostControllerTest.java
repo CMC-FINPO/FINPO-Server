@@ -246,7 +246,7 @@ class PostControllerTest {
                 requestParameters(
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
-                    parameterWithName("sort").description("정렬 기준\n createdAt desc:작성일 내림차순\n [createdAt, likes]").optional()
+                    parameterWithName("sort").description("정렬 기준\n id desc:작성일 내림차순\n [id, likes]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부")

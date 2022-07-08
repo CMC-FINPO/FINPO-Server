@@ -377,6 +377,9 @@ class PolicyControllerTest {
     insertMyJoined(4L, null);
     insertMyJoined(91L, null);
     insertMyJoined(78L, "이건 좀 아쉬웠음");
+//    for (Long i = 1L; i < 20L; i++)
+//      insertMyJoined(i, "이건 좀 아쉬웠음");
+
     then(beforeCnt + 5).isEqualTo(joinedPolicyRepository.count());
   }
 
@@ -393,7 +396,6 @@ class PolicyControllerTest {
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.data.policy.id").value(id))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(
@@ -411,18 +413,22 @@ class PolicyControllerTest {
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
-                    fieldWithPath("data.id").description("참여정책id"),
-                    fieldWithPath("data.policy.id").description("정책id"),
+                    fieldWithPath("data.id").description("참여정책id").optional().type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.policy.id").description("정책id").optional().type(JsonFieldType.NUMBER),
                     fieldWithPath("data.memo").description("메모").optional().type(JsonFieldType.STRING)
                 )
             )
         )
         .andReturn();
 
-    JSONParser parser = new JSONParser();
-    JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
-    json = (JSONObject) parser.parse(json.get("data").toString());
-    return (int) json.get("id");
+    try {
+      JSONParser parser = new JSONParser();
+      JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
+      json = (JSONObject) parser.parse(json.get("data").toString());
+      return (int) json.get("id");
+    } catch (NullPointerException e) {
+      return -1;
+    }
   }
 
   @Test
@@ -458,7 +464,7 @@ class PolicyControllerTest {
   }
 
   @Test
-  void etMyJoins() throws Exception {
+  void getMyJoins() throws Exception {
     insertMyInterest(37L);
     insertMyJoined();
 
