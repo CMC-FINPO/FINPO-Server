@@ -1,5 +1,6 @@
 package kr.finpo.api.service;
 
+import kr.finpo.api.constant.Constraint;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.*;
 import kr.finpo.api.dto.CommentDto;
@@ -63,6 +64,10 @@ public class CommentService {
 
   public CommentDto insert(Long postId, CommentDto dto) {
     try {
+      if (dto.content().length() > Constraint.COMMENT_MAX_LENGTH)
+        throw new GeneralException(ErrorCode.BAD_REQUEST, "Content's length must equal or less than " + Constraint.COMMENT_MAX_LENGTH);
+
+
       Post post = postRepository.findById(postId).get();
       postService.checkStatus(postId);
 
@@ -89,6 +94,8 @@ public class CommentService {
       log.debug("sendCommentPush: " + fcmService.sendCommentPush(comment).toString());
 
       return CommentDto.response(comment, true, null);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

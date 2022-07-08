@@ -105,7 +105,7 @@ public class PolicyService {
 
   public List<InterestPolicyDto> getMyInterests() {
     try {
-      return interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(e->InterestPolicyDto.response(e, isInterest(e.getPolicy().getId()))).toList();
+      return interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(e -> InterestPolicyDto.response(e, isInterest(e.getPolicy().getId()))).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -113,7 +113,7 @@ public class PolicyService {
 
   public List<JoinedPolicyDto> getMyJoins() {
     try {
-      return joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(e->JoinedPolicyDto.response(e, isInterest(e.getPolicy().getId()))).toList();
+      return joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(e -> JoinedPolicyDto.response(e, isInterest(e.getPolicy().getId()))).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -121,7 +121,7 @@ public class PolicyService {
 
   public InterestPolicyDto insertMyInterest(InterestPolicyDto dto) {
     try {
-      if(interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() > Constraint.INTEREST_POLICY_MAX_CNT)
+      if (interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() > Constraint.INTEREST_POLICY_MAX_CNT)
         throw new GeneralException(ErrorCode.BAD_REQUEST, "Interest policy must equal or less than " + Constraint.INTEREST_POLICY_MAX_CNT);
 
       User user = getMe();
@@ -130,6 +130,8 @@ public class PolicyService {
         return null;
       InterestPolicy interestPolicy = InterestPolicy.of(user, policy);
       return InterestPolicyDto.response(interestPolicyRepository.save(interestPolicy), true);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -137,7 +139,7 @@ public class PolicyService {
 
   public JoinedPolicyDto insertMyJoined(JoinedPolicyDto dto) {
     try {
-      if(joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() > Constraint.JOINED_POLICY_MAX_CNT)
+      if (joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() > Constraint.JOINED_POLICY_MAX_CNT)
         throw new GeneralException(ErrorCode.BAD_REQUEST, "Joined policy must equal or less than " + Constraint.JOINED_POLICY_MAX_CNT);
 
       User user = getMe();
@@ -145,7 +147,9 @@ public class PolicyService {
       JoinedPolicy joinedPolicy = JoinedPolicy.of(user, policy, dto.memo());
       if (joinedPolicyRepository.findOneByUserIdAndPolicyId(user.getId(), policy.getId()).isPresent())
         return null;
-      return JoinedPolicyDto.response(joinedPolicyRepository.save(joinedPolicy),isInterest(policy.getId()));
+      return JoinedPolicyDto.response(joinedPolicyRepository.save(joinedPolicy), isInterest(policy.getId()));
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
