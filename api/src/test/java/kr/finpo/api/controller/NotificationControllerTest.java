@@ -70,19 +70,11 @@ class NotificationControllerTest {
     HashMap<String, String> map = oc.registerAndGetToken(mockMvc);
     accessToken = map.get("accessToken");
     refreshToken = map.get("refreshToken");
-
-    PolicyCategoryControllerTest cc = new PolicyCategoryControllerTest();
-    cc.set(mockMvc, accessToken);
-    interestCategories = cc.insertMyInterestCategories();
-
-    RegionControllerTest rc = new RegionControllerTest();
-    rc.set(mockMvc, interestRegionRepository, accessToken);
-    interestRegions = rc.insertMyInterests(101L);
   }
 
   @Test
   void getMy() throws Exception {
-    updateMy();
+    updateMy(accessToken);
 
     mockMvc.perform(get("/notification/me")
             .contentType(MediaType.APPLICATION_JSON)
@@ -112,7 +104,19 @@ class NotificationControllerTest {
 
 
   @Test
-  void updateMy() throws Exception {
+  void updateMyTest() throws Exception {
+    updateMy(accessToken);
+  }
+
+  void updateMy(String accessToken) throws Exception {
+    PolicyCategoryControllerTest cc = new PolicyCategoryControllerTest();
+    cc.set(mockMvc, accessToken);
+    interestCategories = cc.insertMyInterestCategories();
+
+    RegionControllerTest rc = new RegionControllerTest();
+    rc.set(mockMvc, interestRegionRepository, accessToken);
+    interestRegions = rc.insertMyInterests(101L);
+
     HashMap<String, Object> body = new HashMap<>() {{
       put("subscribe", true);
       put("registrationToken", "sssssssssssss");
@@ -145,7 +149,8 @@ class NotificationControllerTest {
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data.subscribe").description("전체 알림 구독 설정 여부")
-                    , fieldWithPath("data.interestCategories.[].subscribe").description("관심 카테고리별 알림 구독 설정 여부")
+                    , fieldWithPath("data.interestCategories.[].subscribe").description("관심 카테고리별 알림 구독 설정 여부").optional().type(JsonFieldType.BOOLEAN)
+
                 )
             )
         )

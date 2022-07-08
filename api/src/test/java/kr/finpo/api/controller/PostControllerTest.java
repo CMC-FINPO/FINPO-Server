@@ -2,6 +2,7 @@ package kr.finpo.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.repository.BookmarkPostRepository;
 import kr.finpo.api.repository.InterestRegionRepository;
 import kr.finpo.api.repository.LikePostRepository;
 import kr.finpo.api.repository.PostRepository;
@@ -58,10 +59,16 @@ class PostControllerTest {
   @Autowired
   private LikePostRepository likePostRepository;
 
-  String accessToken, refreshToken, otherAccessToken;
+  @Autowired
+  private BookmarkPostRepository bookmarkPostRepository;
+
+  String accessToken, refreshToken, otherAccessToken, anotherAccessToken;
+
+  UserControllerTest uc = new UserControllerTest();
 
   @BeforeEach
   void setUp() throws Exception {
+    if(accessToken != null) return;
     OAuthControllerTest oc = new OAuthControllerTest();
     HashMap<String, String> map = oc.registerAndGetToken(mockMvc);
     accessToken = map.get("accessToken");
@@ -69,6 +76,17 @@ class PostControllerTest {
 
     map = oc.registerAndGetToken(mockMvc, "leeekim");
     otherAccessToken = map.get("accessToken");
+
+    map = oc.registerAndGetToken(mockMvc, "wwwwwlllll");
+    anotherAccessToken = map.get("accessToken");
+
+    uc.set(mockMvc, accessToken);
+
+    NotificationControllerTest nc = new NotificationControllerTest();
+    nc.set(mockMvc, accessToken);
+    nc.updateMy(accessToken);
+    nc.updateMy(otherAccessToken);
+    nc.updateMy(anotherAccessToken);
   }
 
   public void set(MockMvc mockMvc, String accessToken) {
@@ -78,7 +96,7 @@ class PostControllerTest {
 
   @Test
   void gett() throws Exception {
-    int id = insertPost();
+    int id = insertPost(accessToken);
     mockMvc.perform(RestDocumentationRequestBuilders.get("/post/{id}", id)
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
@@ -101,12 +119,20 @@ class PostControllerTest {
                     fieldWithPath("success").description("성공 여부")
                     , fieldWithPath("errorCode").description("응답 코드")
                     , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data.status").description("글 상태 (삭제 시 false)")
                     , fieldWithPath("data.id").description("글 id")
                     , fieldWithPath("data.content").description("글 내용")
                     , fieldWithPath("data.anonymity").description("글 작성자 익명 여부")
                     , fieldWithPath("data.likes").description("좋아요 수")
                     , fieldWithPath("data.hits").description("조회수")
+                    , fieldWithPath("data.countOfComment").description("댓글수")
                     , fieldWithPath("data.user").description("글 작성자")
+                    , fieldWithPath("data.isUserWithdraw").description("탈퇴한 유저의 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.isMine").description("내가 작성한 글인가")
+                    , fieldWithPath("data.isLiked").description("내가 좋아요 한 글인가")
+                    , fieldWithPath("data.isBookmarked").description("내가 북마크 한 글인가")
+                    , fieldWithPath("data.isModified").description("수정된 글인가")
+                    , fieldWithPath("data.isMine").description("내가 작성한 글인가").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("data.createdAt").description("작성일")
                     , fieldWithPath("data.modifiedAt").description("수정일")
                     , fieldWithPath("data.imgs").description("글 이미지들").optional().type(JsonFieldType.ARRAY)
@@ -121,7 +147,7 @@ class PostControllerTest {
   @Test
   void getMy() throws Exception {
     insertPostTest();
-    mockMvc.perform(get("/post/me?page=0&size=5&sort=createdAt,desc")
+    mockMvc.perform(get("/post/me?page=0&size=5&sort=id,desc")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
         )
@@ -140,7 +166,7 @@ class PostControllerTest {
                 requestParameters(
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
-                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n createdAt desc:작성일 내림차순\n [createdAt, likes]").optional()
+                    parameterWithName("sort").description("정렬 기준\n id desc:작성일(createdAt말고) 내림차순\n [createdAt, likes]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부")
@@ -151,6 +177,7 @@ class PostControllerTest {
                     , fieldWithPath("data.content.[].anonymity").description("글 작성자 익명 여부")
                     , fieldWithPath("data.content.[].likes").description("좋아요 수")
                     , fieldWithPath("data.content.[].hits").description("조회수")
+                    , fieldWithPath("data.content.[].countOfComment").description("댓글수")
                     , fieldWithPath("data.content.[].user").description("글 작성자")
                     , fieldWithPath("data.content.[].createdAt").description("작성일")
                     , fieldWithPath("data.content.[].modifiedAt").description("수정일")
@@ -168,11 +195,40 @@ class PostControllerTest {
         );
   }
 
+  @Test
+  void getMyLikesTest() throws Exception {
+    long beforeCnt = likePostRepository.count();
+    like(insertPost(otherAccessToken), accessToken);
+    like(insertPost(anotherAccessToken), accessToken);
+    like(insertAnonymity(otherAccessToken), accessToken);
+    getMy("like", accessToken);
+    then(beforeCnt + 3).isEqualTo(likePostRepository.count());
+  }
 
   @Test
-  void search() throws Exception {
-    insertPostTest();
-    mockMvc.perform(get("/post/search?page=0&size=5&sort=createdAt,desc")
+  void getMyBookmarksTest() throws Exception {
+    long beforeCnt = bookmarkPostRepository.count();
+    bookmark(insertPost(otherAccessToken), accessToken);
+    bookmark(insertPost(anotherAccessToken), accessToken);
+    bookmark(insertAnonymity(otherAccessToken), accessToken);
+    getMy("bookmark", accessToken);
+    then(beforeCnt + 3).isEqualTo(bookmarkPostRepository.count());
+  }
+
+  @Test
+  void getMyCommentPostsTest() throws Exception {
+    CommentControllerTest cc = new CommentControllerTest();
+    cc.set(mockMvc, accessToken);
+    int id = insertPost(otherAccessToken);
+    cc.insertAnonymity(id, "댓글글글글", accessToken, false);
+    cc.insertAnonymity(id, "댓글글글글222", accessToken, false);
+    int id2 = insertAnonymity(otherAccessToken);
+    cc.insert(id2, "익명글댓글", accessToken, false);
+    getMy("comment", accessToken);
+  }
+
+  void getMy(String type, String accessToken) throws Exception {
+    mockMvc.perform(get("/post/" + type + "/me?page=0&size=5&sort=id,desc")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
         )
@@ -180,9 +236,8 @@ class PostControllerTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
-        .andExpect(jsonPath("$.data.content.length()").value(5))
         .andDo(
-            document("글조회",
+            document(type.equals("like")?"내좋아요한글조회":type.equals("bookmark")?"내북마크글조회":"내댓글단글조회",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestHeaders(
@@ -191,20 +246,82 @@ class PostControllerTest {
                 requestParameters(
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
-                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n createdAt desc:작성일 내림차순\n [createdAt, likes]").optional()
+                    parameterWithName("sort").description("정렬 기준\n createdAt desc:작성일 내림차순\n [createdAt, likes]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부")
                     , fieldWithPath("errorCode").description("응답 코드")
                     , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data.content.[].status").description("글 상태 (삭제 시 false)")
                     , fieldWithPath("data.content.[].id").description("글 id")
                     , fieldWithPath("data.content.[].content").description("글 내용")
                     , fieldWithPath("data.content.[].anonymity").description("글 작성자 익명 여부")
                     , fieldWithPath("data.content.[].likes").description("좋아요 수")
                     , fieldWithPath("data.content.[].hits").description("조회수")
+                    , fieldWithPath("data.content.[].countOfComment").description("댓글수")
                     , fieldWithPath("data.content.[].user").description("글 작성자").optional().type(JsonFieldType.OBJECT)
                     , fieldWithPath("data.content.[].createdAt").description("작성일")
                     , fieldWithPath("data.content.[].modifiedAt").description("수정일")
+
+                    , fieldWithPath("data.last").description("현재가 마지막 페이지인가")
+                    , fieldWithPath("data.first").description("현재가 첫 페이지인가")
+                    , fieldWithPath("data.totalElements").description("전체 데이터 수")
+                    , fieldWithPath("data.totalPages").description("전체 페이지 수")
+                    , fieldWithPath("data.number").description("현재 페이지")
+                    , fieldWithPath("data.size").description("한 페이지 데이터 개수")
+                    , fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 개수")
+                    , fieldWithPath("data.empty").description("현재 페이지가 비어있는가")
+                )
+            )
+        );
+  }
+
+  @Test
+  void search() throws Exception {
+    insertPostTest();
+
+    uc.deleteMe(accessToken);
+    mockMvc.perform(get("/post/search?content=내용&page=0&size=5&sort=id,desc")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + otherAccessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("글조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("content").description("검색할 내용").optional(),
+                    parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
+                    parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
+                    parameterWithName("sort").description("정렬 기준\n id desc:작성일(createdAt말고) 내림차순\n [createdAt, likes]").optional()
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data.content.[].status").description("글 상태 (삭제 시 false)")
+                    , fieldWithPath("data.content.[].id").description("글 id")
+                    , fieldWithPath("data.content.[].content").description("글 내용")
+                    , fieldWithPath("data.content.[].anonymity").description("글 작성자 익명 여부")
+                    , fieldWithPath("data.content.[].likes").description("좋아요 수")
+                    , fieldWithPath("data.content.[].hits").description("조회수")
+                    , fieldWithPath("data.content.[].countOfComment").description("댓글수")
+                    , fieldWithPath("data.content.[].user").description("글 작성자").optional().type(JsonFieldType.OBJECT)
+                    , fieldWithPath("data.content.[].isUserWithdraw").description("탈퇴한 유저의 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isMine").description("내가 작성한 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isLiked").description("좋아요 한 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isBookmarked").description("북마크 한 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].modified").description("수정된 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].createdAt").description("작성일")
+                    , fieldWithPath("data.content.[].modifiedAt").description("수정일")
+
 
                     , fieldWithPath("data.last").description("현재가 마지막 페이지인가")
                     , fieldWithPath("data.first").description("현재가 첫 페이지인가")
@@ -223,16 +340,20 @@ class PostControllerTest {
   @Test
   void insertPostTest() throws Exception {
     long beforeCnt = postRepository.count();
-    insertPost();
-    insertPost();
-    insertPost();
-    insertPost();
-    insertPost();
-    then(beforeCnt + 5).isEqualTo(postRepository.count());
+    insertPost(accessToken);
+    insertPost(accessToken);
+    insertPost(accessToken);
+    insertPost(accessToken);
+    insertPost(accessToken);
+    insertPost(anotherAccessToken);
+    insertPost(accessToken);
+    insertAnonymity(anotherAccessToken);
+    insertPost(otherAccessToken);
+    then(beforeCnt + 9).isEqualTo(postRepository.count());
   }
 
 
-  int insertPost() throws Exception {
+  int insertPost(String accessToken) throws Exception {
     HashMap<String, Object> body = new HashMap<>();
     ObjectMapper objectMapper = new ObjectMapper();
     body.put("content", "내용 내용\nsdfjagf ear34329u4jrq3 fmfmmmm ");
@@ -303,18 +424,18 @@ class PostControllerTest {
   @Test
   void insertAnonymityTest() throws Exception {
     long beforeCnt = postRepository.count();
-    insertAnonymity();
-    insertAnonymity();
-    insertAnonymity();
-    insertAnonymity();
-    insertAnonymity();
+    insertAnonymity(accessToken);
+    insertAnonymity(anotherAccessToken);
+    insertAnonymity(accessToken);
+    insertAnonymity(anotherAccessToken);
+    insertAnonymity(otherAccessToken);
     then(beforeCnt + 5).isEqualTo(postRepository.count());
   }
 
-  int insertAnonymity() throws Exception {
+  int insertAnonymity(String accessToken) throws Exception {
     HashMap<String, Object> body = new HashMap<>();
     ObjectMapper objectMapper = new ObjectMapper();
-    body.put("content", "내용 내용\nsdfjagf ear34329u4jrq3 fmfmmmm ");
+    body.put("content", "익명 내용 내용\nsdfjagf ear34329u4jrq3 fmfmmmm ");
     body.put("anonymity", true);
 
     MvcResult res = mockMvc.perform(post("/post")
@@ -364,7 +485,7 @@ class PostControllerTest {
 
   @Test
   void update() throws Exception {
-    int id = insertPost();
+    int id = insertPost(accessToken);
     long beforeCnt = postRepository.count();
     then(update(id)).isEqualTo(id);
     then(beforeCnt).isEqualTo(postRepository.count());
@@ -407,7 +528,6 @@ class PostControllerTest {
                 ),
                 requestFields(
                     fieldWithPath("content").description("수정할 글 내용").optional().type(JsonFieldType.STRING)
-                    , fieldWithPath("anonymity").description("수정할 익명 여부").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("imgs.[].order").description("이미지 순서").optional().type(JsonFieldType.NUMBER)
                     , fieldWithPath("imgs.[].img").description("이미지 링크").optional().type(JsonFieldType.STRING)
                 ),
@@ -434,10 +554,11 @@ class PostControllerTest {
 
   @Test
   void delete() throws Exception {
-    int id = insertAnonymity();
+    int id = insertAnonymity(accessToken);
     long beforeCnt = postRepository.count();
     delete(id);
-    then(beforeCnt - 1).isEqualTo(postRepository.count());
+    then(beforeCnt).isEqualTo(postRepository.count());
+    then(postRepository.findById((long)id).get().getStatus()).isEqualTo(false);
   }
 
   void delete(int id) throws Exception {
@@ -473,18 +594,18 @@ class PostControllerTest {
   @Test
   void like() throws Exception {
     long beforeCnt = likePostRepository.count();
-    int id = insertAnonymity();
-    like(id);
-    like(insertAnonymity());
-    like(insertAnonymity());
-    like(insertAnonymity());
+    int id = insertAnonymity(accessToken);
+    like(id, otherAccessToken);
+    like(insertAnonymity(accessToken), otherAccessToken);
+    like(insertAnonymity(accessToken), otherAccessToken);
+    like(insertAnonymity(accessToken), otherAccessToken);
     then(beforeCnt + 4).isEqualTo(likePostRepository.count());
   }
 
-  void like(int id) throws Exception {
+  void like(int id, String accessToken) throws Exception {
     mockMvc.perform(RestDocumentationRequestBuilders.post("/post/{id}/like", id)
             .contentType(MediaType.APPLICATION_JSON)
-            .header("Authorization", "Bearer " + otherAccessToken)
+            .header("Authorization", "Bearer " + accessToken)
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -520,17 +641,17 @@ class PostControllerTest {
 
   @Test
   void deleteLike() throws Exception {
-    int id = insertAnonymity();
-    like(id);
+    int id = insertAnonymity(accessToken);
+    like(id, otherAccessToken);
     long beforeCnt = likePostRepository.count();
-    deleteLike(id);
+    deleteLike(id, otherAccessToken);
     then(beforeCnt - 1).isEqualTo(likePostRepository.count());
   }
 
-  void deleteLike(int id) throws Exception {
+  void deleteLike(int id, String accessToken) throws Exception {
     mockMvc.perform(RestDocumentationRequestBuilders.delete("/post/{id}/like", id)
             .contentType(MediaType.APPLICATION_JSON)
-            .header("Authorization", "Bearer " + otherAccessToken)
+            .header("Authorization", "Bearer " + accessToken)
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -561,6 +682,99 @@ class PostControllerTest {
         )
     ;
   }
+
+
+  @Test
+  void bookmartTest() throws Exception {
+    long beforeCnt = bookmarkPostRepository.count();
+    int id = insertAnonymity(accessToken);
+    bookmark(id, otherAccessToken);
+    bookmark(insertAnonymity(accessToken), otherAccessToken);
+    bookmark(insertAnonymity(accessToken), otherAccessToken);
+    bookmark(insertAnonymity(accessToken), otherAccessToken);
+    then(beforeCnt + 4).isEqualTo(bookmarkPostRepository.count());
+  }
+
+  void bookmark(int id, String accessToken) throws Exception {
+    mockMvc.perform(RestDocumentationRequestBuilders.post("/post/{id}/bookmark", id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("글북마크",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                pathParameters(
+                    parameterWithName("id").description("북마크 할 글 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data.id").description("글 id")
+                    , fieldWithPath("data.content").description("글 내용")
+                    , fieldWithPath("data.anonymity").description("글 작성자 익명 여부")
+                    , fieldWithPath("data.likes").description("좋아요 수")
+                    , fieldWithPath("data.hits").description("조회수")
+                    , fieldWithPath("data.user").description("글 작성자").optional().type(JsonFieldType.OBJECT)
+                )
+            )
+        )
+    ;
+  }
+
+
+  @Test
+  void deleteBookmarkTest() throws Exception {
+    int id = insertAnonymity(accessToken);
+    bookmark(id, otherAccessToken);
+    long beforeCnt = bookmarkPostRepository.count();
+    deleteBookmark(id, otherAccessToken);
+    then(beforeCnt - 1).isEqualTo(bookmarkPostRepository.count());
+  }
+
+  void deleteBookmark(int id, String accessToken) throws Exception {
+    mockMvc.perform(RestDocumentationRequestBuilders.delete("/post/{id}/bookmark", id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("글북마크취소",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                pathParameters(
+                    parameterWithName("id").description("북마크 해제할 글 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data.id").description("글 id")
+                    , fieldWithPath("data.content").description("글 내용")
+                    , fieldWithPath("data.anonymity").description("글 작성자 익명 여부")
+                    , fieldWithPath("data.likes").description("좋아요 수")
+                    , fieldWithPath("data.hits").description("조회수")
+                    , fieldWithPath("data.user").description("글 작성자").optional().type(JsonFieldType.OBJECT)
+                )
+            )
+        )
+    ;
+  }
+
 
   @Disabled
   @Test

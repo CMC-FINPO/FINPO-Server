@@ -60,6 +60,11 @@ class UserControllerTest {
     refreshToken = map.get("refreshToken");
   }
 
+  public void set(MockMvc mockMvc, String accessToken) {
+    this.mockMvc = mockMvc;
+    this.accessToken = accessToken;
+  }
+
   @AfterEach
   void tearDown() {
   }
@@ -250,7 +255,11 @@ class UserControllerTest {
   }
 
   @Test
-  void deleteMe() throws Exception {
+  void deleteMeTest() throws  Exception {
+    deleteMe(accessToken);
+  }
+
+  void deleteMe(String accessToken) throws Exception {
     getMyInfo();
 
     HashMap<String, Object> body = new HashMap<>();
@@ -389,6 +398,36 @@ class UserControllerTest {
                     fieldWithPath("data.profileImg").description("프로필이미지 url"),
                     fieldWithPath("data.oAuthType").description("소셜로그인 타입"),
                     fieldWithPath("data.defaultRegion").description("갱신된 거주 지역")
+                )
+            )
+        );
+  }
+
+  @Test
+  void getMyPurpose() throws Exception {
+    setMyStatusAndPurpose();
+
+    mockMvc.perform(get("/user/me/purpose")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data.size()").value("3"))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내이용목적조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.[]").description("유저 이용 목적 id")
                 )
             )
         );

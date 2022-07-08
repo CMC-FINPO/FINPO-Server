@@ -135,7 +135,7 @@ class PolicyControllerTest {
 
   @Test
   void getMy() throws Exception {
-    mockMvc.perform(get("/policy/me?page=1&size=5&sort=title,asc&sort=modifiedAt,desc")
+    mockMvc.perform(get("/policy/me?page=1&size=5&sort=title,asc&sort=id,desc")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
         )
@@ -154,7 +154,7 @@ class PolicyControllerTest {
                 requestParameters(
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
-                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt, countOfInterest, countOfInterest]").optional()
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nid:등록일 내림차순\n[title, institution, startDate, endDate, id, countOfInterest, countOfInterest]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -183,7 +183,7 @@ class PolicyControllerTest {
 
   @Test
   void search() throws Exception {
-    mockMvc.perform(get("/policy/search?title=청년&&region=107,4,10,11,102,104&category=9,10,11&page=0&size=5&sort=title,asc&sort=modifiedAt,desc")
+    mockMvc.perform(get("/policy/search?title=청년&&region=107,4,10,11,102,104&category=9,10,11&page=0&size=5&sort=title,asc&sort=id,desc")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
         )
@@ -207,7 +207,7 @@ class PolicyControllerTest {
 
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
-                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt, countOfInterest]").optional()
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nid:등록일 내림차순\n[title, institution, startDate, endDate, id, countOfInterest]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -234,7 +234,7 @@ class PolicyControllerTest {
         )
     ;
 
-    mockMvc.perform(get("/policy/search?startDate=2022-05-20&category=6&page=0&size=5&sort=startDate,asc&sort=modifiedAt,desc")
+    mockMvc.perform(get("/policy/search?startDate=2022-05-20&category=6&page=0&size=5&sort=startDate,asc&sort=id,desc")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
         )
@@ -258,7 +258,7 @@ class PolicyControllerTest {
 
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
-                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nmodifiedAt:수정일 내림차순\n[title, institution, startDate, endDate, modifiedAt, countOfInterest]").optional()
+                    parameterWithName("sort").description("정렬 기준 (복수 정렬 가능)\n title,asc:제목 오름차순\nid:등록일 내림차순\n[title, institution, startDate, endDate, id, countOfInterest]").optional()
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
@@ -435,7 +435,6 @@ class PolicyControllerTest {
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.data.length()").value(5))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(
@@ -450,7 +449,8 @@ class PolicyControllerTest {
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data.[].id").description("관심정책id"),
-                    fieldWithPath("data.[].policy.id").description("정책id")
+                    fieldWithPath("data.[].policy.id").description("정책id"),
+                    fieldWithPath("data.[].policy.isInterest").description("관심정책여부")
                 )
             )
         )
@@ -458,7 +458,8 @@ class PolicyControllerTest {
   }
 
   @Test
-  void getMyJoins() throws Exception {
+  void etMyJoins() throws Exception {
+    insertMyInterest(37L);
     insertMyJoined();
 
     mockMvc.perform(get("/policy/joined/me")
@@ -467,7 +468,6 @@ class PolicyControllerTest {
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.data.length()").value(5))
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(
@@ -500,7 +500,7 @@ class PolicyControllerTest {
 
     long beforeCnt = joinedPolicyRepository.count();
 
-    mockMvc.perform(RestDocumentationRequestBuilders.put("/policy/joined/{id}",id)
+    mockMvc.perform(RestDocumentationRequestBuilders.put("/policy/joined/{id}", id)
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
             .content(objectMapper.writeValueAsString(body))
@@ -511,7 +511,7 @@ class PolicyControllerTest {
         .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
         .andDo(
             document("내참여정책수정",
-               preprocessRequest(prettyPrint()),
+                preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestHeaders(
                     headerWithName("Authorization").description("Access Token")
@@ -618,7 +618,7 @@ class PolicyControllerTest {
     int id = insertMyInterest(policyId);
     long beforeCnt = interestPolicyRepository.count();
 
-    mockMvc.perform(RestDocumentationRequestBuilders.delete("/policy/interest/me?policyId="+policyId)
+    mockMvc.perform(RestDocumentationRequestBuilders.delete("/policy/interest/me?policyId=" + policyId)
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
         )
@@ -656,7 +656,7 @@ class PolicyControllerTest {
     int id = insertMyJoined(policyId, "이건 꽤 괜찮았던듯");
     long beforeCnt = joinedPolicyRepository.count();
 
-    mockMvc.perform(RestDocumentationRequestBuilders.delete("/policy/joined/me?policyId="+policyId)
+    mockMvc.perform(RestDocumentationRequestBuilders.delete("/policy/joined/me?policyId=" + policyId)
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
         )

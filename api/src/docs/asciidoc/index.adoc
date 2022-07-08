@@ -230,8 +230,23 @@ operation::이용목적목록조회[snippets='http-request,request-headers,http-
 
 &nbsp;
 
-==== 등록
+==== 등록 및 수정
+
+등록 시에는 statusId, purposeIds 다 보내주세요.
+
+수정 시에는 수정할 속성만(둘 중 하나만) 보내주셔도 됩니디.
+
 operation::현재상태이용목적추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 내 이용 목적 조회
+
+operation::내이용목적조회[snippets='http-request,request-headers,http-response,response-fields']
 
 &nbsp;
 
@@ -547,6 +562,50 @@ operation::알림수정[snippets='http-request,request-headers,request-fields,ht
 
 &nbsp;
 
+=== FCM 형식
+
+==== 정책
+    data:
+        category1: "일자리"
+        category2: "진로"
+        id: "5343"
+        region1: "서울"
+        region2: "마포"
+        title: "마포구 뭐시기머시기"
+        type: "policy"
+    fcmMessageId: "bc252c00-bf36-46e3-b051-ac7c2d92dd25"
+    from: "612456786880"
+    priority: "normal"
+
+==== 댓글
+
+댓글 100자 넘어갈 시 뒤에 ... 붙음
+
+    data:
+        content: "댓글댓글대대대대 개대ㅐㄷ슥"
+        id: "5345"
+        postId: "5333"
+        type: "comment"
+    fcmMessageId: "60301125-b076-4809-8168-8efac06ae4fa"
+    from: "612456786880"
+
+
+==== 대댓글
+
+    data:
+        content: "대댓글글글  ㄹㄴㄹㅇㄴㄹㅇㅁ너"
+        id: "5348"
+        postId: "5309"
+        type: "childComment"
+    fcmMessageId: "cc503903-15da-4819-956e-27cd6ba8c7c7"
+    from: "612456786880"
+    priority: "normal"
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 == 정책
 === 상세 정보
@@ -622,9 +681,9 @@ operation::내관심정책조회[snippets='http-request,request-headers,http-res
 
 ==== 추가
 
-operation::내관심정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
-
 policyId가 중복된다면 data에 null을 반환합니다.
+
+operation::내관심정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 &nbsp;
 
@@ -666,6 +725,8 @@ operation::내참여정책조회[snippets='http-request,request-headers,http-res
 
 ==== 추가
 
+메모 최대 글자 수는 200자 입니다.
+
 operation::내참여정책추가[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 policyId가 중복된다면 data에 null을 반환합니다.
@@ -678,6 +739,8 @@ policyId가 중복된다면 data에 null을 반환합니다.
 
 
 ==== 수정
+
+메모 최대 글자 수는 200자 입니다.
 
 operation::내참여정책수정[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
 
@@ -700,6 +763,255 @@ operation::내참여정책삭제[snippets='http-request,request-headers,path-par
 ==== 정책 id로 삭제
 
 operation::내참여정책삭제정책id[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+= 커뮤니티
+== 게시글
+=== 조회
+==== 상세 조회
+
+operation::글상세조회[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 전체 조회/검색
+
+operation::글조회[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+==== 내가 쓴 글 조회
+
+operation::내글조회[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 북마크한 글 조회
+
+operation::내북마크글조회[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 좋아요한 글 조회
+
+operation::내좋아요한글조회[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 댓글단 글 조회
+
+operation::내댓글단글조회[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+=== 작성
+
+==== 이미지 첨부
+
+operation::글이미지업로드[snippets='http-request,request-headers,request-parts,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 글 작성
+
+먼저 이미지 첨부 request를 보낸 후, imgs에 img url을 넣어주세요
+
+이미지는 5개 이하여야 입니다.
+
+최대 글자 수는 1000자 입니다.
+
+operation::글쓰기[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 익명 글 작성
+
+먼저 이미지 첨부 request를 보낸 후, imgs에 img url을 넣어주세요
+
+이미지는 5개 이하여야 입니다.
+
+최대 글자 수는 1000자 입니다.
+
+operation::글쓰기익명[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 글 수정
+
+먼저 이미지 첨부 request를 보낸 후, imgs에 img url을 넣어주세요
+
+최대 글자 수는 1000자 입니다.
+
+operation::글수정[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 글 삭제
+
+operation::글삭제[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+=== 좋아요
+==== 추가
+
+operation::글좋아요[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 취소
+
+operation::글좋아요취소[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+=== 북마크
+==== 추가
+
+operation::글북마크[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 취소
+
+operation::글북마크취소[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+== 댓글
+
+=== 조회
+
+==== 게시글 댓글 조회
+
+operation::글댓글조회[snippets='http-request,request-headers,path-parameters,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+=== 작성
+
+==== 댓글 작성
+
+최대 글자 수는 200자 입니다.
+
+operation::댓글쓰기[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 내가 익명으로 쓴 글에 익명 댓글 작성 시
+
+글 작성자이므로 익명id를 주지 않고 isWriter를 true로 줍니다.
+
+operation::댓글쓰기익명[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 대댓글 작성
+
+최대 글자 수는 200자 입니다.
+
+operation::대댓글쓰기[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 댓글 수정
+
+최대 글자 수는 200자 입니다.
+
+operation::댓글수정[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 댓글 삭제
+
+operation::댓글삭제[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 &nbsp;
 
