@@ -171,6 +171,7 @@ export default function RegisterPopup() {
                 const formData = new FormData();
 
                 if (profileImg) formData.append('profileImgFile', profileImg);
+                console.log(profileImg);
                 if (name) formData.append('name', name);
                 if (birth) formData.append('birth', birth);
                 if (email) formData.append('email', email);

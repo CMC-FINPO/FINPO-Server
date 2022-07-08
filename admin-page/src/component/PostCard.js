@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 import { axiosInstance } from '../axiosInstance';
-
 import { useNavigate } from 'react-router-dom';
+
+import Modal from '@mui/material/Modal';
+import { Avatar, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 const style = {
   position: 'absolute',
@@ -21,23 +31,16 @@ const style = {
   maxWidth: '95vw',
 };
 
-export default function ({ fetchData, fetch }) {
-  const navigate = useNavigate();
-
-  const [data, setData] = useState([]);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+export default function PostCard({ fetchData, fetch }) {
   const [reload, setReload] = useState(false);
   const reloadTrigger = () => setReload(!reload);
+  const navigate = useNavigate();
 
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [userDetail, setUserDetail] = useState();
+  const [length, setLength] = useState(0);
 
   useEffect(() => {
-    axiosInstance.get('policy/search?page=0&size=1').then((res) => {
-      console.log(res.data.data);
-      setData(res.data.data.totalElements);
+    axiosInstance.get('post/search?page=0&size=1').then((res) => {
+      setLength(res.data.data.totalElements);
     });
   }, [fetch]);
 
@@ -46,17 +49,17 @@ export default function ({ fetchData, fetch }) {
       <Card sx={{ minWidth: 200, padding: 1 }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
-            등록된 청년 정책
+            등록된 게시글
           </Typography>
           <Typography variant='h4' component='div'>
-            {data}
+            {length}
           </Typography>
           <Typography sx={{}} color='text.secondary'>
             개
           </Typography>
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Button size='small' onClick={() => navigate('/policy')}>
+          <Button size='small' onClick={() => navigate('/post')}>
             자세히 보기
           </Button>
         </CardActions>
