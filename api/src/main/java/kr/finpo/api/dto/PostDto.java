@@ -1,6 +1,7 @@
 package kr.finpo.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import kr.finpo.api.constant.Constraint;
 import kr.finpo.api.domain.Post;
 import kr.finpo.api.domain.PostImg;
 import kr.finpo.api.repository.BookmarkPostRepository;
@@ -74,7 +75,7 @@ public record PostDto(
     return new PostDto(
         post.getStatus(),
         post.getId(),
-        post.getContent().substring(0, Math.min(100, post.getContent().length())) + (post.getContent().length() > 100 ? "..." : ""),
+        post.getContent().substring(0, Math.min(Constraint.CONTENT_PREVIEW_MAX_LENGTH, post.getContent().length())) + (post.getContent().length() > Constraint.CONTENT_PREVIEW_MAX_LENGTH ? "..." : ""),
         post.getAnonymity(),
         post.getLikes(),
         post.getHits(),

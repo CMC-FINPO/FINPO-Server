@@ -2,6 +2,7 @@ package kr.finpo.api.service;
 
 import com.google.common.collect.Lists;
 import com.google.firebase.messaging.*;
+import kr.finpo.api.constant.Constraint;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.*;
 import kr.finpo.api.exception.GeneralException;
@@ -84,7 +85,7 @@ public class FcmService {
           Message message = Message.builder()
               .putData("type", "childComment")
               .putData("id", Long.toString(comment.getId()))
-              .putData("content", comment.getContent().substring(0, Math.min(100, comment.getContent().length())) + (comment.getContent().length() > 100 ? "..." : ""))
+              .putData("content", comment.getContent().substring(0, Math.min(Constraint.CONTENT_PREVIEW_MAX_LENGTH, comment.getContent().length())) + (comment.getContent().length() > Constraint.CONTENT_PREVIEW_MAX_LENGTH ? "..." : ""))
               .putData("postId", Long.toString(comment.getPost().getId()))
               .setToken(parentRegistrationToken)
               .build();
@@ -109,7 +110,7 @@ public class FcmService {
           Message message = Message.builder()
               .putData("type", "comment")
               .putData("id", Long.toString(comment.getId()))
-              .putData("content", comment.getContent().substring(0, Math.min(100, comment.getContent().length())) + (comment.getContent().length() > 100 ? "..." : ""))
+              .putData("content", comment.getContent().substring(0, Math.min(Constraint.CONTENT_PREVIEW_MAX_LENGTH, comment.getContent().length())) + (comment.getContent().length() > Constraint.CONTENT_PREVIEW_MAX_LENGTH ? "..." : ""))
               .putData("postId", Long.toString(comment.getPost().getId()))
               .setToken(postUserRegistrationToken)
               .build();

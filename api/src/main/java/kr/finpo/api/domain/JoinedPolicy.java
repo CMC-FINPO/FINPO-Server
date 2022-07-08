@@ -1,5 +1,6 @@
 package kr.finpo.api.domain;
 
+import kr.finpo.api.constant.Constraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,7 +21,7 @@ public class JoinedPolicy {
   private Long id;
 
   @Setter
-  @Column(length = 200)
+  @Column(length = Constraint.JOINED_POLICY_MEMO_MAX_LENGTH)
   private String memo;
 
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")

@@ -1,5 +1,6 @@
 package kr.finpo.api.service;
 
+import kr.finpo.api.constant.Constraint;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.domain.*;
 import kr.finpo.api.dto.*;
@@ -120,6 +121,9 @@ public class PolicyService {
 
   public InterestPolicyDto insertMyInterest(InterestPolicyDto dto) {
     try {
+      if(interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() > Constraint.INTEREST_POLICY_MAX_CNT)
+        throw new GeneralException(ErrorCode.BAD_REQUEST, "Interest policy must equal or less than " + Constraint.INTEREST_POLICY_MAX_CNT);
+
       User user = getMe();
       Policy policy = policyRepository.findById(dto.policyId()).get();
       if (interestPolicyRepository.findOneByUserIdAndPolicyId(user.getId(), policy.getId()).isPresent())
@@ -133,6 +137,9 @@ public class PolicyService {
 
   public JoinedPolicyDto insertMyJoined(JoinedPolicyDto dto) {
     try {
+      if(joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() > Constraint.JOINED_POLICY_MAX_CNT)
+        throw new GeneralException(ErrorCode.BAD_REQUEST, "Joined policy must equal or less than " + Constraint.JOINED_POLICY_MAX_CNT);
+
       User user = getMe();
       Policy policy = policyRepository.findById(dto.policyId()).get();
       JoinedPolicy joinedPolicy = JoinedPolicy.of(user, policy, dto.memo());

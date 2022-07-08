@@ -1,5 +1,6 @@
 package kr.finpo.api.domain;
 
+import kr.finpo.api.constant.Constraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,7 +24,7 @@ public class Post {
   private Long id;
 
   @Setter
-  @Column(length = 1000, nullable = false)
+  @Column(length = Constraint.POST_MAX_LENGTH, nullable = false)
   private String content;
 
   @Setter

@@ -1,5 +1,6 @@
 package kr.finpo.api.domain;
 
+import kr.finpo.api.constant.Constraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,13 +17,12 @@ import java.time.LocalDateTime;
 @Entity
 @ToString
 public class Comment {
-
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
   @Setter
-  @Column(length = 200, nullable = false)
+  @Column(length = Constraint.COMMENT_MAX_LENGTH, nullable = false)
   private String content;
 
   @Setter
