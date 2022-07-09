@@ -4,11 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.firebase.messaging.*;
 import kr.finpo.api.constant.Constraint;
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.constant.NotificationType;
 import kr.finpo.api.domain.*;
+import kr.finpo.api.domain.Notification;
 import kr.finpo.api.exception.GeneralException;
-import kr.finpo.api.repository.FcmRepository;
-import kr.finpo.api.repository.InterestCategoryRepository;
-import kr.finpo.api.repository.InterestRegionRepository;
+import kr.finpo.api.repository.*;
 import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,8 @@ import java.util.Optional;
 public class FcmService {
 
   private final FcmRepository fcmRepository;
+  private final UserRepository userRepository;
+  private final NotificationRepository notificationRepository;
   private final InterestCategoryRepository interestCategoryRepository;
   private final InterestRegionRepository interestRegionRepository;
 
@@ -45,6 +47,10 @@ public class FcmService {
     userIds.forEach(userId -> {
       Fcm fcm = fcmRepository.findOneByUserId(userId).get();
       registrationTokens.add(fcm.getRegistrationToken());
+
+      userRepository.findById(userId).ifPresent(user ->
+          notificationRepository.save(Notification.of(user, NotificationType.POLICY, policy))
+      );
     });
 
     List<List<String>> registrationTokensPartition = Lists.partition(registrationTokens, 1000);
@@ -53,7 +59,7 @@ public class FcmService {
 
     registrationTokensPartition.forEach(registrationTokensPart -> {
       MulticastMessage message = MulticastMessage.builder()
-          .putData("type", "policy")
+          .putData("type", "POLICY")
           .putData("id", Long.toString(policy.getId()))
           .putData("title", policy.getTitle())
           .putData("region", Optional.ofNullable(region.getParent()).isPresent() ? region.getParent().getName() + " " + region.getName() : region.getName() + " 전체")
@@ -79,11 +85,15 @@ public class FcmService {
       Optional.ofNullable(comment.getParent()).flatMap(parentComment -> Optional.ofNullable(parentComment.getUser())).ifPresent(parentUser -> {
         if (parentUser.getId().equals(SecurityUtil.getCurrentUserId())) return;
 
+        userRepository.findById(parentUser.getId()).ifPresent(user ->
+            notificationRepository.save(Notification.of(user, NotificationType.CHILDCOMMENT, comment))
+        );
+
         fcmRepository.findOneByUserId(parentUser.getId()).ifPresent(parentUserFcm -> {
           String parentRegistrationToken = parentUserFcm.getRegistrationToken();
 
           Message message = Message.builder()
-              .putData("type", "childComment")
+              .putData("type", "CHILDCOMMENT")
               .putData("id", Long.toString(comment.getId()))
               .putData("content", stringCutter(comment.getContent(), Constraint.CONTENT_PREVIEW_MAX_LENGTH))
               .putData("postId", Long.toString(comment.getPost().getId()))
@@ -103,13 +113,16 @@ public class FcmService {
       Optional.ofNullable(comment.getPost().getUser()).ifPresent(postUser -> {
         if (postUser.getId().equals(SecurityUtil.getCurrentUserId()) || userIds.contains(postUser.getId())) return;
 
+        userRepository.findById(postUser.getId()).ifPresent(user ->
+            notificationRepository.save(Notification.of(user, NotificationType.COMMENT, comment))
+        );
 
         fcmRepository.findOneByUserId(postUser.getId()).ifPresent(postUserFcm -> {
 
           String postUserRegistrationToken = postUserFcm.getRegistrationToken();
 
           Message message = Message.builder()
-              .putData("type", "comment")
+              .putData("type", "COMMENT")
               .putData("id", Long.toString(comment.getId()))
               .putData("content", stringCutter(comment.getContent(), Constraint.CONTENT_PREVIEW_MAX_LENGTH))
               .putData("postId", Long.toString(comment.getPost().getId()))

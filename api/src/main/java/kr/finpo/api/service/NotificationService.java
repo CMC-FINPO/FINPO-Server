@@ -8,6 +8,8 @@ import kr.finpo.api.repository.*;
 import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class NotificationService {
 
   private final FcmRepository fcmRepository;
+  private final NotificationRepository notificationRepository;
   private final InterestCategoryRepository interestCategoryRepository;
   private final InterestRegionRepository interestRegionRepository;
   private final UserRepository userRepository;
@@ -31,19 +34,24 @@ public class NotificationService {
     );
   }
 
-  public NotificationDto getMy() {
+  private void authorizeMe(Long id) {
+    if (!id.equals(SecurityUtil.getCurrentUserId()))
+      throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
+  }
+
+  public FcmDto getMy() {
     try {
       User user = getMe();
       Fcm fcm = fcmRepository.findOneByUserId(user.getId()).orElse(null);
       List<InterestCategory> interestCategories = interestCategoryRepository.findByUserId(user.getId());
       List<InterestRegion> interestRegions = interestRegionRepository.findByUserId(user.getId());
-      return NotificationDto.response(fcm, interestCategories, interestRegions);
+      return FcmDto.response(fcm, interestCategories, interestRegions);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
-  public NotificationDto upsertMy(NotificationDto dto) {
+  public FcmDto upsertMy(FcmDto dto) {
     try {
       User user = getMe();
       Optional<Fcm> fcm = fcmRepository.findOneByUserId(user.getId());
@@ -81,12 +89,30 @@ public class NotificationService {
     }
   }
 
-  public void insertMy(NotificationDto dto) {
+  public void insertMy(FcmDto dto) {
     try {
       User user = getMe();
       Fcm fcm = Fcm.of(dto.subscribe(), dto.registrationToken());
       fcm.setUser(user);
       fcmRepository.save(fcm);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public Page<NotificationDto> getMyHistories(Pageable pageable) {
+    try {
+      return notificationRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(NotificationDto::response);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
+
+  public Boolean deleteMyHistory(Long id) {
+    try {
+      authorizeMe(notificationRepository.findById(id).get().getUser().getId());
+      notificationRepository.deleteById(id);
+      return true;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
