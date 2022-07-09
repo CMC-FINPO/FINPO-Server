@@ -121,7 +121,7 @@ public class PolicyService {
 
   public InterestPolicyDto insertMyInterest(InterestPolicyDto dto) {
     try {
-      if (interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() > Constraint.INTEREST_POLICY_MAX_CNT)
+      if (interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() >= Constraint.INTEREST_POLICY_MAX_CNT)
         throw new GeneralException(ErrorCode.BAD_REQUEST, "Interest policy must equal or less than " + Constraint.INTEREST_POLICY_MAX_CNT);
 
       User user = getMe();
@@ -139,7 +139,7 @@ public class PolicyService {
 
   public JoinedPolicyDto insertMyJoined(JoinedPolicyDto dto) {
     try {
-      if (joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() > Constraint.JOINED_POLICY_MAX_CNT)
+      if (joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).size() >= Constraint.JOINED_POLICY_MAX_CNT)
         throw new GeneralException(ErrorCode.BAD_REQUEST, "Joined policy must equal or less than " + Constraint.JOINED_POLICY_MAX_CNT);
 
       User user = getMe();
