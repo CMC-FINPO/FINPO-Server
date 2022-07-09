@@ -91,6 +91,7 @@ class CommentControllerTest {
     nc.updateMy(anotherAccessToken);
   }
 
+
   @Test
   void getByPostId() throws Exception {
     int postId = pc.insertPost(accessToken);

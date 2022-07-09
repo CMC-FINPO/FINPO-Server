@@ -562,6 +562,28 @@ operation::알림수정[snippets='http-request,request-headers,request-fields,ht
 
 &nbsp;
 
+
+=== 기록
+==== 내 알림 기록 조회
+
+operation::내알림기록조회[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 내 알림 기록 삭제
+
+operation::내알림기록삭제[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 === FCM 형식
 
 ==== 정책
@@ -570,7 +592,7 @@ operation::알림수정[snippets='http-request,request-headers,request-fields,ht
         id: "5343"
         region: "서울 마포"
         title: "마포구 뭐시기머시기"
-        type: "policy"
+        type: "POLICY"
     fcmMessageId: "bc252c00-bf36-46e3-b051-ac7c2d92dd25"
     from: "612456786880"
     priority: "normal"
@@ -584,7 +606,7 @@ operation::알림수정[snippets='http-request,request-headers,request-fields,ht
         id: "5345"
         postComment:"글내용내용내용"
         postId: "5333"
-        type: "comment"
+        type: "COMMENT"
     fcmMessageId: "60301125-b076-4809-8168-8efac06ae4fa"
     from: "612456786880"
     priority: "normal"
@@ -597,7 +619,7 @@ operation::알림수정[snippets='http-request,request-headers,request-fields,ht
         id: "5348"
         postComment:"글내용내용내용"
         postId: "5309"
-        type: "childComment"
+        type: "CHILDCOMMENT"
     fcmMessageId: "cc503903-15da-4819-956e-27cd6ba8c7c7"
     from: "612456786880"
     priority: "normal"
