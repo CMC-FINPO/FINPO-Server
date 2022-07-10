@@ -1,37 +1,27 @@
-package kr.finpo.api.controller;
+package kr.finpo.api.config;
 
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.exception.GeneralException;
-import kr.finpo.api.repository.PolicyRepository;
 import kr.finpo.api.service.CategoryService;
 import kr.finpo.api.service.RegionService;
-import kr.finpo.api.service.S3Uploader;
 import kr.finpo.api.service.openapi.GgdataService;
 import kr.finpo.api.service.openapi.YouthcenterService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
 
-@RestController
+@Configuration
 @RequiredArgsConstructor
-public class Initalizer {
+public class DbConfig {
 
   private final GgdataService ggdataService;
   private final YouthcenterService youthcenterService;
   private final RegionService regionService;
   private final CategoryService categoryService;
 
-//  @EventListener(ApplicationReadyEvent.class)
+  @PostConstruct
   public void initialize() {
     try {
       regionService.initialize();
@@ -43,4 +33,8 @@ public class Initalizer {
     }
   }
 
+  @PostConstruct
+  void started() {
+    TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+  }
 }
