@@ -574,6 +574,18 @@ operation::내알림기록조회[snippets='http-request,request-headers,request-
 
 &nbsp;
 
+==== 내 알림기록 최신순 조회 (무한스크롤)
+
+`page=0&sort=id,desc` 으로 고정하고 `lastId` 만 갱신해서 요청 주세요
+
+operation::내알림기록최신순조회[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 ==== 내 알림 기록 삭제
 
 operation::내알림기록삭제[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
@@ -803,6 +815,18 @@ operation::내참여정책삭제정책id[snippets='http-request,request-headers,
 ==== 상세 조회
 
 operation::글상세조회[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 최신순 조회 (무한스크롤)
+
+`page=0&sort=id,desc` 으로 고정하고 `lastId` 만 갱신해서 요청 주세요
+
+operation::글최신순조회[snippets='http-request,request-headers,request-parameters,http-response,response-fields']
 
 &nbsp;
 

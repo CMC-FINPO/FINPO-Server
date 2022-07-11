@@ -336,6 +336,78 @@ class PostControllerTest {
         );
   }
 
+  @Test
+  void searchByLastIdTest() throws Exception {
+    insertPost(accessToken);
+    insertPost(accessToken);
+    insertPost(anotherAccessToken);
+    int id = insertPost(accessToken);
+    insertPost(anotherAccessToken);
+    insertPost(otherAccessToken);
+    insertPost(accessToken);
+    insertPost(anotherAccessToken);
+    searchByLastId(id);
+    uc.deleteMe(accessToken);
+  }
+
+  void searchByLastId(int lastId) throws Exception {
+
+    mockMvc.perform(get("/post/search?content=내용&lastId="+lastId+"&page=0&size=5&sort=id,desc")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + otherAccessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("글최신순조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("content").description("검색할 내용").optional(),
+                    parameterWithName("lastId").description("최근에 불러온 마지막 알림 기록 id").optional(),
+                    parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
+                    parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
+                    parameterWithName("sort").description("정렬 기준\n id desc:작성일(createdAt말고) 내림차순\n [createdAt, likes]").optional()
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data.content.[].status").description("글 상태 (삭제 시 false)")
+                    , fieldWithPath("data.content.[].id").description("글 id")
+                    , fieldWithPath("data.content.[].content").description("글 내용")
+                    , fieldWithPath("data.content.[].anonymity").description("글 작성자 익명 여부")
+                    , fieldWithPath("data.content.[].likes").description("좋아요 수")
+                    , fieldWithPath("data.content.[].hits").description("조회수")
+                    , fieldWithPath("data.content.[].countOfComment").description("댓글수")
+                    , fieldWithPath("data.content.[].user").description("글 작성자").optional().type(JsonFieldType.OBJECT)
+                    , fieldWithPath("data.content.[].isUserWithdraw").description("탈퇴한 유저의 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isMine").description("내가 작성한 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isLiked").description("좋아요 한 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isBookmarked").description("북마크 한 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].modified").description("수정된 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].createdAt").description("작성일")
+                    , fieldWithPath("data.content.[].modifiedAt").description("수정일")
+
+
+                    , fieldWithPath("data.last").description("현재가 마지막 페이지인가")
+                    , fieldWithPath("data.first").description("현재가 첫 페이지인가")
+                    , fieldWithPath("data.totalElements").description("전체 데이터 수")
+                    , fieldWithPath("data.totalPages").description("전체 페이지 수")
+                    , fieldWithPath("data.number").description("현재 페이지")
+                    , fieldWithPath("data.size").description("한 페이지 데이터 개수")
+                    , fieldWithPath("data.numberOfElements").description("현재 페이지 데이터 개수")
+                    , fieldWithPath("data.empty").description("현재 페이지가 비어있는가")
+                )
+            )
+        );
+  }
+
 
   @Test
   void insertPostTest() throws Exception {

@@ -91,6 +91,7 @@ public class FcmService {
 
         fcmRepository.findOneByUserId(parentUser.getId()).ifPresent(parentUserFcm -> {
           String parentRegistrationToken = parentUserFcm.getRegistrationToken();
+          userIds.add(parentUser.getId());
 
           Message message = Message.builder()
               .putData("type", "CHILDCOMMENT")
@@ -103,7 +104,6 @@ public class FcmService {
 
           try {
             FirebaseMessaging.getInstance().send(message);
-            userIds.add(parentUser.getId());
           } catch (FirebaseMessagingException e) {
             log.error(e.toString());
           }

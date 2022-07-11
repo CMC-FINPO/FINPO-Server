@@ -65,10 +65,14 @@ public class NotificationControllerTest {
   @Autowired
   private InterestRegionRepository interestRegionRepository;
 
-  @Autowired private PolicyService policyService;
-  @Autowired private CategoryRepository categoryRepository;
-  @Autowired private RegionRepository regionRepository;
-  @Autowired private NotificationRepository notificationRepository;
+  @Autowired
+  private PolicyService policyService;
+  @Autowired
+  private CategoryRepository categoryRepository;
+  @Autowired
+  private RegionRepository regionRepository;
+  @Autowired
+  private NotificationRepository notificationRepository;
 
   public void set(MockMvc mockMvc, String accessToken) {
     this.mockMvc = mockMvc;
@@ -185,8 +189,8 @@ public class NotificationControllerTest {
         boolean flag = true;
         for (InterestCategoryDto interestCategory : interestCategories) {
           flag = !flag;
-          if(flag) continue;
-          add(new HashMap<>(){{
+          if (flag) continue;
+          add(new HashMap<>() {{
             put("id", interestCategory.id());
             put("subscribe", false);
           }});
@@ -196,8 +200,8 @@ public class NotificationControllerTest {
         boolean flag = true;
         for (InterestRegionDto interestRegion : interestRegions) {
           flag = !flag;
-          if(flag) continue;
-          add(new HashMap<>(){{
+          if (flag) continue;
+          add(new HashMap<>() {{
             put("id", interestRegion.id());
             put("subscribe", false);
           }});
@@ -297,27 +301,29 @@ public class NotificationControllerTest {
     ct.uc.set(mockMvc, accessToken);
 
     int postId = ct.pc.insertPost(accessToken);
-    int parentId =  ct.insertAnonymity(postId, "익명으로 다는 댓글임", otherAccessToken, false);
-    int parentId2 =ct.insert(postId, "작성자가쓰는글", accessToken, false);
+    int parentId = ct.insertAnonymity(postId, "익명으로 다는 댓글임", otherAccessToken, false);
+    int parentId2 = ct.insert(postId, "작성자가쓰는글", accessToken, false);
     ct.insertAnonymity(postId, "익명으로 단 사람이 또 단 댓글임", otherAccessToken, false);
-    ct.insert(postId, "딴사람이단댓글", anotherAccessToken, false);
-    ct.insertAnonymity(postId, "익명댓글에 첫번째로 다는 대댓글", parentId, otherAccessToken, false);
-    int deleteId =  ct.insertAnonymity(postId, "fsdfsd", parentId, anotherAccessToken, false);
+    ct.insert(postId, "11딴사람이단댓글", anotherAccessToken, false);
+    ct.insert(postId, "222딴사람이단댓글", anotherAccessToken, false);
+    ct.insert(postId, "333딴사람이단댓글", anotherAccessToken, false);
+     ct.insertAnonymity(postId, "익명댓글에 첫번째로 다는 대댓글", parentId, otherAccessToken, false);
+    int deleteId = ct.insertAnonymity(postId, "fsdfsd", parentId, anotherAccessToken, false);
     ct.insertAnonymity(postId, "두번째익명 대댓글", parentId2, anotherAccessToken, false);
-    int updateId =  ct.insert(postId, "글작성자가쓰는 세번째 대댓글", parentId, accessToken, false);
+    int updateId = ct.insert(postId, "글작성자가쓰는 세번째 대댓글", parentId, accessToken, false);
     ct.delete(parentId, otherAccessToken, false);
     ct.delete(deleteId, anotherAccessToken, false);
     ct.update(updateId, "글작성자가 쓰는 세번째 대댓글 수정된거임", accessToken, false);
     ct.uc.deleteMe(anotherAccessToken);
 
 
-    ArrayList<Object> arr = new ArrayList<>(){{
-      add(new HashMap<>(){{
+    ArrayList<Object> arr = new ArrayList<>() {{
+      add(new HashMap<>() {{
         put("title", "테스트 정책 제목");
-        put("region", new HashMap<>(){{
+        put("region", new HashMap<>() {{
           put("id", "14");
         }});
-        put("category", new HashMap<>(){{
+        put("category", new HashMap<>() {{
           put("id", "6");
         }});
       }});
@@ -330,6 +336,61 @@ public class NotificationControllerTest {
     );
 
     getMyNotificationHistory(accessToken);
+  }
+
+  @Test
+  void getMyLastNotificationHistoryTest() throws Exception {
+    getMyNotificationHistoryTest();
+    Long id = getMyNotificationHistory(accessToken);
+
+    getMyNotificationHistory(accessToken, id);
+  }
+
+  Long getMyNotificationHistory(String accessToken, long lastId) throws Exception {
+
+    MvcResult res = mockMvc.perform(get("/notification/history/me?lastId=" + lastId + "&page=0&size=5&sort=id,desc")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내알림기록최신순조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                requestParameters(
+                    parameterWithName("lastId").description("최근에 불러온 마지막 알림 기록 id").optional(),
+                    parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
+                    parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
+                    parameterWithName("sort").description("정렬 기준\n id asc:작성일(createdAt 대신 id 써주세요) 오름차순").optional()
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data.content.[].id").description("알림 히스토리 id")
+                    , fieldWithPath("data.content.[].type").description("알림 타입 (COMMENT, CHILDCOMMENT, POLICY")
+                    , fieldWithPath("data.content.[].comment").description("알림 온 댓글").optional().type(JsonFieldType.OBJECT)
+                    , fieldWithPath("data.content.[].policy").description("알림 온 정책").optional().type(JsonFieldType.OBJECT)
+                )
+            )
+        ).andReturn();
+
+    JSONParser parser = new JSONParser();
+    JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
+    json = (JSONObject) parser.parse(json.get("data").toString());
+
+    JSONArray jsonArray = (JSONArray) parser.parse(json.get("content").toString());
+    for (Object o : jsonArray) {
+      JSONObject jsonObj = (JSONObject) o;
+      return Long.valueOf((Integer) jsonObj.get("id"));
+    }
+    return -1L;
   }
 
   Long getMyNotificationHistory(String accessToken) throws Exception {
@@ -370,7 +431,7 @@ public class NotificationControllerTest {
     JSONObject json = (JSONObject) parser.parse(res.getResponse().getContentAsString());
     json = (JSONObject) parser.parse(json.get("data").toString());
 
-    JSONArray jsonArray = (JSONArray)parser.parse(json.get("content").toString());
+    JSONArray jsonArray = (JSONArray) parser.parse(json.get("content").toString());
     for (Object o : jsonArray) {
       JSONObject jsonObj = (JSONObject) o;
       return Long.valueOf((Integer) jsonObj.get("id"));
@@ -381,7 +442,7 @@ public class NotificationControllerTest {
   @Test
   void deleteMyNotificationHistoryTest() throws Exception {
     getMyNotificationHistoryTest();
-    Long id = getMyNotificationHistory(accessToken);
+    Long id = getMyNotificationHistory(accessToken );
     long beforeCnt = notificationRepository.count();
     deleteMyNotificationHistory(accessToken, id);
     then(beforeCnt - 1).isEqualTo(notificationRepository.count());
