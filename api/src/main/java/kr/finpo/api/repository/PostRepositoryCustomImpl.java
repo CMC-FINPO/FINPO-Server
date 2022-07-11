@@ -84,11 +84,12 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
   }
 
   @Override
-  public Page<Post> querydslFindbyContent(String keyword, Pageable pageable) {
+  public Page<Post> querydslFindbyContent(String keyword, Long lastId, Pageable pageable) {
     List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
 
     BooleanBuilder builder = new BooleanBuilder();
     if (!isEmpty(keyword)) builder.and(p.content.contains(keyword));
+    if (!isEmpty(lastId)) builder.and(p.id.lt(lastId));
     builder.and(p.status.eq(true));
 
     QueryResults<Post> results = jpaQueryFactory

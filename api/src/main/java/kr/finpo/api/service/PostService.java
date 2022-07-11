@@ -91,9 +91,9 @@ public class PostService {
     }
   }
 
-  public Page<PostDto> search(String content, Pageable pageable) {
+  public Page<PostDto> search(String content, Long lastId, Pageable pageable) {
     try {
-      return postRepository.querydslFindbyContent(content, pageable).map(e -> PostDto.previewResponse(e, likePostRepository, bookmarkPostRepository));
+      return postRepository.querydslFindbyContent(content, lastId, pageable).map(e -> PostDto.previewResponse(e, likePostRepository, bookmarkPostRepository));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

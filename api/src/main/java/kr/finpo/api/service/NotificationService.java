@@ -100,8 +100,10 @@ public class NotificationService {
     }
   }
 
-  public Page<NotificationDto> getMyHistories(Pageable pageable) {
+  public Page<NotificationDto> getMyHistories(Long lastId, Pageable pageable) {
     try {
+      if (Optional.ofNullable(lastId).isPresent())
+        return notificationRepository.findByUserId(SecurityUtil.getCurrentUserId(), lastId, pageable).map(NotificationDto::response);
       return notificationRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(NotificationDto::response);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);

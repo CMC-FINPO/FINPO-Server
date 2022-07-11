@@ -22,8 +22,8 @@ public class NotificationController {
   }
 
   @GetMapping("/history/me")
-  public DataResponse<Object> getMyHistories(Pageable pageable) {
-    return DataResponse.of(notificationService.getMyHistories(pageable));
+  public DataResponse<Object> getMyHistories(@RequestParam(value = "lastId", required = false) Long lastId, Pageable pageable) {
+    return DataResponse.of(notificationService.getMyHistories(lastId, pageable));
   }
 
   @DeleteMapping("/history/{id}")

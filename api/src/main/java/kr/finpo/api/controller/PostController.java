@@ -46,9 +46,10 @@ public class PostController {
   @GetMapping("/search")
   public DataResponse<Object> search(
       @RequestParam(value = "content", required = false) String content,
+      @RequestParam(value = "lastId", required = false) Long lastId,
       Pageable pageable
   ) {
-    return DataResponse.of(postService.search(content, pageable));
+    return DataResponse.of(postService.search(content, lastId, pageable));
   }
 
   @PostMapping
