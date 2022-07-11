@@ -73,7 +73,7 @@ public record UserDto(
   }
 
   public static UserDto communityResponse(User user) {
-    return new UserDto(user.getId(), null, user.getNickname(), null, null, null, null, user.getProfileImg(), null, null, null, null, null, null);
+    return new UserDto(user.getId(), null, user.getNickname(), null, user.getGender(), null, null, user.getProfileImg(), null, null, null, null, null, null);
   }
 
   public static UserDto appleUserDto() {
