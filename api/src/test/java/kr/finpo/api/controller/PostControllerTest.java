@@ -2,10 +2,7 @@ package kr.finpo.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
-import kr.finpo.api.repository.BookmarkPostRepository;
-import kr.finpo.api.repository.InterestRegionRepository;
-import kr.finpo.api.repository.LikePostRepository;
-import kr.finpo.api.repository.PostRepository;
+import kr.finpo.api.repository.*;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +58,10 @@ class PostControllerTest {
 
   @Autowired
   private BookmarkPostRepository bookmarkPostRepository;
+
+  @Autowired
+  private CommunityReportRepository communityReportRepository;
+
 
   String accessToken, refreshToken, otherAccessToken, anotherAccessToken;
 
@@ -369,7 +370,7 @@ class PostControllerTest {
                 ),
                 requestParameters(
                     parameterWithName("content").description("검색할 내용").optional(),
-                    parameterWithName("lastId").description("최근에 불러온 마지막 알림 기록 id").optional(),
+                    parameterWithName("lastId").description("최근에 불러온 마지막 글 id").optional(),
                     parameterWithName("page").description("페이지 위치 (0부터 시작)").optional(),
                     parameterWithName("size").description("한 페이지의 데이터 개수").optional(),
                     parameterWithName("sort").description("정렬 기준\n id desc:작성일(createdAt말고) 내림차순\n [createdAt, likes]").optional()
@@ -845,6 +846,94 @@ class PostControllerTest {
             )
         )
     ;
+  }
+
+  @Test
+  void reportTest() throws Exception {
+    int postId = insertAnonymity(accessToken);
+    long beforeCnt = communityReportRepository.count();
+    report(postId, accessToken, "글신고");
+    then(beforeCnt + 1).isEqualTo(communityReportRepository.count());
+  }
+
+  void report(int id, String accessToken, String documentName) throws Exception {
+    HashMap<String, Object> body = new HashMap<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    body.put("report", new HashMap<>(){{
+      put("id", "5");
+    }});
+
+    mockMvc.perform(RestDocumentationRequestBuilders.post("/post/{id}/report", id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(body))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document(documentName,
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                pathParameters(
+                    parameterWithName("id").description("신고할 글 id")
+                ),
+                requestFields(
+                    fieldWithPath("report.id").description("신고 사유 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data").description("신고 성공 여부")
+                )
+            )
+        )
+        .andReturn();
+  }
+
+  @Test
+  void getReportTest() throws Exception {
+    getReport(accessToken, "신고사유조회");
+  }
+
+  void getReport(String accessToken, String documentName) throws Exception {
+    HashMap<String, Object> body = new HashMap<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    body.put("report", new HashMap<>(){{
+      put("id", "5");
+    }});
+
+    mockMvc.perform(RestDocumentationRequestBuilders.get("/report/reason")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(body))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document(documentName,
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data.[].id").description("신고 사유 id")
+                    , fieldWithPath("data.[].reason").description("신고 사유")
+                )
+            )
+        )
+        .andReturn();
   }
 
 

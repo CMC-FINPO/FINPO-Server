@@ -3,6 +3,7 @@ package kr.finpo.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.repository.CommentRepository;
+import kr.finpo.api.repository.CommunityReportRepository;
 import kr.finpo.api.repository.LikePostRepository;
 import kr.finpo.api.repository.PostRepository;
 import net.minidev.json.JSONObject;
@@ -57,6 +58,10 @@ class CommentControllerTest {
 
   @Autowired
   private CommentRepository commentRepository;
+
+  @Autowired
+  private CommunityReportRepository communityReportRepository;
+
 
   String accessToken, refreshToken, otherAccessToken, anotherAccessToken;
 
@@ -421,6 +426,55 @@ class CommentControllerTest {
                     , fieldWithPath("data.modifiedAt").description("수정일").optional()
                 )
 
+            )
+        )
+        .andReturn();
+  }
+
+  @Test
+  void reportTest() throws Exception {
+    int postId = pc.insertAnonymity(accessToken);
+    int commentId = insertAnonymity(postId, "eotemfdsgsdfgd", accessToken, false);
+    long beforeCnt = communityReportRepository.count();
+    report(commentId, accessToken, "댓글신고");
+    then(beforeCnt + 1).isEqualTo(communityReportRepository.count());
+  }
+
+  void report(int id, String accessToken, String documentName) throws Exception {
+    HashMap<String, Object> body = new HashMap<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    body.put("report", new HashMap<>(){{
+      put("id", "3");
+    }});
+
+    mockMvc.perform(RestDocumentationRequestBuilders.post("/comment/{id}/report", id)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .content(objectMapper.writeValueAsString(body))
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document(documentName,
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                pathParameters(
+                    parameterWithName("id").description("신고할 댓글 id")
+                ),
+                requestFields(
+                    fieldWithPath("report.id").description("신고 사유 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data").description("신고 성공 여부")
+                )
             )
         )
         .andReturn();

@@ -996,6 +996,7 @@ operation::글북마크취소[snippets='http-request,request-headers,path-parame
 
 &nbsp;
 
+
 == 댓글
 
 === 조회
@@ -1018,7 +1019,7 @@ operation::글댓글조회[snippets='http-request,request-headers,path-parameter
 
 operation::댓글쓰기[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
 
-&nbsp;
+&nbsp;r
 
 &nbsp;
 
@@ -1063,6 +1064,38 @@ operation::댓글수정[snippets='http-request,request-headers,path-parameters,r
 ==== 댓글 삭제
 
 operation::댓글삭제[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+=== 신고
+
+==== 신고 사유 조회
+
+operation::신고사유조회[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 댓글 신고
+
+operation::댓글신고[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 게시글 신고
+
+operation::글신고[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
 
 &nbsp;
 
