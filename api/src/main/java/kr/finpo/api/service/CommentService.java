@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Transactional
 @Service
+@EnableJpaAuditing
 @Slf4j
 public class CommentService {
 
@@ -50,13 +52,11 @@ public class CommentService {
     try {
       postService.checkStatus(postId);
 
-      List<Comment> comments = commentRepository.findByPostIdAndParentId(postId, null, pageable);
+      Page<Comment> comments = commentRepository.findByPostIdAndParentId(postId, null, pageable);
 
-      List<CommentDto> commentDtos = comments.stream().map(comment ->
+      return comments.map(comment ->
           CommentDto.response(comment, false, commentRepository.findByPostIdAndParentId(postId, comment.getId()))
-      ).toList();
-
-      return new PageImpl<>(commentDtos, pageable, commentDtos.size());
+      );
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-  public List<Comment> findByPostIdAndParentId(Long id, Long parentId, Pageable pageable);
+  public Page<Comment> findByPostIdAndParentId(Long id, Long parentId, Pageable pageable);
 
   public List<Comment> findByPostIdAndParentId(Long id, Long parentId);
 
