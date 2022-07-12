@@ -82,6 +82,7 @@ public record GoogleAccountDto(
 
     return new UserDto(
         null,
+        null,
         name,
         null,
         birth,

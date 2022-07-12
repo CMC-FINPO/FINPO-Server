@@ -8,6 +8,7 @@ import kr.finpo.api.domain.Region;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record PolicyDto(
@@ -24,6 +25,7 @@ public record PolicyDto(
     String announcement,
     String detailUrl,
     OpenApiType openApiType,
+    LocalDateTime createdAt,
     LocalDateTime modifiedAt,
     Category category,
     Region region,
@@ -31,6 +33,22 @@ public record PolicyDto(
     Long hits,
     Boolean isInterest
 ) {
+
+  public Policy updateEntity(Policy policy) {
+    Optional.ofNullable(title).ifPresent(policy::setTitle);
+    Optional.ofNullable(content).ifPresent(policy::setContent);
+    Optional.ofNullable(institution).ifPresent(policy::setInstitution);
+    Optional.ofNullable(supportScale).ifPresent(policy::setSupportScale);
+    Optional.ofNullable(support).ifPresent(policy::setSupport);
+    Optional.ofNullable(period).ifPresent(policy::setPeriod);
+    Optional.ofNullable(startDate).ifPresent(policy::setStartDate);
+    Optional.ofNullable(endDate).ifPresent(policy::setEndDate);
+    Optional.ofNullable(process).ifPresent(policy::setProcess);
+    Optional.ofNullable(announcement).ifPresent(policy::setAnnouncement);
+    Optional.ofNullable(detailUrl).ifPresent(policy::setDetailUrl);
+
+    return policy;
+  }
 
   public static PolicyDto response(Policy policy, Boolean isInterest) {
     return new PolicyDto(
@@ -47,6 +65,7 @@ public record PolicyDto(
         policy.getAnnouncement(),
         policy.getDetailUrl(),
         policy.getOpenApiType(),
+        policy.getCreatedAt(),
         policy.getModifiedAt(),
         policy.getCategory(),
         policy.getRegion(),
@@ -62,6 +81,7 @@ public record PolicyDto(
         policy.getTitle(),
         null,
         policy.getInstitution(),
+        null,
         null,
         null,
         null,

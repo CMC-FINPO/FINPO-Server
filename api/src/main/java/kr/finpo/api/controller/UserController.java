@@ -71,12 +71,6 @@ public class UserController {
     return new ResponseEntity<>(DataResponse.of(true, "OAuth account has already withdrawn"), HttpStatus.ACCEPTED);
   }
 
-  @DeleteMapping("/{id}")
-  public DataResponse<Object> delete(@PathVariable Long id, @RequestBody(required=false) WithdrawDto body) {
-    return DataResponse.of(userService.delete(id, body));
-  }
-
-
   @GetMapping("/check-duplicate")
   public DataResponse<Object> checkNicknameDuplicate(@RequestParam Map<String, String> params) {
     Boolean res = false;

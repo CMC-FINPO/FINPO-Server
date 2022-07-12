@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.Gender;
 import kr.finpo.api.constant.OAuthType;
+import kr.finpo.api.domain.InterestRegion;
 import kr.finpo.api.domain.Region;
 import kr.finpo.api.domain.User;
 import kr.finpo.api.exception.GeneralException;
@@ -13,10 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserDto(
     Long id,
+    Boolean status,
     String name,
     String nickname,
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -69,14 +72,14 @@ public record UserDto(
   }
 
   public static UserDto response(User user) {
-    return new UserDto(user.getId(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatusId(), user.getProfileImg(), user.getOAuthType(), null, null, user.getDefaultRegion().getRegion(), null, null);
+    return new UserDto(user.getId(), user.getStatus(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatusId(), user.getProfileImg(), user.getOAuthType(), null, null, Optional.ofNullable(user.getDefaultRegion()).map(InterestRegion::getRegion).orElse(null), null, null);
   }
 
   public static UserDto communityResponse(User user) {
-    return new UserDto(user.getId(), null, user.getNickname(), null, user.getGender(), null, null, user.getProfileImg(), null, null, null, null, null, null);
+    return new UserDto(user.getId(), null, null, user.getNickname(), null, user.getGender(), null, null, user.getProfileImg(), null, null, null, null, null, null);
   }
 
   public static UserDto appleUserDto() {
-    return new UserDto(null,null,null,null,null,null,null,null,OAuthType.APPLE,null,null,null,null,null);
+    return new UserDto(null, null, null, null, null, null, null, null, null, OAuthType.APPLE, null, null, null, null, null);
   }
 }

@@ -42,7 +42,7 @@ public class NotificationService {
   public FcmDto getMy() {
     try {
       User user = getMe();
-      Fcm fcm = fcmRepository.findOneByUserId(user.getId()).orElse(null);
+      Fcm fcm = fcmRepository.findFirst1ByUserId(user.getId()).orElse(null);
       List<InterestCategory> interestCategories = interestCategoryRepository.findByUserId(user.getId());
       List<InterestRegion> interestRegions = interestRegionRepository.findByUserId(user.getId());
       return FcmDto.response(fcm, interestCategories, interestRegions);
@@ -54,7 +54,7 @@ public class NotificationService {
   public FcmDto upsertMy(FcmDto dto) {
     try {
       User user = getMe();
-      Optional<Fcm> fcm = fcmRepository.findOneByUserId(user.getId());
+      Optional<Fcm> fcm = fcmRepository.findFirst1ByUserId(user.getId());
 
       if (fcm.isEmpty()) { // insert
         if (dto.registrationToken() == null)

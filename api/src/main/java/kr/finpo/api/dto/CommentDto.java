@@ -32,12 +32,11 @@ public record CommentDto(
       comment.setContent(content);
       comment.setIsModified(true);
     }
-
     return comment;
   }
 
   public static CommentDto response(Comment comment, Boolean showPost, List<Comment> childs) {
-    if (comment.getUser() == null) return withdrawResponse(comment, showPost, childs);
+    if (!comment.getUser().getStatus()) return withdrawResponse(comment, showPost, childs);
     if (!comment.getStatus()) return deletedResponse(comment, showPost, childs);
     return new CommentDto(
         comment.getStatus(),
@@ -115,6 +114,26 @@ public record CommentDto(
         comment.getModifiedAt(),
         showPost ? PostDto.previewResponse(comment.getPost()) : null,
         childs == null || childs.isEmpty() ? null : childs.stream().map(child -> CommentDto.response(child, false, null)).toList()
+    );
+  }
+
+  public static CommentDto adminResponse(Comment comment) {
+    return new CommentDto(
+        comment.getStatus(),
+        comment.getId(),
+        comment.getParent() == null ? null : CommentDto.idOnly(comment.getParent()),
+        comment.getContent(),
+        comment.getAnonymity(),
+        UserDto.communityResponse(comment.getUser()),
+        null,
+        comment.getAnonymityId().equals(0) ? null : comment.getAnonymityId(),
+        comment.getUser().getId().equals(Optional.ofNullable(comment.getPost().getUser()).map(User::getId).orElse(null)),
+        comment.getUser().getId().equals(SecurityUtil.getCurrentUserId()),
+        comment.getIsModified(),
+        comment.getCreatedAt(),
+        comment.getModifiedAt(),
+        PostDto.previewResponse(comment.getPost()),
+        null
     );
   }
 }

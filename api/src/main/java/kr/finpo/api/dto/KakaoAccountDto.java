@@ -31,6 +31,7 @@ public record KakaoAccountDto(
 
     return new UserDto(null,
         null,
+        null,
         nickname,
         null,
         "male".equals(kakao_account.gender) ? Gender.MALE : "female".equals(kakao_account.gender) ? Gender.FEMALE : null,

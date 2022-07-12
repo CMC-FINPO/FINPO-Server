@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -46,18 +48,11 @@ public class UserService {
   private final RegionService regionService;
   private final UserRepository userRepository;
   private final UserPurposeRepository userPurposeRepository;
-  private final InterestRegionRepository interestRegionRepository;
-  private final InterestCategoryRepository interestCategoryRepository;
-  private final InterestPolicyRepository interestPolicyRepository;
-  private final JoinedPolicyRepository joinedPolicyRepository;
   private final KakaoAccountRepository kakaoAccountRepository;
   private final AppleAccountRepository appleAccountRepository;
   private final GoogleAccountRepository googleAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final FcmRepository fcmRepository;
-  private final PostRepository postRepository;
-  private final LikePostRepository likePostRepository;
-  private final CommentRepository commentRepository;
   private final S3Uploader s3Uploader;
 
   @Value("${oauth.kakao.admin-key}")
@@ -114,9 +109,9 @@ public class UserService {
 
   public UserDto update(Long id, UserDto dto) {
     try {
-      if (isNicknameDuplicated(dto.nickname()))
+      if (!isEmpty(dto.nickname()) && isNicknameDuplicated(dto.nickname()))
         throw new GeneralException(ErrorCode.VALIDATION_ERROR, "nickname duplicated");
-      if (StringUtils.hasText(dto.email()) && isEmailDuplicated(dto.email()))
+      if (!isEmpty(dto.email()) && isEmailDuplicated(dto.email()))
         throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
 
       User user = dto.updateEntity(userRepository.findById(id).get());
@@ -161,21 +156,6 @@ public class UserService {
   public Boolean delete(Long id, WithdrawDto dto) {
     try {
       User user = userRepository.findById(id).get();
-
-      likePostRepository.deleteByUserId(id);
-      commentRepository.findByUserId(id).forEach(comment -> {
-        comment.setUser(null);
-        commentRepository.save(comment);
-      });
-      postRepository.findByUserId(id).forEach(post -> {
-        post.setUser(null);
-        postRepository.save(post);
-      });
-      userPurposeRepository.deleteByUserId(id);
-      interestRegionRepository.deleteByUserId(id);
-      interestCategoryRepository.deleteByUserId(id);
-      interestPolicyRepository.deleteByUserId(id);
-      joinedPolicyRepository.deleteByUserId(id);
       refreshTokenRepository.deleteByUserId(id);
       fcmRepository.deleteByUserId(id);
 
@@ -241,7 +221,7 @@ public class UserService {
         kakaoAccountRepository.deleteByUserId(id);
         googleAccountRepository.deleteByUserId(id);
         appleAccountRepository.deleteByUserId(id);
-        userRepository.deleteById(id);
+        user.withdraw();
       }
       return true;
     } catch (Exception e) {

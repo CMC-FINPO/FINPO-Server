@@ -23,18 +23,22 @@ public class User{
 
   @Setter
   @Column(nullable = false)
+  private Boolean status = true;
+
+  @Setter
+  @Column(nullable = true)
   private String name;
 
   @Setter
-  @Column(nullable = false, length = 13)
+  @Column(nullable = true, length = 13)
   private String nickname;
 
   @Setter
-  @Column(nullable = false)
+  @Column(nullable = true)
   private LocalDate birth;
 
   @Setter
-  @Column(nullable = false)
+  @Column(nullable = true)
   @Enumerated(EnumType.STRING)
   private Gender gender;
 
@@ -84,6 +88,14 @@ public class User{
 
   public static User of(String name, String nickname, LocalDate birth, Gender gender, String email, Long statusId, String profileImg, OAuthType oAuthType) {
     return new User(name, nickname, birth, gender, email, statusId, profileImg, oAuthType);
+  }
+
+  public void withdraw() {
+    status = false;
+    name = nickname = email  = profileImg = null;
+    birth = null;
+    gender = null;
+    defaultRegion = null;
   }
 
 

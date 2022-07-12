@@ -102,6 +102,14 @@ public class PolicyService {
     }
   }
 
+  public PolicyDto update(Long id, PolicyDto dto) {
+    try {
+      Policy policy = dto.updateEntity(policyRepository.findById(id).get());
+      return PolicyDto.response(policyRepository.save(policy), null);
+    } catch (Exception e) {
+      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    }
+  }
 
   public List<InterestPolicyDto> getMyInterests() {
     try {

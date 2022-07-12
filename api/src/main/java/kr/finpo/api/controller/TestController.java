@@ -2,7 +2,6 @@ package kr.finpo.api.controller;
 
 import kr.finpo.api.dto.*;
 import kr.finpo.api.service.OAuthService;
-import kr.finpo.api.service.PolicyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -25,7 +23,6 @@ import java.util.stream.Collectors;
 public class TestController {
 
   private final OAuthService oAuthService;
-  private final PolicyService policyService;
 
   @PostMapping("/oauth/register/test")
   public DataResponse<Object> registerTest(
@@ -114,22 +111,6 @@ public class TestController {
     }
     return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER); // redirect
   }
-
-
-  @PostMapping("/policy")
-  public DataResponse<Object> insertCustom(
-      @RequestBody List<PolicyDto> body
-  ) {
-    return DataResponse.of(policyService.insertCustom(body));
-  }
-
-  @DeleteMapping("/policy/{id}")
-  public DataResponse<Object> deleteCustom(
-      @PathVariable Long id
-  ) {
-    return DataResponse.of(policyService.deleteCustom(id));
-  }
-
 }
 
 

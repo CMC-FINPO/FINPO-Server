@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record PostDto(
     Boolean status,
@@ -41,8 +43,8 @@ public record PostDto(
 
 
   public static PostDto response(Post post, List<PostImg> imgs, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository) {
-    Boolean isLiked = likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
-    Boolean isBookmarked = bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
+    Boolean isLiked = !isEmpty(likePostRepository) && likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
+    Boolean isBookmarked = !isEmpty(bookmarkPostRepository) && bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
 
     return new PostDto(
         post.getStatus(),
@@ -53,14 +55,14 @@ public record PostDto(
         post.getHits(),
         post.getCountOfComment(),
         post.getAnonymity() ? null : Optional.ofNullable(post.getUser()).map(UserDto::communityResponse).orElse(null),
-        post.getUser() == null ? true : null,
+        isEmpty(post.getUser()) ? true : null,
         Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
         isLiked,
         isBookmarked,
         post.getIsModified(),
         post.getCreatedAt(),
         post.getModifiedAt(),
-        imgs.stream().map(ImgDto::response).toList()
+        isEmpty(imgs) ? null : imgs.stream().map(ImgDto::response).toList()
     );
   }
 
@@ -81,10 +83,31 @@ public record PostDto(
         post.getHits(),
         post.getCountOfComment(),
         post.getAnonymity() ? null : Optional.ofNullable(post.getUser()).map(UserDto::communityResponse).orElse(null),
-        post.getUser() == null ? true : null,
+        isEmpty(post.getUser()) ? true : null,
         Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
         isLiked,
         isBookmarked,
+        post.getIsModified(),
+        post.getCreatedAt(),
+        post.getModifiedAt(),
+        null
+    );
+  }
+
+  public static PostDto adminResponse(Post post) {
+    return new PostDto(
+        post.getStatus(),
+        post.getId(),
+        post.getContent(),
+        post.getAnonymity(),
+        post.getLikes(),
+        post.getHits(),
+        post.getCountOfComment(),
+        Optional.ofNullable(post.getUser()).map(UserDto::communityResponse).orElse(null),
+        isEmpty(post.getUser()) ? true : null,
+        Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
+        null,
+        null,
         post.getIsModified(),
         post.getCreatedAt(),
         post.getModifiedAt(),

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface FcmRepository extends JpaRepository<Fcm, Long> {
-  public Optional<Fcm> findOneByUserId(Long id);
+  public Optional<Fcm> findFirst1ByUserId(Long id);
   Long deleteByUserId(Long id);
 }
 

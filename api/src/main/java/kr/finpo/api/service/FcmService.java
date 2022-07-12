@@ -45,7 +45,7 @@ public class FcmService {
     if (userIds.size() == 0) return null;
 
     userIds.forEach(userId -> {
-      Fcm fcm = fcmRepository.findOneByUserId(userId).get();
+      Fcm fcm = fcmRepository.findFirst1ByUserId(userId).get();
       registrationTokens.add(fcm.getRegistrationToken());
 
       userRepository.findById(userId).ifPresent(user ->
@@ -89,7 +89,7 @@ public class FcmService {
             notificationRepository.save(Notification.of(user, NotificationType.CHILDCOMMENT, comment))
         );
 
-        fcmRepository.findOneByUserId(parentUser.getId()).ifPresent(parentUserFcm -> {
+        fcmRepository.findFirst1ByUserId(parentUser.getId()).ifPresent(parentUserFcm -> {
           String parentRegistrationToken = parentUserFcm.getRegistrationToken();
           userIds.add(parentUser.getId());
 
@@ -117,7 +117,7 @@ public class FcmService {
             notificationRepository.save(Notification.of(user, NotificationType.COMMENT, comment))
         );
 
-        fcmRepository.findOneByUserId(postUser.getId()).ifPresent(postUserFcm -> {
+        fcmRepository.findFirst1ByUserId(postUser.getId()).ifPresent(postUserFcm -> {
 
           String postUserRegistrationToken = postUserFcm.getRegistrationToken();
 

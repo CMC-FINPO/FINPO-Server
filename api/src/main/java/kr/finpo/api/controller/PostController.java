@@ -3,6 +3,7 @@ package kr.finpo.api.controller;
 import kr.finpo.api.dto.*;
 import kr.finpo.api.service.CommentService;
 import kr.finpo.api.service.PostService;
+import kr.finpo.api.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ public class PostController {
 
   private final PostService postService;
   private final CommentService commentService;
+  private final ReportService reportService;
 
   @GetMapping("/{id}")
   public DataResponse<Object> get(@PathVariable Long id) {
@@ -103,5 +105,10 @@ public class PostController {
   @PostMapping("/{id}/comment")
   public DataResponse<Object> insertComment(@PathVariable Long id, @RequestBody CommentDto body) {
     return DataResponse.of(commentService.insert(id, body));
+  }
+
+  @PostMapping("/{id}/report")
+  public DataResponse<Object> reportComment(@PathVariable Long id, @RequestBody CommunityReportDto body) {
+    return DataResponse.of(reportService.insertPost(id, body));
   }
 }
