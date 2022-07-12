@@ -30,7 +30,7 @@ import {
 import { axiosInstance } from '../axiosInstance';
 import { Box } from '@mui/system';
 
-export default function PostScreen({ user, setUser, fetch, fetchData }) {
+export default function ReportScreen({ user, setUser, fetch, fetchData }) {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -62,31 +62,13 @@ export default function PostScreen({ user, setUser, fetch, fetchData }) {
   const [type, setType] = useState('/search');
 
   useEffect(() => {
-    axiosInstance.get(`post${type}?content=${text}&page=${page - 1}&size=10&sort=id,desc`).then((res) => {
+    axiosInstance.get(`report/community?&page=${page - 1}&size=10&sort=id,desc`).then((res) => {
       setData({ ...res.data.data });
     });
 
-    setImages([]);
     setModifyMode(false);
     setModifyContent('');
   }, [page, reload, fetch, detailOpen]);
-
-  useEffect(() => {
-    reloadPost();
-  }, [postId]);
-
-  const reloadPost = () => {
-    axiosInstance.get(`post/${postId}`).then((res) => {
-      setPost(res.data.data);
-      setModifyContent(res.data.data.content);
-      let temp = res.data.data.imgs.sort((a, b) => a.order - b.order);
-      setImgs([...temp]);
-    });
-
-    axiosInstance.get(`post/${postId}/comment?size=100`).then((res) => {
-      setComments([...res.data.data.content]);
-    });
-  };
 
   return (
     <div style={{ padding: 10, display: 'flex', gap: 8, flexDirection: 'column', alignItems: 'center' }}>
@@ -95,54 +77,6 @@ export default function PostScreen({ user, setUser, fetch, fetchData }) {
       ) : (
         <>
           <div style={{ padding: 10, display: 'flex', gap: 30 }}>
-            <ButtonGroup>
-              <Button
-                variant='contained'
-                onClick={(e) => {
-                  setType('/search');
-                  fetchData();
-                }}
-              >
-                전체
-              </Button>
-              <Button
-                variant='contained'
-                onClick={(e) => {
-                  setType('/me');
-                  fetchData();
-                }}
-              >
-                내가쓴글
-              </Button>
-              <Button
-                variant='contained'
-                onClick={(e) => {
-                  setType('/like/me');
-                  fetchData();
-                }}
-              >
-                좋아요한글
-              </Button>
-              <Button
-                variant='contained'
-                onClick={(e) => {
-                  setType('/bookmark/me');
-                  fetchData();
-                }}
-              >
-                북마크한글
-              </Button>
-              <Button
-                variant='contained'
-                onClick={(e) => {
-                  setType('/comment/me');
-                  fetchData();
-                }}
-              >
-                댓글단글
-              </Button>
-            </ButtonGroup>
-
             <div>
               <Input
                 variant='filled'
@@ -168,13 +102,13 @@ export default function PostScreen({ user, setUser, fetch, fetchData }) {
               <TableHead>
                 <TableRow>
                   <TableCell align='center'>id</TableCell>
-                  <TableCell align='center'>내용</TableCell>
+                  <TableCell align='center'>사유</TableCell>
+                  <TableCell align='center'>글id</TableCell>
+                  <TableCell align='center'>글내용</TableCell>
+                  <TableCell align='center'>댓글id</TableCell>
+                  <TableCell align='center'>댓글내용</TableCell>
                   <TableCell align='center'>작성자</TableCell>
-                  <TableCell align='center'>좋아요</TableCell>
-                  <TableCell align='center'>댓글</TableCell>
-                  <TableCell align='center'>조회수</TableCell>
-                  <TableCell align='center'></TableCell>
-                  <TableCell align='center'></TableCell>
+                  <TableCell align='center'>신고자</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -185,68 +119,16 @@ export default function PostScreen({ user, setUser, fetch, fetchData }) {
                     onClick={(e) => {
                       e.stopPropagation();
                       setDetailOpen(true);
-                      if (postId !== row.id) setPostId(row.id);
-                      else reloadPost();
                     }}
                   >
                     <TableCell align='center'>{row.id}</TableCell>
-                    <TableCell align='center'>{row.content}</TableCell>
-                    <TableCell align='center'>{row.isUserWithdraw ? '탈퇴한유저' : row.anonymity ? '익명' : row.user.nickname}</TableCell>
-                    <TableCell align='center'>{row.likes}</TableCell>
-                    <TableCell align='center'>{row.countOfComment}</TableCell>
-                    <TableCell align='center'>{row.hits}</TableCell>
-                    <TableCell align='center'>
-                      <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          row.isLiked
-                            ? axiosInstance
-                                .delete(`post/${row.id}/like`)
-                                .then((res) => {
-                                  fetchData();
-                                })
-                                .catch((res) => {
-                                  alert(res.response.data.message);
-                                })
-                            : axiosInstance
-                                .post(`post/${row.id}/like`)
-                                .then((res) => {
-                                  fetchData();
-                                })
-                                .catch((res) => {
-                                  alert(res.response.data.message);
-                                });
-                        }}
-                      >
-                        {row.isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                      </IconButton>
-                    </TableCell>
-                    <TableCell align='center'>
-                      <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          row.isBookmarked
-                            ? axiosInstance
-                                .delete(`post/${row.id}/bookmark`)
-                                .then((res) => {
-                                  fetchData();
-                                })
-                                .catch((res) => {
-                                  alert(res.response.data.message);
-                                })
-                            : axiosInstance
-                                .post(`post/${row.id}/bookmark`)
-                                .then((res) => {
-                                  fetchData();
-                                })
-                                .catch((res) => {
-                                  alert(res.response.data.message);
-                                });
-                        }}
-                      >
-                        {row.isBookmarked ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-                      </IconButton>
-                    </TableCell>
+                    <TableCell align='center'>{row.report.reason}</TableCell>
+                    <TableCell align='center'>{row.post?.id}</TableCell>
+                    <TableCell align='center'>{row.post?.content}</TableCell>
+                    <TableCell align='center'>{row.comment?.id}</TableCell>
+                    <TableCell align='center'>{row.comment?.content}</TableCell>
+                    <TableCell align='center'>{row.post?.user?.nickname || row.comment?.user?.nickname}</TableCell>
+                    <TableCell align='center'>{row.user?.nickname}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -441,7 +323,6 @@ export default function PostScreen({ user, setUser, fetch, fetchData }) {
                                   axiosInstance
                                     .put(`post/${post.id}`, { content: modifyContent, imgs: [...temp] })
                                     .then((res) => {
-                                      reloadPost();
                                       fetchData();
                                     })
                                     .catch((res) => {
@@ -483,7 +364,6 @@ export default function PostScreen({ user, setUser, fetch, fetchData }) {
                             axiosInstance
                               .post(`post/${post.id}/comment`, { content: commentContent, anonymity: commentAnnonimity })
                               .then((res) => {
-                                reloadPost();
                                 fetchData();
                               })
                               .catch((res) => {
@@ -495,14 +375,6 @@ export default function PostScreen({ user, setUser, fetch, fetchData }) {
                         </Button>
                       </>
                     </div>
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginTop: '20px' }}>
-                    {comments.length
-                      ? comments.map((comment, idx) => (
-                          <Comment comment={comment} reloadPost={reloadPost} fetchData={fetchData} post={post}></Comment>
-                        ))
-                      : ''}
                   </div>
                 </>
               )}
@@ -606,164 +478,6 @@ export default function PostScreen({ user, setUser, fetch, fetchData }) {
     </div>
   );
 }
-
-const Comment = ({ comment, reloadPost, fetchData, post, isChild }) => {
-  const [commentContent, setCommentContent] = useState('');
-  const [commentAnnonimity, setCommentAnnonimity] = useState(false);
-  const [modifyMode, setModifyMode] = useState(false);
-  const [modifyContent, setModifyContent] = useState(comment.content ? comment.content : '');
-
-  const [childs, setChilds] = useState([]);
-
-  useEffect(() => {
-    comment.childs && setChilds([...comment.childs]);
-  }, [comment]);
-
-  return (
-    <div style={{ paddingLeft: isChild ? '30px' : '10px' }}>
-      <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-        <Avatar src={comment.user?.profileImg} sx={{ width: 26, height: 26 }} />
-        <div>
-          <div style={{ fontWeight: '400', fontSize: '15px' }}>
-            {!comment.status
-              ? '삭제된 댓글'
-              : comment.isUserWithdraw
-              ? '탈퇴한유저'
-              : comment.anonymity
-              ? '익명' + (comment.anonymityId ? comment.anonymityId : '')
-              : comment.user?.nickname}{' '}
-            {comment.isWriter && '(글작성자)'}
-          </div>
-          <div style={{ fontWeight: '200', fontSize: '10px', marginTop: '-3px' }}>
-            {comment.createdAt} {comment.isModified && '(수정됨)'}
-          </div>
-        </div>
-        <div>
-          {comment.isMine && (
-            <ButtonGroup size={'small'}>
-              <Button
-                sx={{ marginBottom: 0.5 }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModifyMode(!modifyMode);
-                }}
-              >
-                {!modifyMode ? '수정' : '수정취소'}
-              </Button>
-              <Button
-                sx={{ marginBottom: 0.5 }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  axiosInstance.delete(`comment/${comment.id}`).then((res) => {
-                    setModifyMode(false);
-                    fetchData();
-                    reloadPost();
-                  });
-                }}
-              >
-                삭제
-              </Button>
-            </ButtonGroup>
-          )}
-        </div>
-        <Button
-          sx={{ marginBottom: 0.5 }}
-          onClick={(e) => {
-            e.stopPropagation();
-            axiosInstance
-              .post(`comment/${comment.id}/report`, { report: { id: 4 } })
-              .then((res) => {
-                alert(res.data.data.report.reason + '로 신고완료');
-              })
-              .catch((res) => {
-                alert(res.response.data.message);
-              });
-          }}
-        >
-          신고
-        </Button>
-      </div>
-
-      <div style={{ fontWeight: '500', fontSize: '17px', width: '100%', paddingLeft: '15px' }}>
-        {!modifyMode ? (
-          comment.content
-        ) : (
-          <>
-            <TextField
-              size='small'
-              label='수정할 내용'
-              id='fullWidth'
-              value={modifyContent}
-              onChange={(e) => {
-                setModifyContent(e.target.value);
-              }}
-            />
-            <Button
-              size='sx'
-              variant='contained'
-              onClick={() => {
-                axiosInstance
-                  .put(`comment/${comment.id}`, { content: modifyContent })
-                  .then((res) => {
-                    setModifyMode(false);
-                    fetchData();
-                    reloadPost();
-                  })
-                  .catch((res) => {
-                    alert(res.response.data.message);
-                  });
-              }}
-            >
-              수정
-            </Button>
-          </>
-        )}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        {childs && childs.map((childComments, idx) => <Comment comment={childComments} isChild={true}></Comment>)}
-      </div>
-      {!isChild && comment.status && (
-        <div style={{ paddingLeft: '15px', marginTop: '5px' }}>
-          <TextField
-            size='small'
-            label='대댓글'
-            multiline
-            value={commentContent}
-            onChange={(e) => {
-              setCommentContent(e.target.value);
-            }}
-          />
-          <Button
-            size='sx'
-            variant='contained'
-            onClick={() => {
-              axiosInstance
-                .post(`post/${post.id}/comment`, { content: commentContent, anonymity: commentAnnonimity, parent: { id: comment.id } })
-                .then((res) => {
-                  reloadPost();
-                  fetchData();
-                  setCommentAnnonimity(false);
-                  setCommentContent('');
-                })
-                .catch((res) => {
-                  alert(res.response.data.message);
-                });
-            }}
-          >
-            입력
-          </Button>
-          <Checkbox
-            checked={commentAnnonimity}
-            onChange={(e) => {
-              setCommentAnnonimity(e.target.checked);
-            }}
-          ></Checkbox>
-          익명
-        </div>
-      )}
-    </div>
-  );
-};
 
 const style = {
   position: 'absolute',

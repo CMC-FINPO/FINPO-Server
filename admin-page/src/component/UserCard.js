@@ -46,7 +46,8 @@ export default function UserCard({ fetch, fetchData }) {
 
   useEffect(() => {
     axiosInstance.get('user').then((res) => {
-      setUsers([...res.data.data]);
+      console.log(res.data.data);
+      setUsers([...res.data.data.filter((e) => e.status === true)]);
     });
   }, [fetch]);
 

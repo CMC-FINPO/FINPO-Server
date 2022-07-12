@@ -13,6 +13,7 @@ import { fetchToken, onMessageListener } from './firebase';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import PostScreen from './screen/PostScreen';
+import ReportScreen from './screen/ReportScreen';
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -112,6 +113,7 @@ function App() {
           <Route path='/register/*' element={<RegisterPopup />}></Route>
           <Route path='/policy/*' element={<PolicyScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
           <Route path='/post/*' element={<PostScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
+          <Route path='/report/*' element={<ReportScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
         </Routes>
       </div>
 
