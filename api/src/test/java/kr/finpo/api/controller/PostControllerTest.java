@@ -42,7 +42,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "dev.finpo.kr", uriPort = 443)
 @WithMockUser
 @Transactional
-@EnableJpaAuditing
 @SpringBootTest
 public
 class PostControllerTest {

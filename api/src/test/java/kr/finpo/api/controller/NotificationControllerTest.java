@@ -53,7 +53,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 @Transactional
 @SpringBootTest
-@EnableJpaAuditing
 public class NotificationControllerTest {
 
   @Autowired
