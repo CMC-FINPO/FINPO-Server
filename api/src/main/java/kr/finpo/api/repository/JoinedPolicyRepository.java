@@ -14,5 +14,7 @@ public interface JoinedPolicyRepository extends JpaRepository<JoinedPolicy, Long
   public Optional<JoinedPolicy> findOneByUserIdAndPolicyId(Long userId, Long policyId);
 
   public Long deleteByUserId(Long id);
+
+  public Long deleteByPolicyId(Long policyId);
 }
 

@@ -14,5 +14,7 @@ public interface InterestPolicyRepository extends JpaRepository<InterestPolicy, 
   public Optional<InterestPolicy> findOneByUserIdAndPolicyId(Long userId, Long policyId);
 
   public Long deleteByUserId(Long id);
+
+  public Long deleteByPolicyId(Long policyId);
 }
 

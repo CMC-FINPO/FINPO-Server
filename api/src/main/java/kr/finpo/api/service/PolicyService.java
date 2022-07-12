@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -32,6 +34,7 @@ public class PolicyService {
   private final UserRepository userRepository;
   private final RegionRepository regionRepository;
   private final CategoryRepository categoryRepository;
+  private final NotificationRepository notificationRepository;
   private final FcmService fcmService;
 
   private User getMe() {
@@ -49,17 +52,16 @@ public class PolicyService {
     return interestPolicyRepository.findOneByUserIdAndPolicyId(SecurityUtil.getCurrentUserId(), id).isPresent();
   }
 
-  public String insertCustom(List<PolicyDto> policyDtos) {
+  public Boolean insertCustom(List<PolicyDto> policyDtos) {
     try {
-      List<List<Long>> ret = new ArrayList<>();
       policyDtos.forEach(dto -> {
         Policy policy = Policy.of(dto.title(), Integer.toString(dto.title().hashCode()), dto.institution(), dto.content(), null, null, null, null, null, null, null, null, null, null);
         policy.setRegion(regionRepository.findById(dto.region().getId()).get());
         policy.setCategory(categoryRepository.findById(dto.category().getId()).get());
+        policy.setStatus(false);
         policyRepository.save(policy);
-        ret.add(fcmService.sendPolicyPush(policy));
       });
-      return ret.toString();
+      return true;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -67,6 +69,9 @@ public class PolicyService {
 
   public Boolean deleteCustom(Long id) {
     try {
+      notificationRepository.deleteByPolicyId(id);
+      interestPolicyRepository.deleteByPolicyId(id);
+      joinedPolicyRepository.deleteByPolicyId(id);
       policyRepository.deleteById(id);
       return true;
     } catch (Exception e) {
@@ -94,18 +99,23 @@ public class PolicyService {
     }
   }
 
-  public Page<PolicyDto> search(String title, LocalDate startDate, LocalDate endDate, List<Long> regionIds, List<Long> categoryIds, Pageable pageable) {
+  public Page<PolicyDto> search(String title, LocalDate startDate, LocalDate endDate, List<Long> regionIds, List<Long> categoryIds, Boolean status, Pageable pageable) {
     try {
-      return policyRepository.querydslFindbyTitle(title, startDate, endDate, categoryIds, regionIds, pageable).map(e -> PolicyDto.previewResponse(e, isInterest(e.getId())));
+      return policyRepository.querydslFindbyTitle(title, startDate, endDate, categoryIds, regionIds, status, pageable).map(e -> PolicyDto.previewResponse(e, isInterest(e.getId())));
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
-  public PolicyDto update(Long id, PolicyDto dto) {
+  public String update(Long id, PolicyDto dto, Boolean sendNotification) {
     try {
+      List<List<Long>> ret = new ArrayList<>();
       Policy policy = dto.updateEntity(policyRepository.findById(id).get());
-      return PolicyDto.response(policyRepository.save(policy), null);
+      if (!isEmpty(dto.region())) policy.setRegion(regionRepository.findById(dto.region().getId()).get());
+      if (!isEmpty(dto.category())) policy.setCategory(categoryRepository.findById(dto.category().getId()).get());
+      policy = policyRepository.save(policy);
+      if (sendNotification) ret.add(fcmService.sendPolicyPush(policy));
+      return ret.toString();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

@@ -76,7 +76,6 @@ public class GgdataService {
   private final PolicyRepository policyRepository;
   private final CategoryRepository categoryRepository;
   private final RegionRepository regionRepository;
-  private final FcmService fcmService;
 
   @Value("${ggdata.key}")
   private String apiKey;
@@ -86,6 +85,10 @@ public class GgdataService {
   // 10시, 15시, 19시마다 업데이트
   @Scheduled(cron = "0 0 10,15,19 * * *")
   public void initialize() {
+    initialize(true);
+  }
+
+  public void initialize(Boolean isAuto) {
     try {
       log.debug("batch start");
       HttpHeaders headers = new HttpHeaders();
@@ -119,7 +122,6 @@ public class GgdataService {
             return;
           }
 
-
           try {
             Region region = regionRepository.findById(RegionService.name2regionId("경기", regionName.get(row.REGION_CD()))).get();
             policy.setRegion(region);
@@ -129,10 +131,9 @@ public class GgdataService {
           }
 
           categoryRepository.findById(categoryName.get(row.DIV_CD())).ifPresent(policy::setCategory);
+          if(isAuto) policy.setStatus(false);
           policyRepository.save(policy);
-          fcmService.sendPolicyPush(policy);
         }
-        ;
       }
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);

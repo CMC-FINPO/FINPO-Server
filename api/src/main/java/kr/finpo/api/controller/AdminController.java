@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,9 +44,9 @@ public class AdminController {
 
   @PutMapping("/policy/{id}")
   public DataResponse<Object> update(
-      @PathVariable Long id, @RequestBody PolicyDto body
+      @PathVariable Long id, @RequestBody PolicyDto body, @RequestParam("sendNotification") Boolean sendNotification
   ) {
-    return DataResponse.of(policyService.update(id, body));
+    return DataResponse.of(policyService.update(id, body, sendNotification));
   }
 
   @DeleteMapping("/policy/{id}")
@@ -62,6 +64,18 @@ public class AdminController {
   @DeleteMapping("/user/{id}")
   public DataResponse<Object> deleteUser(@PathVariable Long id, @RequestBody(required=false) WithdrawDto body) {
     return DataResponse.of(userService.delete(id, body));
+  }
+
+  @GetMapping("/policy/admin")
+  public DataResponse<Object> search(
+      @RequestParam(value = "title", required = false) String title,
+      @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+      @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+      @RequestParam(value = "region", required = false) List<Long> regionIds,
+      @RequestParam(value = "category", required = false) List<Long> categoryIds,
+      Pageable pageable
+  ) {
+    return DataResponse.of(policyService.search(title, startDate, endDate, regionIds, categoryIds, null, pageable));
   }
 }
 

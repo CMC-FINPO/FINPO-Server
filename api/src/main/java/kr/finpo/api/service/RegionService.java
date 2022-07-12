@@ -88,9 +88,9 @@ public class RegionService {
   private final RegionRepository regionRepository;
   private final UserRepository userRepository;
 
-  public List<InterestRegionDto> getAllInterest() {
+  public List<Region> getAll() {
     try {
-      return interestRegionRepository.findAll().stream().map(InterestRegionDto::response).toList();
+      return regionRepository.findAll();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

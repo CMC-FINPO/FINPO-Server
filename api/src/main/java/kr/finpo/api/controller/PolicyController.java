@@ -40,7 +40,7 @@ public class PolicyController {
       @RequestParam(value = "category", required = false) List<Long> categoryIds,
       Pageable pageable
   ) {
-    return DataResponse.of(policyService.search(title, startDate, endDate, regionIds, categoryIds, pageable));
+    return DataResponse.of(policyService.search(title, startDate, endDate, regionIds, categoryIds, true, pageable));
   }
 
 

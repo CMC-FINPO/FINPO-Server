@@ -87,14 +87,8 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
     BooleanBuilder categoryBuilder = new BooleanBuilder(),
         regionBuilder = new BooleanBuilder();
 
-    myCategoryDtos.forEach(dto -> {
-      log.debug("관심카테고리 " + dto.category().getId() + " " + dto.category().getName());
-      categoryBuilder.or(p.category.id.eq(dto.category().getId()));
-    });
-    myRegionDtos.forEach(dto -> {
-      log.debug("관심지역 " + dto.region().getId() + " " + dto.region().getName());
-      regionBuilder.or(p.region.id.eq(dto.region().getId()));
-    });
+    myCategoryDtos.forEach(dto -> categoryBuilder.or(p.category.id.eq(dto.category().getId())));
+    myRegionDtos.forEach(dto -> regionBuilder.or(p.region.id.eq(dto.region().getId())));
 
     QueryResults<Policy> results = jpaQueryFactory
         .selectFrom(QPolicy.policy)
@@ -111,7 +105,7 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
   }
 
   @Override
-  public Page<Policy> querydslFindbyTitle(String title, LocalDate startDate, LocalDate endDate, List<Long> categoryIds, List<Long> regionIds, Pageable pageable) {
+  public Page<Policy> querydslFindbyTitle(String title, LocalDate startDate, LocalDate endDate, List<Long> categoryIds, List<Long> regionIds, Boolean status, Pageable pageable) {
 
     System.out.println(title);
 
@@ -135,10 +129,11 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
     if (!isEmpty(title)) builder.and(p.title.contains(title));
     if (!isEmpty(startDate)) builder.and(p.startDate.after(startDate.minusDays(1)));
     if (!isEmpty(endDate)) builder.and(p.endDate.before(startDate.plusDays(1)));
+    if (!isEmpty(status)) builder.and(p.status.eq(status));
 
     QueryResults<Policy> results = jpaQueryFactory
         .selectFrom(QPolicy.policy)
-        .where(categoryBuilder, regionBuilder, builder, p.status.eq(true))
+        .where(categoryBuilder, regionBuilder, builder)
         .orderBy(orders.toArray(OrderSpecifier[]::new))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())

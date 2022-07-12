@@ -17,5 +17,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
   public Page<Notification> findByUserId(Long id, Pageable pageable);
 
   public Long deleteByUserId(Long userId);
+
+  public Long deleteByPolicyId(Long policyId);
 }
 

@@ -13,6 +13,7 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record PolicyDto(
     Long id,
+    Boolean status,
     String title,
     String content,
     String institution,
@@ -35,6 +36,7 @@ public record PolicyDto(
 ) {
 
   public Policy updateEntity(Policy policy) {
+    Optional.ofNullable(status).ifPresent(policy::setStatus);
     Optional.ofNullable(title).ifPresent(policy::setTitle);
     Optional.ofNullable(content).ifPresent(policy::setContent);
     Optional.ofNullable(institution).ifPresent(policy::setInstitution);
@@ -53,6 +55,7 @@ public record PolicyDto(
   public static PolicyDto response(Policy policy, Boolean isInterest) {
     return new PolicyDto(
         policy.getId(),
+        policy.getStatus(),
         policy.getTitle(),
         policy.getContent(),
         policy.getInstitution(),
@@ -78,6 +81,7 @@ public record PolicyDto(
   public static PolicyDto previewResponse(Policy policy, Boolean isInterest) {
     return new PolicyDto(
         policy.getId(),
+        policy.getStatus(),
         policy.getTitle(),
         null,
         policy.getInstitution(),
@@ -90,7 +94,7 @@ public record PolicyDto(
         null,
         null,
         null,
-        null,
+        policy.getCreatedAt(),
         null,
         null,
         policy.getRegion(),

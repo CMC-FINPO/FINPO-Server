@@ -14,6 +14,6 @@ import java.util.List;
 public interface PolicyRepositoryCustom {
   Page<Policy> querydslFindMy(List<InterestCategoryDto> myCategoryDtos, List<InterestRegionDto> myRegionDtos, Pageable pageable);
 
-  Page<Policy> querydslFindbyTitle(String title, LocalDate startDate, LocalDate endDate, List<Long> categoryIds, List<Long> regionIds, Pageable pageable);
+  Page<Policy> querydslFindbyTitle(String title, LocalDate startDate, LocalDate endDate, List<Long> categoryIds, List<Long> regionIds, Boolean status, Pageable pageable);
 }
 

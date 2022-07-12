@@ -27,11 +27,10 @@ public class RegionController {
     return DataResponse.of(regionService.getByParentId(parentId));
   }
 
-  @GetMapping("")
+  @GetMapping(path = "/name/all")
   public DataResponse<Object> getAll() {
-    return DataResponse.of(regionService.getAllInterest());
+    return DataResponse.of(regionService.getAll());
   }
-
 
   @GetMapping("/me")
   public DataResponse<Object> getMy() {

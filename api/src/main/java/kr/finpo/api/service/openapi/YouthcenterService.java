@@ -188,13 +188,12 @@ public class YouthcenterService {
     }});
   }};
 
-  private final List<Long> categoryList = new ArrayList<Long>(categories.keySet());
+  private final List<Long> categoryList = new ArrayList<>(categories.keySet());
 
 
   private final PolicyRepository policyRepository;
   private final CategoryRepository categoryRepository;
   private final RegionRepository regionRepository;
-  private final FcmService fcmService;
 
   @Value("${youthcenter.key}")
   private String apiKey;
@@ -205,6 +204,10 @@ public class YouthcenterService {
   // 10시, 15시, 19시마다 업데이트
   @Scheduled(cron = "0 0 10,15,19 * * *")
   public void initialize() {
+    initialize(true);
+  }
+
+  public void initialize(Boolean isAuto) {
     try {
       log.debug("youthcenter batch start");
 
@@ -237,7 +240,7 @@ public class YouthcenterService {
               new HttpEntity<>(null, headers),
               String.class
           );
-//          log.debug(response.toString());
+
           JAXBContext jaxbContext = JAXBContext.newInstance(YouthcenterDto.class);
           Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
           YouthcenterDto dto = (YouthcenterDto) unmarshaller.unmarshal(new ByteArrayInputStream(response.getBody().getBytes()));
@@ -265,7 +268,7 @@ public class YouthcenterService {
             }
 
             policyRepository.save(policy);
-            fcmService.sendPolicyPush(policy);
+            if (isAuto) policy.setStatus(false);
           }
           if (endFlag) break;
         }
