@@ -616,7 +616,7 @@ operation::내알림기록삭제[snippets='http-request,request-headers,path-par
     data:
         content: "댓글댓글대대대대 개대ㅐㄷ슥"
         id: "5345"
-        postComment:"글내용내용내용"
+        postContent:"글내용내용내용"
         postId: "5333"
         type: "COMMENT"
     fcmMessageId: "60301125-b076-4809-8168-8efac06ae4fa"
@@ -629,7 +629,7 @@ operation::내알림기록삭제[snippets='http-request,request-headers,path-par
     data:
         content: "대댓글글글  ㄹㄴㄹㅇㄴㄹㅇㅁ너"
         id: "5348"
-        postComment:"글내용내용내용"
+        postContent:"글내용내용내용"
         postId: "5309"
         type: "CHILDCOMMENT"
     fcmMessageId: "cc503903-15da-4819-956e-27cd6ba8c7c7"
