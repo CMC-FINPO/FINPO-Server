@@ -22,7 +22,6 @@ import java.util.*;
 @RequiredArgsConstructor
 @Transactional
 @Service
-@EnableJpaAuditing
 @Slf4j
 public class CommentService {
 

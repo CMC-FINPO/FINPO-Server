@@ -22,7 +22,6 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
-@EnableJpaAuditing
 @Service
 @Slf4j
 public class PostService {
