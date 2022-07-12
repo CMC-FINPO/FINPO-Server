@@ -35,7 +35,7 @@ export default function ({ fetchData, fetch }) {
   const [userDetail, setUserDetail] = useState();
 
   useEffect(() => {
-    axiosInstance.get('policy/search?page=0&size=1').then((res) => {
+    axiosInstance.get('policy/admin?page=0&size=1').then((res) => {
       console.log(res.data.data);
       setData(res.data.data.totalElements);
     });

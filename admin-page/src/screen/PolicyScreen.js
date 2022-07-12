@@ -21,12 +21,14 @@ import {
   Modal,
   Paper,
   Select,
+  Switch,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Collapse,
 } from '@mui/material';
 import { axiosInstance } from '../axiosInstance';
 import { Box } from '@mui/system';
@@ -55,6 +57,11 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
   const [pregion, setPregion] = useState();
   const [pcategory, setPcategory] = useState();
 
+  const [r1, sr1] = useState();
+  const [r2, sr2] = useState();
+  const [c1, sc1] = useState();
+  const [c2, sc2] = useState();
+
   useEffect(() => {
     let reg = '';
     region.map((e) => (reg += e.region.id + ','));
@@ -62,10 +69,18 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
     let cat = '';
     category.map((e) => (cat += e.category.id + ','));
 
-    axiosInstance.get(`policy/search?title=${text}&region=${reg}&category=${cat}&page=${page - 1}&size=10`).then((res) => {
+    axiosInstance.get(`policy/admin?title=${text}&region=${reg}&category=${cat}&page=${page - 1}&size=20`).then((res) => {
       setData({ ...res.data.data });
     });
   }, [page, reload, fetch]);
+
+  useEffect(() => {
+    sc1(userDetail?.category?.parent?.id);
+    sc2(userDetail?.category?.id);
+
+    sr1(userDetail?.region?.parent?.id);
+    sr2(userDetail?.region?.id);
+  }, [userDetail]);
 
   const [region1, setRegion1] = useState();
   const [region2, setRegion2] = useState();
@@ -73,26 +88,33 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
   const [regions2, setRegions2] = useState([]);
 
   useEffect(() => {
-    axiosInstance.get(`policy/category/me`).then((res) => {
-      console.log(res.data.data);
-      setCategory([...res.data.data]);
-      axiosInstance.get(`region/me`).then((res) => {
-        console.log(res.data.data);
-        setRegion([...res.data.data]);
-        reloadTrigger();
-      });
-    });
+    // axiosInstance.get(`policy/category/me`).then((res) => {
+    //   console.log(res.data.data);
+    //   setCategory([...res.data.data]);
+    //   axiosInstance.get(`region/me`).then((res) => {
+    //     console.log(res.data.data);
+    //     setRegion([...res.data.data]);
+    //     reloadTrigger();
+    //   });
+    // });
 
     axiosInstance.get('region/name').then((res) => {
       console.log(res);
       setRegions1([...res.data.data]);
     });
   }, []);
+
   useEffect(() => {
     axiosInstance.get(`region/name?parentId=${region1}`).then((res) => {
       setRegions2([...res.data.data]);
     });
   }, [region1]);
+
+  useEffect(() => {
+    axiosInstance.get(`region/name?parentId=${r1}`).then((res) => {
+      setRegions2([...res.data.data]);
+    });
+  }, [r1]);
 
   const [ca1, setCa1] = useState();
   const [ca2, setCa2] = useState();
@@ -100,7 +122,6 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
   const [cas2, setCas2] = useState([]);
   useEffect(() => {
     axiosInstance.get('policy/category/name').then((res) => {
-      console.log(res);
       setCas1([...res.data.data]);
     });
   }, []);
@@ -109,6 +130,28 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
       setCas2([...res.data.data]);
     });
   }, [ca1]);
+  useEffect(() => {
+    axiosInstance.get(`policy/category/name?parentId=${c1}`).then((res) => {
+      setCas2([...res.data.data]);
+    });
+  }, [c1]);
+
+  const updatePolicy = (e, row, sendNotification) => {
+    e.stopPropagation();
+    axiosInstance
+      .put(`policy/${row.id}?sendNotification=${sendNotification}`, {
+        ...userDetail,
+        ...(r2 ? { region: { id: r2 } } : r1 !== null && { region: { id: r1 } }),
+        ...(c2 && { category: { id: c2 } }),
+      })
+      .then((res) => {
+        if (sendNotification) alert('send to ' + res.data.data);
+        reloadTrigger();
+      })
+      .catch((res) => {
+        alert(res.response.data.message);
+      });
+  };
 
   return (
     <div style={{ padding: 10, display: 'flex', gap: 8, flexDirection: 'column', alignItems: 'center' }}>
@@ -215,55 +258,318 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
                   <TableCell align='center'>제목</TableCell>
                   <TableCell align='center'>주관기관</TableCell>
                   <TableCell align='center'>지역</TableCell>
-                  <TableCell align='center'></TableCell>
+                  <TableCell align='center'>등록일</TableCell>
+                  <TableCell align='center'>보이기</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody style={{ width: '100%' }}>
                 {data?.content?.map((row, idx) => (
-                  <TableRow
-                    key={idx}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDetailOpen(true);
-                      axiosInstance.get(`policy/${row.id}`).then((res) => {
-                        setUserDetail(res.data.data);
-                      });
-                    }}
-                  >
-                    <TableCell align='center'>{row.id}</TableCell>
-                    <TableCell align='center'>{row.title}</TableCell>
-                    <TableCell align='center'>{row.institution}</TableCell>
-                    {/* <TableCell align='center'>{user.gender}</TableCell>
-                    <TableCell align='center'>{user.birth}</TableCell>
-                    <TableCell align='center'>
-                      <div>{user.email.substring(0, 10)}</div>
-                      <div>{user.email.substring(10)}</div>
-                    </TableCell> */}
-                    <TableCell align='center'>{row.region?.parent?.name + ' ' + row.region?.name}</TableCell>
-                    <TableCell align='center' width={'20px'}>
-                      <Button
-                        size='small'
-                        variant='contained'
-                        color='error'
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!window.confirm('정말 삭제하시겠습니까?')) return;
-
-                          axiosInstance
-                            .delete(`policy/${row.id}`)
-                            .then(() => {
-                              fetchData();
-                            })
-                            .catch((res) => {
-                              alert(res.response.data.message);
+                  <>
+                    <TableRow
+                      key={idx}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (row && userDetail && userDetail.id === row.id) {
+                          let temp = { ...userDetail };
+                          temp.id = -1;
+                          setUserDetail(temp);
+                        } else {
+                          axiosInstance.get(`policy/${row.id}`).then((res) => {
+                            setUserDetail(res.data.data);
+                          });
+                        }
+                      }}
+                    >
+                      <TableCell align='center'>{row.id}</TableCell>
+                      <TableCell align='center'>{row.title}</TableCell>
+                      <TableCell align='center'>{row.institution}</TableCell>
+                      <TableCell align='center'>{row.region?.parent?.name + ' ' + row.region?.name}</TableCell>
+                      <TableCell align='center'>
+                        {row.createdAt.slice(0, 10)}
+                        <br></br>
+                        {row.createdAt.slice(11)}
+                      </TableCell>
+                      <TableCell align='center'>
+                        <Switch
+                          onClick={(e) => e.stopPropagation()}
+                          checked={row.status}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            axiosInstance.put(`policy/${row.id}?sendNotification=false`, { status: e.target.checked }).then((res) => {
+                              reloadTrigger();
                             });
-                        }}
-                      >
-                        삭제
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                          }}
+                          inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                      </TableCell>
+                    </TableRow>
+
+                    <TableRow>
+                      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                        <Collapse in={row && userDetail && row.id === userDetail.id} timeout='auto' unmountOnExit>
+                          <div style={{ width: '100%', padding: '20px 10px 30px 10px' }}>
+                            {userDetail && (
+                              <>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+                                  <div style={{ display: 'flex', gap: 10 }}>
+                                    <TextField
+                                      label='title'
+                                      variant='standard'
+                                      sx={{ minWidth: '400px' }}
+                                      size='small'
+                                      value={userDetail.title}
+                                      onChange={(e) => {
+                                        let temp = { ...userDetail };
+                                        temp.title = e.target.value;
+                                        setUserDetail(temp);
+                                      }}
+                                    />
+                                    <TextField
+                                      label='institution'
+                                      variant='standard'
+                                      size='small'
+                                      sx={{ flex: 1 }}
+                                      value={userDetail.institution}
+                                      onChange={(e) => {
+                                        let temp = { ...userDetail };
+                                        temp.institution = e.target.value;
+                                        setUserDetail(temp);
+                                      }}
+                                    />
+                                  </div>
+                                  <TextField
+                                    label='content'
+                                    variant='standard'
+                                    size='small'
+                                    multiline
+                                    fullWidth
+                                    value={userDetail.content}
+                                    onChange={(e) => {
+                                      let temp = { ...userDetail };
+                                      temp.content = e.target.value;
+                                      setUserDetail(temp);
+                                    }}
+                                  />
+                                  <div style={{ display: 'flex', gap: 10 }}>
+                                    <TextField
+                                      label='startDate'
+                                      helperText='YYYY-MM-DD'
+                                      error={!userDetail?.startDate?.match(/^\d{4}-\d{2}-\d{2}$/) && userDetail?.startDate}
+                                      variant='standard'
+                                      size='small'
+                                      sx={{ flex: 1 }}
+                                      value={userDetail.startDate}
+                                      onChange={(e) => {
+                                        let temp = { ...userDetail };
+                                        temp.startDate = e.target.value;
+                                        setUserDetail(temp);
+                                      }}
+                                    />
+                                    <TextField
+                                      label='endDate'
+                                      variant='standard'
+                                      helperText='YYYY-MM-DD'
+                                      size='small'
+                                      error={!userDetail?.endDate?.match(/^\d{4}-\d{2}-\d{2}$/) && userDetail?.endDate}
+                                      sx={{ flex: 1 }}
+                                      value={userDetail.endDate}
+                                      onChange={(e) => {
+                                        let temp = { ...userDetail };
+                                        temp.endDate = e.target.value;
+                                        setUserDetail(temp);
+                                      }}
+                                    />
+                                  </div>
+                                  <TextField
+                                    label='period'
+                                    variant='standard'
+                                    size='small'
+                                    sx={{ flex: 1 }}
+                                    value={userDetail.period}
+                                    onChange={(e) => {
+                                      let temp = { ...userDetail };
+                                      temp.period = e.target.value;
+                                      setUserDetail(temp);
+                                    }}
+                                  />
+                                  <TextField
+                                    label='supportScale'
+                                    variant='standard'
+                                    size='small'
+                                    value={userDetail.supportScale}
+                                    onChange={(e) => {
+                                      let temp = { ...userDetail };
+                                      temp.supportScale = e.target.value;
+                                      setUserDetail(temp);
+                                    }}
+                                  />
+                                  <TextField
+                                    label='detailUrl'
+                                    variant='standard'
+                                    size='small'
+                                    multiline
+                                    value={userDetail.detailUrl}
+                                    onChange={(e) => {
+                                      let temp = { ...userDetail };
+                                      temp.detailUrl = e.target.value;
+                                      setUserDetail(temp);
+                                    }}
+                                  />
+                                  <TextField
+                                    label='support'
+                                    variant='standard'
+                                    size='small'
+                                    multiline
+                                    sx={{ flex: 1 }}
+                                    value={userDetail.support}
+                                    onChange={(e) => {
+                                      let temp = { ...userDetail };
+                                      temp.support = e.target.value;
+                                      setUserDetail(temp);
+                                    }}
+                                  />
+                                  <TextField
+                                    label='process'
+                                    variant='standard'
+                                    size='small'
+                                    multiline
+                                    sx={{ flex: 1 }}
+                                    value={userDetail.process}
+                                    onChange={(e) => {
+                                      let temp = { ...userDetail };
+                                      temp.process = e.target.value;
+                                      setUserDetail(temp);
+                                    }}
+                                  />
+                                  <TextField
+                                    label='announcement'
+                                    variant='standard'
+                                    size='small'
+                                    multiline
+                                    sx={{ flex: 1 }}
+                                    value={userDetail.announcement}
+                                    onChange={(e) => {
+                                      let temp = { ...userDetail };
+                                      temp.announcement = e.target.value;
+                                      setUserDetail(temp);
+                                    }}
+                                  />
+                                  <div style={{ position: 'relative' }}>
+                                    <div style={{ display: 'flex', gap: 20, float: 'left' }}>
+                                      <FormControl sx={{ width: '90px' }} size='small'>
+                                        <InputLabel id='demo-simple-select-label'>지역</InputLabel>
+                                        <Select
+                                          value={r1}
+                                          onChange={(e) => {
+                                            sr2();
+                                            sr1(e.target.value);
+                                          }}
+                                        >
+                                          {regions1.map((region, idx) => {
+                                            return <MenuItem value={region.id}>{region.name}</MenuItem>;
+                                          })}
+                                        </Select>
+                                      </FormControl>
+                                      <FormControl sx={{ width: '90px' }} size='small'>
+                                        <InputLabel id='demo-simple-select-label'>상세 지역</InputLabel>
+                                        <Select value={r2} onChange={(e) => sr2(e.target.value)}>
+                                          {regions2.map((region, idx) => {
+                                            return <MenuItem value={region.id}>{region.name}</MenuItem>;
+                                          })}
+                                        </Select>
+                                      </FormControl>
+
+                                      <FormControl sx={{ width: '120px' }} size='small'>
+                                        <InputLabel id='demo-simple-select-label'>상위카테</InputLabel>
+                                        <Select
+                                          value={c1}
+                                          onChange={(e) => {
+                                            sc2();
+                                            sc1(e.target.value);
+                                          }}
+                                        >
+                                          {cas1.map((region, idx) => {
+                                            return <MenuItem value={region.id}>{region.name}</MenuItem>;
+                                          })}
+                                        </Select>
+                                      </FormControl>
+                                      <FormControl sx={{ width: '120px' }} size='small'>
+                                        <InputLabel id='demo-simple-select-label'>하위카테</InputLabel>
+                                        <Select
+                                          value={c2}
+                                          onChange={(e) => {
+                                            sc2(e.target.value);
+                                          }}
+                                        >
+                                          {cas2.map((region, idx) => {
+                                            return <MenuItem value={region.id}>{region.name}</MenuItem>;
+                                          })}
+                                        </Select>
+                                      </FormControl>
+                                    </div>
+
+                                    <Button
+                                      variant='contained'
+                                      sx={{ float: 'right', width: '70px' }}
+                                      onClick={(e) => {
+                                        updatePolicy(e, row, false);
+                                      }}
+                                    >
+                                      수정
+                                    </Button>
+                                    <Button
+                                      variant='contained'
+                                      color='secondary'
+                                      sx={{ float: 'right', width: '100px', marginRight: '20px' }}
+                                      onClick={(e) => {
+                                        if (!window.confirm('구독한 사용자에게 등록 알림을 보내며 수정합니다')) return;
+                                        updatePolicy(e, row, true);
+                                      }}
+                                    >
+                                      수정(알림)
+                                    </Button>
+                                    <Button
+                                      size='small'
+                                      variant='contained'
+                                      color='error'
+                                      sx={{ float: 'right', width: '30px', marginRight: '70px' }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!window.confirm('정말 삭제하시겠습니까?')) return;
+
+                                        axiosInstance
+                                          .delete(`policy/${row.id}`)
+                                          .then(() => {
+                                            fetchData();
+                                          })
+                                          .catch((res) => {
+                                            alert(res.response.data.message);
+                                          });
+                                      }}
+                                    >
+                                      삭제
+                                    </Button>
+                                  </div>
+                                  <div style={{ display: 'flex', gap: 20 }}>
+                                    <div>createdAt:{userDetail.createdAt}</div>
+                                    <div>modifiedAt:{userDetail.modifiedAt}</div>
+                                    <div>openApiType:{userDetail.openApiType}</div>
+                                    <div>countOfInterest:{userDetail.countOfInterest}</div>
+                                  </div>
+                                </div>
+                                {/* {Object.entries(userDetail).map(([key, value]) => (
+                                  <div>
+                                    {key}:{' ' + JSON.stringify(value)}
+                                  </div>
+                                ))} */}
+                              </>
+                            )}
+                          </div>
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                  </>
                 ))}
               </TableBody>
             </Table>
@@ -276,17 +582,6 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
             }}
             color='primary'
           />
-
-          <Modal open={detailOpen} onClose={() => setDetailOpen(false)}>
-            <Box sx={{ ...style }}>
-              {userDetail &&
-                Object.entries(userDetail).map(([key, value]) => (
-                  <div>
-                    {key}:{' ' + JSON.stringify(value)}
-                  </div>
-                ))}
-            </Box>
-          </Modal>
 
           <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
             <Box sx={style}>
@@ -371,7 +666,6 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
                       axiosInstance
                         .post(`policy`, [{ title, institution, content, region: { id: pregion }, category: { id: pcategory.id } }])
                         .then((res) => {
-                          alert('send to ' + res.data.data);
                           fetchData();
                         })
                         .catch((res) => {

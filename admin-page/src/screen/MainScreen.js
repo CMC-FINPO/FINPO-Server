@@ -11,6 +11,7 @@ import PolicyCard from '../component/PolicyCard';
 import MyNotification from '../component/MyNotification';
 import PostCard from '../component/PostCard';
 import ReportCard from '../component/ReportCard';
+import { Divider } from '@mui/material';
 
 export default function MainScreen({ user, setUser, fetch, fetchData }) {
   return (
@@ -18,32 +19,39 @@ export default function MainScreen({ user, setUser, fetch, fetchData }) {
       {!user ? (
         <div>인증된 사용자만 확인할 수 있습니다</div>
       ) : (
-        <Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Grid item xs='auto'>
-            <UserCard fetch={fetch} fetchData={fetchData} />
+        <>
+          <Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid item xs='auto'>
+              <UserCard fetch={fetch} fetchData={fetchData} />
+            </Grid>
+
+            <Grid item xs='auto'>
+              <PolicyCard fetch={fetch} fetchData={fetchData} />
+            </Grid>
+
+            <Grid item xs='auto'>
+              <PostCard fetch={fetch} fetchData={fetchData} />
+            </Grid>
+            <Grid item xs='auto'>
+              <ReportCard fetch={fetch} fetchData={fetchData} />
+            </Grid>
           </Grid>
-          <Grid item xs='auto'>
-            <MyInterestRegionCard fetch={fetch} fetchData={fetchData} />
+
+          <Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+            <Grid item xs='auto'>
+              <MyInterestRegionCard fetch={fetch} fetchData={fetchData} />
+            </Grid>
+            <Grid item xs='auto'>
+              <MyInterestCategoryCard fetch={fetch} fetchData={fetchData} />
+            </Grid>
+            <Grid item xs='auto'>
+              <MyNotification fetch={fetch} fetchData={fetchData} />
+            </Grid>
+            <Grid item xs='auto'>
+              <ApiTestCard fetch={fetch} fetchData={fetchData} />
+            </Grid>
           </Grid>
-          <Grid item xs='auto'>
-            <MyInterestCategoryCard fetch={fetch} fetchData={fetchData} />
-          </Grid>
-          <Grid item xs='auto'>
-            <PolicyCard fetch={fetch} fetchData={fetchData} />
-          </Grid>
-          <Grid item xs='auto'>
-            <MyNotification fetch={fetch} fetchData={fetchData} />
-          </Grid>
-          <Grid item xs='auto'>
-            <PostCard fetch={fetch} fetchData={fetchData} />
-          </Grid>
-          <Grid item xs='auto'>
-            <ReportCard fetch={fetch} fetchData={fetchData} />
-          </Grid>
-          <Grid item xs='auto'>
-            <ApiTestCard fetch={fetch} fetchData={fetchData} />
-          </Grid>
-        </Grid>
+        </>
       )}
     </div>
   );
