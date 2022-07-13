@@ -30,6 +30,7 @@ public class CommentService {
   private final CommentRepository commentRepository;
   private final PostService postService;
   private final FcmService fcmService;
+  private final BlockedUserRepository blockedUserRepository;
 
   private User getMe() {
     return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
@@ -54,7 +55,7 @@ public class CommentService {
       Page<Comment> comments = commentRepository.findByPostIdAndParentId(postId, null, pageable);
 
       return comments.map(comment ->
-          CommentDto.response(comment, false, commentRepository.findByPostIdAndParentId(postId, comment.getId()))
+          CommentDto.response(comment, false, commentRepository.findByPostIdAndParentId(postId, comment.getId()), blockedUserRepository)
       );
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
@@ -92,7 +93,7 @@ public class CommentService {
 
       log.debug("sendCommentPush: " + fcmService.sendCommentPush(comment).toString());
 
-      return CommentDto.response(comment, true, null);
+      return CommentDto.response(comment, true, null, null);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -106,7 +107,7 @@ public class CommentService {
       authorizeMe(comment.getUser().getId());
       checkStatus(id);
       comment = commentRepository.save(comment);
-      return CommentDto.response(comment, false, null);
+      return CommentDto.response(comment, false, null, null);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

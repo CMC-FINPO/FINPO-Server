@@ -31,6 +31,7 @@ public class FcmService {
   private final NotificationRepository notificationRepository;
   private final InterestCategoryRepository interestCategoryRepository;
   private final InterestRegionRepository interestRegionRepository;
+  private final BlockedUserRepository blockedUserRepository;
 
 
   public List<Long> sendPolicyPush(Policy policy) {
@@ -83,7 +84,8 @@ public class FcmService {
 
     try {
       Optional.ofNullable(comment.getParent()).flatMap(parentComment -> Optional.ofNullable(parentComment.getUser())).ifPresent(parentUser -> {
-        if (parentUser.getId().equals(SecurityUtil.getCurrentUserId())) return;
+        if (parentUser.getId().equals(SecurityUtil.getCurrentUserId())
+            || blockedUserRepository.findOneByUserIdAndBlockedUserId(parentUser.getId(), SecurityUtil.getCurrentUserId()).isPresent()) return;
 
         userRepository.findById(parentUser.getId()).ifPresent(user ->
             notificationRepository.save(Notification.of(user, NotificationType.CHILDCOMMENT, comment))
@@ -111,7 +113,8 @@ public class FcmService {
       });
 
       Optional.ofNullable(comment.getPost().getUser()).ifPresent(postUser -> {
-        if (postUser.getId().equals(SecurityUtil.getCurrentUserId()) || userIds.contains(postUser.getId())) return;
+        if (postUser.getId().equals(SecurityUtil.getCurrentUserId()) || userIds.contains(postUser.getId())
+            || blockedUserRepository.findOneByUserIdAndBlockedUserId(postUser.getId(), SecurityUtil.getCurrentUserId()).isPresent()) return;
 
         userRepository.findById(postUser.getId()).ifPresent(user ->
             notificationRepository.save(Notification.of(user, NotificationType.COMMENT, comment))

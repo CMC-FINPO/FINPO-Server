@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.finpo.api.constant.Constraint;
 import kr.finpo.api.domain.Post;
 import kr.finpo.api.domain.PostImg;
+import kr.finpo.api.repository.BlockedUserRepository;
 import kr.finpo.api.repository.BookmarkPostRepository;
 import kr.finpo.api.repository.LikePostRepository;
 import kr.finpo.api.util.SecurityUtil;
@@ -24,6 +25,7 @@ public record PostDto(
     Long hits,
     Integer countOfComment,
     UserDto user,
+    Boolean isUserBlocked,
     Boolean isUserWithdraw,
     Boolean isMine,
     Boolean isLiked,
@@ -33,6 +35,7 @@ public record PostDto(
     LocalDateTime modifiedAt,
     List<ImgDto> imgs
 ) {
+
   public Post updateEntity(Post post) {
     if (content != null) {
       post.setContent(content);
@@ -41,10 +44,10 @@ public record PostDto(
     return post;
   }
 
-
-  public static PostDto response(Post post, List<PostImg> imgs, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository) {
+  public static PostDto response(Post post, List<PostImg> imgs, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, BlockedUserRepository blockedUserRepository) {
     Boolean isLiked = !isEmpty(likePostRepository) && likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
     Boolean isBookmarked = !isEmpty(bookmarkPostRepository) && bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
+    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserId(SecurityUtil.getCurrentUserId(), post.getUser().getId()).isPresent();
 
     return new PostDto(
         post.getStatus(),
@@ -56,6 +59,7 @@ public record PostDto(
         post.getCountOfComment(),
         post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()): null,
         !post.getUser().getStatus() ? true : null,
+        isUserBlocked,
         Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
         isLiked,
         isBookmarked,
@@ -67,12 +71,13 @@ public record PostDto(
   }
 
   public static PostDto previewResponse(Post post) {
-    return previewResponse(post, null, null);
+    return previewResponse(post, null, null, null);
   }
 
-  public static PostDto previewResponse(Post post, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository) {
+  public static PostDto previewResponse(Post post, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, BlockedUserRepository blockedUserRepository) {
     Boolean isLiked = likePostRepository == null ? null : likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
     Boolean isBookmarked = bookmarkPostRepository == null ? null : bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
+    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserId(SecurityUtil.getCurrentUserId(), post.getUser().getId()).isPresent();
 
     return new PostDto(
         post.getStatus(),
@@ -83,6 +88,7 @@ public record PostDto(
         post.getHits(),
         post.getCountOfComment(),
         post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()): null,
+        isUserBlocked,
         !post.getUser().getStatus() ? true : null,
         Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
         isLiked,
@@ -104,6 +110,7 @@ public record PostDto(
         post.getHits(),
         post.getCountOfComment(),
         post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()): null,
+        null,
         !post.getUser().getStatus() ? true : null,
         Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
         null,

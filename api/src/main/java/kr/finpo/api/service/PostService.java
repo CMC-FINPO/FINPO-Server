@@ -32,6 +32,8 @@ public class PostService {
   private final BookmarkPostRepository bookmarkPostRepository;
   private final CommentRepository commentRepository;
   private final PostImgRepository postImgRepository;
+  private final BlockedUserRepository blockedUserRepository;
+
 
   private User getMe() {
     return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
@@ -54,7 +56,7 @@ public class PostService {
       Post post = postRepository.findById(id).get();
       checkStatus(id);
       postRepository.increaseHits(id);
-      return PostDto.response(post, postImgRepository.findByPostId(post.getId()), likePostRepository, bookmarkPostRepository);
+      return PostDto.response(post, postImgRepository.findByPostId(post.getId()), likePostRepository, bookmarkPostRepository, blockedUserRepository);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -64,7 +66,7 @@ public class PostService {
 
   public Page<PostDto> getMy(Pageable pageable) {
     try {
-      return postRepository.querydslFindMy(pageable).map(e -> PostDto.previewResponse(e, likePostRepository, bookmarkPostRepository));
+      return postRepository.querydslFindMy(pageable).map(e -> PostDto.previewResponse(e, likePostRepository, bookmarkPostRepository, blockedUserRepository));
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -74,7 +76,7 @@ public class PostService {
 
   public Page<PostDto> getMyLikes(Pageable pageable) {
     try {
-      return likePostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost(), likePostRepository, bookmarkPostRepository));
+      return likePostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost(), likePostRepository, bookmarkPostRepository, blockedUserRepository));
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -84,7 +86,7 @@ public class PostService {
 
   public Page<PostDto> getMyBookmarks(Pageable pageable) {
     try {
-      return bookmarkPostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost(), likePostRepository, bookmarkPostRepository));
+      return bookmarkPostRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(likePost -> PostDto.previewResponse(likePost.getPost(), likePostRepository, bookmarkPostRepository, blockedUserRepository));
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -94,7 +96,7 @@ public class PostService {
 
   public Page<PostDto> getMyCommentPosts(Pageable pageable) {
     try {
-      return commentRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(comment -> PostDto.previewResponse(comment.getPost(), likePostRepository, bookmarkPostRepository));
+      return commentRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(comment -> PostDto.previewResponse(comment.getPost(), likePostRepository, bookmarkPostRepository, blockedUserRepository));
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -104,7 +106,7 @@ public class PostService {
 
   public Page<PostDto> search(String content, Long lastId, Pageable pageable) {
     try {
-      return postRepository.querydslFindbyContent(content, lastId, pageable).map(e -> PostDto.previewResponse(e, likePostRepository, bookmarkPostRepository));
+      return postRepository.querydslFindbyContent(content, lastId, pageable).map(e -> PostDto.previewResponse(e, likePostRepository, bookmarkPostRepository, blockedUserRepository));
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -118,7 +120,7 @@ public class PostService {
       post.setUser(getMe());
       post = postRepository.save(post);
       List<PostImg> postImgs = insertPostImg(dto, post);
-      return PostDto.response(post, postImgs, likePostRepository, bookmarkPostRepository);
+      return PostDto.response(post, postImgs, likePostRepository, bookmarkPostRepository, blockedUserRepository);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -151,7 +153,7 @@ public class PostService {
         insertPostImg(dto, finalPost);
       });
 
-      return PostDto.response(post, postImgRepository.findByPostId(id), likePostRepository, bookmarkPostRepository);
+      return PostDto.response(post, postImgRepository.findByPostId(id), likePostRepository, bookmarkPostRepository, blockedUserRepository);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -167,6 +169,7 @@ public class PostService {
       post.setStatus(false);
       postRepository.save(post);
       likePostRepository.deleteByPostId(id);
+      bookmarkPostRepository.deleteByPostId(id);
       return true;
     } catch (GeneralException e) {
       throw e;
@@ -192,7 +195,7 @@ public class PostService {
         likePostRepository.save(LikePost.of(user, post));
       });
 
-      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository);
+      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository, blockedUserRepository);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -208,7 +211,7 @@ public class PostService {
 
       likePostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresent(likePostRepository::delete);
 
-      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository);
+      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository, blockedUserRepository);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -226,7 +229,7 @@ public class PostService {
         bookmarkPostRepository.save(BookmarkPost.of(user, post));
       });
 
-      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository);
+      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository, blockedUserRepository);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -242,7 +245,7 @@ public class PostService {
 
       bookmarkPostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresent(bookmarkPostRepository::delete);
 
-      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository);
+      return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository, blockedUserRepository);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {

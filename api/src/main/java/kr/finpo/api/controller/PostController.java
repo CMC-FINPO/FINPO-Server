@@ -1,6 +1,7 @@
 package kr.finpo.api.controller;
 
 import kr.finpo.api.dto.*;
+import kr.finpo.api.service.BlockedUserService;
 import kr.finpo.api.service.CommentService;
 import kr.finpo.api.service.PostService;
 import kr.finpo.api.service.ReportService;
@@ -21,6 +22,7 @@ public class PostController {
   private final PostService postService;
   private final CommentService commentService;
   private final ReportService reportService;
+  private final BlockedUserService blockedUserService;
 
   @GetMapping("/{id}")
   public DataResponse<Object> get(@PathVariable Long id) {
@@ -110,7 +112,12 @@ public class PostController {
   }
 
   @PostMapping("/{id}/report")
-  public DataResponse<Object> reportComment(@PathVariable Long id, @RequestBody CommunityReportDto body) {
+  public DataResponse<Object> reportPost(@PathVariable Long id, @RequestBody CommunityReportDto body) {
     return DataResponse.of(reportService.insertPost(id, body));
+  }
+
+  @PostMapping("/{id}/block")
+  public DataResponse<Object> blockPost(@PathVariable Long id) {
+    return DataResponse.of(blockedUserService.insert(id, null));
   }
 }

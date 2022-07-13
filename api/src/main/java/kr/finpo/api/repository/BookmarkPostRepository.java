@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface BookmarkPostRepository extends JpaRepository<BookmarkPost, Long> {
   public Page<BookmarkPost> findByUserId(Long id, Pageable pageable);
   public Optional<BookmarkPost> findOneByUserIdAndPostId(Long userId, Long postId);
-  public Long deleteByUserId(Long id);
+  public Long deleteByUserId(Long userId);
+  public Long deleteByPostId(Long postId);
 }
 
