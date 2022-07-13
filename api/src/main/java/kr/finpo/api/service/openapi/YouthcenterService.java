@@ -266,9 +266,9 @@ public class YouthcenterService {
             } catch (Exception e) {
               continue;
             }
-
-            policyRepository.save(policy);
+            
             if (isAuto) policy.setStatus(false);
+            policyRepository.save(policy);
           }
           if (endFlag) break;
         }
