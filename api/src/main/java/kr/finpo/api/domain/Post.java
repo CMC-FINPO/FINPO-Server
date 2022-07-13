@@ -41,7 +41,7 @@ public class Post {
   @Formula("(select count(*) from like_post lp where lp.post_id = id)")
   private Integer likes = 0;
 
-  @Formula("(select count(*) from comment c where c.post_id = id)")
+  @Formula("(select count(*) from comment c where c.post_id = id and c.status = true)")
   private Integer countOfComment = 0;
 
   @Setter
