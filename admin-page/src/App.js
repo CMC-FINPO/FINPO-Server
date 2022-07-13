@@ -14,6 +14,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import PostScreen from './screen/PostScreen';
 import ReportScreen from './screen/ReportScreen';
+import UserScreen from './screen/UserScreen';
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -114,6 +115,7 @@ function App() {
           <Route path='/policy/*' element={<PolicyScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
           <Route path='/post/*' element={<PostScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
           <Route path='/report/*' element={<ReportScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
+          <Route path='/user/*' element={<UserScreen fetchData={fetchData} fetch={fetch} user={user} setUser={setUser} />}></Route>
         </Routes>
       </div>
 

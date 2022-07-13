@@ -138,12 +138,14 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
 
   const updatePolicy = (e, row, sendNotification) => {
     e.stopPropagation();
+    let body = {
+      ...userDetail,
+      ...(r2 ? { region: { id: r2 } } : r1 !== null && { region: { id: r1 } }),
+      ...(c2 && { category: { id: c2 } }),
+    };
+    delete body.status;
     axiosInstance
-      .put(`policy/${row.id}?sendNotification=${sendNotification}`, {
-        ...userDetail,
-        ...(r2 ? { region: { id: r2 } } : r1 !== null && { region: { id: r1 } }),
-        ...(c2 && { category: { id: c2 } }),
-      })
+      .put(`policy/${row.id}?sendNotification=${sendNotification}`, body)
       .then((res) => {
         if (sendNotification) alert('send to ' + res.data.data);
         reloadTrigger();
@@ -577,6 +579,7 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
           <Pagination
             count={data?.totalPages}
             page={page}
+            siblingCount={5}
             onChange={(e, value) => {
               setPage(value);
             }}
