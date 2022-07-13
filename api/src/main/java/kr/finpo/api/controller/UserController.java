@@ -19,12 +19,6 @@ public class UserController {
 
   private final UserService userService;
 
-
-  @GetMapping("")
-  public DataResponse<Object> getAll() {
-    return DataResponse.of(userService.getAll());
-  }
-
   @GetMapping(path = "/status/name")
   public DataResponse<Object> getAllStatus() {
     return DataResponse.of(Stream.of(UserStatus.values()).map(UserStatusDto::response).toList());

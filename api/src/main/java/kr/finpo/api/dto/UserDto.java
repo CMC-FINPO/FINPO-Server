@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.Gender;
 import kr.finpo.api.constant.OAuthType;
+import kr.finpo.api.constant.Role;
 import kr.finpo.api.domain.InterestRegion;
 import kr.finpo.api.domain.Region;
 import kr.finpo.api.domain.User;
@@ -29,6 +30,7 @@ public record UserDto(
     Long statusId,
     String profileImg,
     OAuthType oAuthType,
+    Role role,
     MultipartFile profileImgFile,
     Long regionId,
     Region defaultRegion,
@@ -72,14 +74,14 @@ public record UserDto(
   }
 
   public static UserDto response(User user) {
-    return new UserDto(user.getId(), user.getStatus(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatusId(), user.getProfileImg(), user.getOAuthType(), null, null, Optional.ofNullable(user.getDefaultRegion()).map(InterestRegion::getRegion).orElse(null), null, null);
+    return new UserDto(user.getId(), user.getStatus(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatusId(), user.getProfileImg(), user.getOAuthType(), user.getRole(), null, null, Optional.ofNullable(user.getDefaultRegion()).map(InterestRegion::getRegion).orElse(null), null, null);
   }
 
   public static UserDto communityResponse(User user) {
-    return new UserDto(user.getId(), null, null, user.getNickname(), null, user.getGender(), null, null, user.getProfileImg(), null, null, null, null, null, null);
+    return new UserDto(user.getId(), null, null, user.getNickname(), null, user.getGender(), null, null, user.getProfileImg(), null, user.getRole(), null, null, null, null, null);
   }
 
   public static UserDto appleUserDto() {
-    return new UserDto(null, null, null, null, null, null, null, null, null, OAuthType.APPLE, null, null, null, null, null);
+    return new UserDto(null, null, null, null, null, null, null, null, null, OAuthType.APPLE, null, null, null, null, null, null);
   }
 }

@@ -7,12 +7,14 @@ import kr.finpo.api.service.CommentService;
 import kr.finpo.api.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 
 @RequiredArgsConstructor
 @RestController
 @Slf4j
+@Secured({"ROLE_ADMIN", "ROLE_USER"})
 @RequestMapping("/comment")
 public class CommentController {
 

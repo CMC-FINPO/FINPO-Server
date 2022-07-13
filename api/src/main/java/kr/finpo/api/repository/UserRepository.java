@@ -1,6 +1,8 @@
 package kr.finpo.api.repository;
 
 import kr.finpo.api.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   public Optional<User> findByAppleAccountId(String id);
   public Optional<User> findByNickname(String name);
   public Optional<User> findByEmail(String email);
+  public Page<User> findAllByStatus(Boolean status, Pageable pageable);
 }
 

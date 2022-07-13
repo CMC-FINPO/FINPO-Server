@@ -95,6 +95,7 @@ public record GoogleAccountDto(
         null,
         null,
         null,
+        null,
         null
     );
   }

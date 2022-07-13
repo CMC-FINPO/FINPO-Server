@@ -43,6 +43,7 @@ public record KakaoAccountDto(
         null,
         null,
         null,
+        null,
         null
     );
   }

@@ -17,6 +17,8 @@ import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,9 +69,9 @@ public class UserService {
   @Value("${oauth.apple.private-key}")
   private String applePrivateKey;
 
-  public List<UserDto> getAll() {
+  public Page<UserDto> getAll(Pageable pageable) {
     try {
-      return userRepository.findAll().stream().map(UserDto::response).toList();
+      return userRepository.findAllByStatus(true, pageable).map(UserDto::response);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
