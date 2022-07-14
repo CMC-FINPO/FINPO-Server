@@ -28,6 +28,14 @@ public class Fcm {
   @Column(nullable = false)
   private Boolean subscribe = false;
 
+  @Setter
+  @Column(nullable = false)
+  private Boolean communitySubscribe = true;
+
+  @Setter
+  @Column(nullable = false)
+  private Boolean adSubscribe = false;
+
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
   @CreatedDate
   private LocalDateTime createdAt;

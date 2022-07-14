@@ -63,9 +63,7 @@ public class NotificationService {
         insertMy(dto);
       }
       else { // update
-        if (dto.subscribe() != null) fcm.get().setSubscribe(dto.subscribe());
-        if (dto.registrationToken() != null) fcm.get().setRegistrationToken(dto.registrationToken());
-        fcmRepository.save(fcm.get());
+        fcmRepository.save(dto.updateEntity(fcm.get()));
       }
 
       if (dto.interestCategories() != null)
@@ -84,7 +82,6 @@ public class NotificationService {
 
       return getMy();
     } catch (Exception e) {
-      log.debug(dto.toString());
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }

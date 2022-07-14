@@ -46,12 +46,12 @@ public class FcmService {
     if (userIds.size() == 0) return null;
 
     userIds.forEach(userId -> {
-      Fcm fcm = fcmRepository.findFirst1ByUserId(userId).get();
-      registrationTokens.add(fcm.getRegistrationToken());
-
-      userRepository.findById(userId).ifPresent(user ->
-          notificationRepository.save(Notification.of(user, NotificationType.POLICY, policy))
-      );
+      fcmRepository.findFirst1ByUserIdAndSubscribe(userId, true).ifPresent(fcm -> {
+        registrationTokens.add(fcm.getRegistrationToken());
+        userRepository.findById(userId).ifPresent(user ->
+            notificationRepository.save(Notification.of(user, NotificationType.POLICY, policy))
+        );
+      });
     });
 
     List<List<String>> registrationTokensPartition = Lists.partition(registrationTokens, 1000);
@@ -91,7 +91,7 @@ public class FcmService {
             notificationRepository.save(Notification.of(user, NotificationType.CHILDCOMMENT, comment))
         );
 
-        fcmRepository.findFirst1ByUserId(parentUser.getId()).ifPresent(parentUserFcm -> {
+        fcmRepository.findFirst1ByUserIdAndSubscribeAndCommunitySubscribe(parentUser.getId(), true, true).ifPresent(parentUserFcm -> {
           String parentRegistrationToken = parentUserFcm.getRegistrationToken();
           userIds.add(parentUser.getId());
 
@@ -120,7 +120,7 @@ public class FcmService {
             notificationRepository.save(Notification.of(user, NotificationType.COMMENT, comment))
         );
 
-        fcmRepository.findFirst1ByUserId(postUser.getId()).ifPresent(postUserFcm -> {
+        fcmRepository.findFirst1ByUserIdAndSubscribeAndCommunitySubscribe(postUser.getId(), true, true).ifPresent(postUserFcm -> {
 
           String postUserRegistrationToken = postUserFcm.getRegistrationToken();
 
