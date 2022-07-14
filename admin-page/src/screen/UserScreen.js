@@ -53,6 +53,10 @@ export default function UserScreen({ user, setUser, fetch, fetchData }) {
 
   const [banneds, setBanneds] = useState([]);
 
+  let today = new Date();
+  let utcNow = today.getTime() + today.getTimezoneOffset() * 60 * 1000;
+  today = new Date(utcNow + 9 * 60 * 60 * 1000);
+
   const releaseDates = [
     { str: '하루', val: 1 },
     { str: '10일', val: 10 },
@@ -193,7 +197,7 @@ export default function UserScreen({ user, setUser, fetch, fetchData }) {
                               <div style={{ width: '100%', padding: '20px 10px 30px 10px' }}>
                                 <div style={{ fontSize: '20px', fontWeight: '600' }}>정지기록</div>
 
-                                {[...banneds].reverse().map((banned, idx) => {
+                                {banneds.map((banned, idx) => {
                                   return (
                                     <div style={{ display: 'flex', gap: 30, paddingLeft: '50px', alignItems: 'center' }}>
                                       <div>id:{banned.id}</div>
@@ -201,7 +205,7 @@ export default function UserScreen({ user, setUser, fetch, fetchData }) {
                                       <div> 상세사유:{banned.detail}</div>
                                       <div> 차단일:{banned.createdAt.slice(0, 10)}</div>
                                       <div> 해제일:{banned.releaseDate}</div>
-                                      {banned.releaseDate > new Date().toISOString().slice(0, 10) && (
+                                      {banned.releaseDate > today.toLocaleDateString('en-CA') && (
                                         <Button
                                           size='small'
                                           variant='contained'
@@ -274,8 +278,8 @@ export default function UserScreen({ user, setUser, fetch, fetchData }) {
                   <InputLabel id='demo-simple-select-label'>정지 기간</InputLabel>
                   <Select
                     onChange={(e) => {
-                      let today = new Date();
-                      reportBody.releaseDate = new Date(today.setDate(today.getDate() + e.target.value)).toISOString().slice(0, 10);
+                      reportBody.releaseDate = new Date(today.setDate(today.getDate() + e.target.value)).toLocaleDateString('en-CA');
+                      console.log(reportBody.releaseDate);
                       setReportBody({ ...reportBody });
                     }}
                   >
@@ -315,98 +319,6 @@ export default function UserScreen({ user, setUser, fetch, fetchData }) {
                   차단
                 </Button>
               </div>
-              {/* <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, marginTop: 30 }}>
-                <div style={{ width: '100%', display: 'flex', gap: 20 }}>
-                  <div style={{ width: '40%', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <FormControl>
-                      <InputLabel id='demo-simple-select-label'>지역</InputLabel>
-                      <Select size='small' value={region1} onChange={(e) => setRegion1(e.target.value)}>
-                        {regions1.map((region, idx) => {
-                          return <MenuItem value={region.id}>{region.name}</MenuItem>;
-                        })}
-                      </Select>
-                    </FormControl>
-                    <FormControl>
-                      <InputLabel id='demo-simple-select-label'>상세 지역</InputLabel>
-                      <Select size='small' value={region2} onChange={(e) => setPregion(e.target.value)}>
-                        {regions2.map((region, idx) => {
-                          return <MenuItem value={region.id}>{region.name}</MenuItem>;
-                        })}
-                      </Select>
-                    </FormControl>
-                  </div>
-
-                  <div style={{ width: '40%', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <FormControl>
-                      <InputLabel id='demo-simple-select-label'>상위카테</InputLabel>
-                      <Select size='small' sx={{ width: 100 }} value={ca1} onChange={(e) => setCa1(e.target.value)}>
-                        {cas1.map((region, idx) => {
-                          return <MenuItem value={region.id}>{region.name}</MenuItem>;
-                        })}
-                      </Select>
-                    </FormControl>
-                    <FormControl>
-                      <InputLabel id='demo-simple-select-label'>하위카테</InputLabel>
-                      <Select
-                        size='small'
-                        sx={{ width: 100 }}
-                        value={ca2}
-                        onChange={(e) => {
-                          setPcategory(e.target.value);
-                        }}
-                      >
-                        {cas2.map((region, idx) => {
-                          return <MenuItem value={region}>{region.name}</MenuItem>;
-                        })}
-                      </Select>
-                    </FormControl>
-                  </div>
-                </div>
-
-                <TextField
-                  label='제목'
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
-                ></TextField>
-
-                <TextField
-                  label='기관'
-                  value={institution}
-                  onChange={(e) => {
-                    setInstitution(e.target.value);
-                  }}
-                ></TextField>
-
-                <TextField
-                  label='내용'
-                  value={content}
-                  onChange={(e) => {
-                    setContent(e.target.value);
-                  }}
-                ></TextField>
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: 20 }}>
-                  <Button
-                    variant='contained'
-                    sx={{ marginBottom: 0.5 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleClose();
-                      axiosInstance
-                        .post(`policy`, [{ title, institution, content, region: { id: pregion }, category: { id: pcategory.id } }])
-                        .then((res) => {
-                          fetchData();
-                        })
-                        .catch((res) => {
-                          alert(res.response.data.message);
-                        });
-                    }}
-                  >
-                    정책 추가
-                  </Button>
-                </div>
-              </div> */}
             </Box>
           </Modal>
         </>

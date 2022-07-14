@@ -144,6 +144,7 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
       ...(c2 && { category: { id: c2 } }),
     };
     delete body.status;
+    if (sendNotification === true) body.status = true;
     axiosInstance
       .put(`policy/${row.id}?sendNotification=${sendNotification}`, body)
       .then((res) => {
