@@ -3,6 +3,7 @@ package kr.finpo.api.controller;
 import kr.finpo.api.constant.UserPurpose;
 import kr.finpo.api.constant.UserStatus;
 import kr.finpo.api.dto.*;
+import kr.finpo.api.service.BannedUserService;
 import kr.finpo.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 public class UserController {
 
   private final UserService userService;
+  private final BannedUserService bannedUserService;
 
   @GetMapping(path = "/status/name")
   public DataResponse<Object> getAllStatus() {
@@ -74,4 +76,10 @@ public class UserController {
       res = userService.isEmailDuplicated(params.get("email"));
     return DataResponse.of(res);
   }
+
+  @GetMapping(value = "/banned/me")
+  public DataResponse<Object> getMyBanned() {
+    return DataResponse.of(bannedUserService.getMe());
+  }
+
 }

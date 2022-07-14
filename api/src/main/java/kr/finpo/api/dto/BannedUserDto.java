@@ -28,6 +28,6 @@ public record BannedUserDto(
   }
 
   public static BannedUserDto response(BannedUser bannedUser) {
-    return new BannedUserDto(bannedUser.getId(), bannedUser.getReleaseDate(), bannedUser.getDetail(), bannedUser.getReport(), UserDto.response(bannedUser.getUser()), bannedUser.getCreatedAt(), bannedUser.getModifiedAt());
+    return new BannedUserDto(bannedUser.getId(), bannedUser.getReleaseDate(), bannedUser.getDetail(), bannedUser.getReport(), UserDto.communityResponse(bannedUser.getUser()), bannedUser.getCreatedAt(), bannedUser.getModifiedAt());
   }
 }

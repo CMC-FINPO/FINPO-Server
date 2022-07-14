@@ -7,6 +7,7 @@ import kr.finpo.api.domain.*;
 import kr.finpo.api.dto.*;
 import kr.finpo.api.exception.GeneralException;
 import kr.finpo.api.repository.*;
+import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,9 +39,13 @@ public class BannedUserService {
     }
   }
 
+  public List<BannedUserDto> getMe() {
+    return getByUserId(SecurityUtil.getCurrentUserId());
+  }
+
   public List<BannedUserDto> getByUserId(Long userId) {
     try {
-      return bannedUserRepository.findByUserId(userId).stream().map(BannedUserDto::response).toList();
+      return bannedUserRepository.findByUserIdOrderByIdDesc(userId).stream().map(BannedUserDto::response).toList();
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -82,7 +87,9 @@ public class BannedUserService {
 
   @Scheduled(cron = "0 0 0 * * *")
   public void releaseUser() {
-    bannedUserRepository.findByReleaseDateLessThanEqual(LocalDate.now()).forEach(bannedUser -> {
+    log.debug("start");
+    bannedUserRepository.findByReleaseDate(LocalDate.now()).forEach(bannedUser -> {
+      log.debug(bannedUser.getUser().getName());
       User user = bannedUser.getUser();
       user.setRole(Role.ROLE_USER);
       userRepository.save(user);

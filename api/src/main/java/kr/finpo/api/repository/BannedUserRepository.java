@@ -14,9 +14,10 @@ import java.util.Optional;
 @Repository
 public interface BannedUserRepository extends JpaRepository<BannedUser, Long> {
   public Page<BannedUser> findByReleaseDateGreaterThan(LocalDate date, Pageable pageable);
-  public List<BannedUser> findByReleaseDateLessThanEqual(LocalDate date);
 
-  public List<BannedUser> findByUserId(Long userId);
+  public List<BannedUser> findByReleaseDate(LocalDate date);
+
+  public List<BannedUser> findByUserIdOrderByIdDesc(Long userId);
 
   public Optional<BannedUser> findByUserIdAndReleaseDateGreaterThan(Long userId, LocalDate date);
 }
