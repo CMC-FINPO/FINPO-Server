@@ -83,6 +83,7 @@ public record CommentDto(
   }
 
   public static CommentDto deletedResponse(Comment comment, Boolean showPost, List<Comment> childs, BlockedUserRepository blockedUserRepository) {
+    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserId(SecurityUtil.getCurrentUserId(), comment.getUser().getId()).isPresent();
     return new CommentDto(
         comment.getStatus(),
         comment.getId(),
@@ -91,7 +92,7 @@ public record CommentDto(
         null,
         null,
         null,
-        null,
+        isUserBlocked,
         null,
         null,
         null,
@@ -104,6 +105,7 @@ public record CommentDto(
   }
 
   public static CommentDto withdrawResponse(Comment comment, Boolean showPost, List<Comment> childs, BlockedUserRepository blockedUserRepository) {
+    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserId(SecurityUtil.getCurrentUserId(), comment.getUser().getId()).isPresent();
     return new CommentDto(
         comment.getStatus(),
         comment.getId(),
@@ -112,7 +114,7 @@ public record CommentDto(
         comment.getAnonymity(),
         null,
         true,
-        null,
+        isUserBlocked,
         comment.getAnonymityId().equals(0) ? null : comment.getAnonymityId(),
         null,
         null,
