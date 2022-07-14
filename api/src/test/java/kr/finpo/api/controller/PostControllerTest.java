@@ -60,6 +60,8 @@ class PostControllerTest {
 
   @Autowired
   private CommunityReportRepository communityReportRepository;
+  @Autowired
+  private BlockedUserRepository blockedUserRepository;
 
 
   String accessToken, refreshToken, otherAccessToken, anotherAccessToken;
@@ -128,6 +130,7 @@ class PostControllerTest {
                     , fieldWithPath("data.countOfComment").description("댓글수")
                     , fieldWithPath("data.user").description("글 작성자")
                     , fieldWithPath("data.isUserWithdraw").description("탈퇴한 유저의 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.isUserBlocked").description("내가 차단한 유저의 글인가").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("data.isMine").description("내가 작성한 글인가")
                     , fieldWithPath("data.isLiked").description("내가 좋아요 한 글인가")
                     , fieldWithPath("data.isBookmarked").description("내가 북마크 한 글인가")
@@ -277,8 +280,56 @@ class PostControllerTest {
   }
 
   @Test
+  void blockUserTest() throws Exception {
+    int id = insertPost(accessToken);
+    long beforeCnt = blockedUserRepository.count();
+    blockUser(id, accessToken);
+    then(beforeCnt + 1).isEqualTo(blockedUserRepository.count());
+  }
+
+  void blockUser(int postId, String accessToken) throws Exception {
+
+      mockMvc.perform(RestDocumentationRequestBuilders.post("/post/{id}/block", postId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("글작성유저차단",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                pathParameters(
+                    parameterWithName("id").description("차단할 유저의 글 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data").description("성공 여부")
+                )
+            )
+        );
+  }
+
+
+  @Test
   void search() throws Exception {
-    insertPostTest();
+    insertPost(accessToken);
+    insertPost(accessToken);
+    insertPost(accessToken);
+    insertPost(accessToken);
+    insertPost(accessToken);
+    insertPost(anotherAccessToken);
+    int id = insertPost(accessToken);
+    insertAnonymity(anotherAccessToken);
+    insertPost(otherAccessToken);
+    blockUser(id, otherAccessToken);
 
     uc.deleteMe(accessToken);
     mockMvc.perform(get("/post/search?content=내용&page=0&size=5&sort=id,desc")
@@ -315,6 +366,7 @@ class PostControllerTest {
                     , fieldWithPath("data.content.[].countOfComment").description("댓글수")
                     , fieldWithPath("data.content.[].user").description("글 작성자").optional().type(JsonFieldType.OBJECT)
                     , fieldWithPath("data.content.[].isUserWithdraw").description("탈퇴한 유저의 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isUserBlocked").description("내가 차단한 유저의 글인가").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("data.content.[].isMine").description("내가 작성한 글인가").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("data.content.[].isLiked").description("좋아요 한 글인가").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("data.content.[].isBookmarked").description("북마크 한 글인가").optional().type(JsonFieldType.BOOLEAN)
@@ -387,6 +439,8 @@ class PostControllerTest {
                     , fieldWithPath("data.content.[].countOfComment").description("댓글수")
                     , fieldWithPath("data.content.[].user").description("글 작성자").optional().type(JsonFieldType.OBJECT)
                     , fieldWithPath("data.content.[].isUserWithdraw").description("탈퇴한 유저의 글인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isUserBlocked").description("내가 차단한 유저의 글인가").optional().type(JsonFieldType.BOOLEAN)
+
                     , fieldWithPath("data.content.[].isMine").description("내가 작성한 글인가").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("data.content.[].isLiked").description("좋아요 한 글인가").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("data.content.[].isBookmarked").description("북마크 한 글인가").optional().type(JsonFieldType.BOOLEAN)
@@ -901,16 +955,9 @@ class PostControllerTest {
   }
 
   void getReport(String accessToken, String documentName) throws Exception {
-    HashMap<String, Object> body = new HashMap<>();
-    ObjectMapper objectMapper = new ObjectMapper();
-    body.put("report", new HashMap<>(){{
-      put("id", "5");
-    }});
-
     mockMvc.perform(RestDocumentationRequestBuilders.get("/report/reason")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
-            .content(objectMapper.writeValueAsString(body))
         )
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))

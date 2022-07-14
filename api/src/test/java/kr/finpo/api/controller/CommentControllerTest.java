@@ -2,10 +2,7 @@ package kr.finpo.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
-import kr.finpo.api.repository.CommentRepository;
-import kr.finpo.api.repository.CommunityReportRepository;
-import kr.finpo.api.repository.LikePostRepository;
-import kr.finpo.api.repository.PostRepository;
+import kr.finpo.api.repository.*;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +58,10 @@ class CommentControllerTest {
   @Autowired
   private CommunityReportRepository communityReportRepository;
 
+  @Autowired
+  private BlockedUserRepository blockedUserRepository;
+
+
 
   String accessToken, refreshToken, otherAccessToken, anotherAccessToken;
 
@@ -107,7 +108,7 @@ class CommentControllerTest {
     insert(postId, "6빠당", anotherAccessToken, false);
     int parentId = insertAnonymity(postId, "익명으로 다는 댓글임", otherAccessToken, false);
     insert(postId, "작성자가쓰는글", accessToken, false);
-    insertAnonymity(postId, "익명으로 단 사람이 또 단 댓글임", otherAccessToken, false);
+    int blockId = insertAnonymity(postId, "익명으로 단 사람이 또 단 댓글임", otherAccessToken, false);
     insert(postId, "딴사람이단댓글", anotherAccessToken, false);
     insertAnonymity(postId, "익명댓글에 첫번째로 다는 대댓글", parentId, otherAccessToken, false);
     int deleteId = insertAnonymity(postId, "fsdfsd", parentId, anotherAccessToken, false);
@@ -117,6 +118,7 @@ class CommentControllerTest {
     delete(deleteId, anotherAccessToken, false);
     update(updateId, "글작성자가 쓰는 세번째 대댓글 수정된거임", accessToken, false);
     uc.deleteMe(anotherAccessToken);
+    blockUser(blockId, accessToken);
     getByPostId(postId);
   }
 
@@ -156,6 +158,7 @@ class CommentControllerTest {
                     , fieldWithPath("data.content.[].anonymityId").description("익명 id").optional().type(JsonFieldType.NUMBER)
                     , fieldWithPath("data.content.[].user").description("댓글 작성 유저(익명 시 빔)").optional().type(JsonFieldType.OBJECT)
                     , fieldWithPath("data.content.[].isUserWithdraw").description("댓글 작성 유저 탈퇴 여부").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isUserBlocked").description("내가 차단한 유저의 댓글인가").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("data.content.[].isWriter").description("댓글 작성자가 글 작성자인가").optional()
                     , fieldWithPath("data.content.[].isMine").description("댓글 작성자가 나인가").optional()
                     , fieldWithPath("data.content.[].createdAt").description("작성일").optional()
@@ -478,4 +481,44 @@ class CommentControllerTest {
         )
         .andReturn();
   }
+
+  @Test
+  void blockUserTest() throws Exception {
+    int postId = pc.insertPost(accessToken);
+    int commentId = insert(postId, "1빠당", anotherAccessToken, false);
+    long beforeCnt = blockedUserRepository.count();
+    blockUser(commentId, accessToken);
+    then(beforeCnt + 1).isEqualTo(blockedUserRepository.count());
+  }
+
+  void blockUser(int commentId, String accessToken) throws Exception {
+
+    mockMvc.perform(RestDocumentationRequestBuilders.post("/comment/{id}/block", commentId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("댓글작성유저차단",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                pathParameters(
+                    parameterWithName("id").description("차단할 유저의 댓글 id")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부")
+                    , fieldWithPath("errorCode").description("응답 코드")
+                    , fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data").description("성공 여부")
+                )
+            )
+        );
+  }
+
 }

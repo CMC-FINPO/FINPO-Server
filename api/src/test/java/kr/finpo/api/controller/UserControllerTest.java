@@ -2,6 +2,7 @@ package kr.finpo.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.repository.BannedUserRepository;
 import kr.finpo.api.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +50,8 @@ class UserControllerTest {
   private MockMvc mockMvc;
   @Autowired
   private UserService userService;
+  @Autowired
+  private BannedUserRepository bannedUserRepository;
 
   String accessToken, refreshToken;
 
@@ -428,6 +431,39 @@ class UserControllerTest {
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data.[]").description("유저 이용 목적 id")
+                )
+            )
+        );
+  }
+
+//  @Test
+  void getMyBanned() throws Exception {
+    setMyStatusAndPurpose();
+
+    mockMvc.perform(get("/user/banned/me")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer " + accessToken)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.errorCode").value(ErrorCode.OK.getCode()))
+        .andDo(
+            document("내정지내역조회",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    headerWithName("Authorization").description("Access Token")
+                ),
+                relaxedResponseFields(
+                    fieldWithPath("success").description("성공 여부"),
+                    fieldWithPath("errorCode").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지")
+                    , fieldWithPath("data.[].id").description("정지 id").optional().type(JsonFieldType.NUMBER)
+                    , fieldWithPath("data.[].releaseDate").description("정지 해제일").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.[].detail").description("세부 사유").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.[].report.reason").description("정지 사유").optional().type(JsonFieldType.STRING)
+                    , fieldWithPath("data.[].createdAt").description("정지일").optional().type(JsonFieldType.STRING)
                 )
             )
         );

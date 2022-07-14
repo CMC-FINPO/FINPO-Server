@@ -1,0 +1,78 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 77
+
+{
+  "success":true,
+  "errorCode":0,
+  "message":"Ok",
+  "data":[
+    {
+      "id":25837,
+      "releaseDate":"2022-07-15",
+      "detail":"ss",
+      "report":{
+        "id":3,
+        "reason":"유출/사칭/사기"
+      },
+      "user":{
+        "id":23786,
+        "nickname":"sadfsad",
+        "gender":"MALE",
+        "profileImg":"https://lh3.googleusercontent.com/a-/AFdZucotGr_uMUxbTHZYqdsKsSoBscWgfvt71Ee8RkJf=s100",
+        "role":"ROLE_BANNED_USER"
+      },
+      "createdAt":"2022-07-14T16:17:44",
+      "modifiedAt":"2022-07-14T16:17:44"
+    },
+    {
+      "id":25834,
+      "releaseDate":"2022-07-14",
+      "detail":"sdfsd",
+      "report":{
+        "id":2,
+        "reason":"정당/정치인 비하 및 선거운동"
+      },
+      "user":{
+        "id":23786,
+        "nickname":"sadfsad",
+        "gender":"MALE",
+        "profileImg":"https://lh3.googleusercontent.com/a-/AFdZucotGr_uMUxbTHZYqdsKsSoBscWgfvt71Ee8RkJf=s100",
+        "role":"ROLE_BANNED_USER"
+      },
+      "createdAt":"2022-07-14T16:14:55",
+      "modifiedAt":"2022-07-14T16:14:56"
+    },
+    {
+      "id":25831,
+      "releaseDate":"2022-07-14",
+      "detail":"sadasd",
+      "report":{
+        "id":3,
+        "reason":"유출/사칭/사기"
+      },
+      "user":{
+        "id":23786,
+        "nickname":"sadfsad",
+        "gender":"MALE",
+        "profileImg":"https://lh3.googleusercontent.com/a-/AFdZucotGr_uMUxbTHZYqdsKsSoBscWgfvt71Ee8RkJf=s100",
+        "role":"ROLE_BANNED_USER"
+      },
+      "createdAt":"2022-07-14T16:14:49",
+      "modifiedAt":"2022-07-14T16:14:50"
+    }
+  ]
+}
+----

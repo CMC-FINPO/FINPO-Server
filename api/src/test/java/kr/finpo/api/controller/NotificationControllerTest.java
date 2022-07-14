@@ -122,6 +122,8 @@ public class NotificationControllerTest {
                     , fieldWithPath("errorCode").description("응답 코드")
                     , fieldWithPath("message").description("응답 메시지")
                     , fieldWithPath("data.subscribe").description("전체 알림 구독 설정 여부")
+                    , fieldWithPath("data.communitySubscribe").description("커뮤니티 알림 구독 설정 여부")
+                    , fieldWithPath("data.adSubscribe").description("광고성 알림 구독 설정 여부")
                     , fieldWithPath("data.interestCategories.[].subscribe").description("관심 카테고리별 알림 구독 설정 여부")
                 )
             )
@@ -146,6 +148,7 @@ public class NotificationControllerTest {
     HashMap<String, Object> body = new HashMap<>() {{
       put("subscribe", true);
       put("registrationToken", "sssssssssssss");
+
     }};
 
 
@@ -169,12 +172,16 @@ public class NotificationControllerTest {
                 requestFields(
                     fieldWithPath("subscribe").optional().description("전체 알림 구독 설정 여부")
                     , fieldWithPath("registrationToken").optional().description("FCM client registration token (최초 로그인 시에만(디바이스 변경 시) 보내주시면 됩니다)")
+                    , fieldWithPath("communitySubscribe").description("커뮤니티 알림 구독 설정 여부").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("adSubscribe").description("광고성 알림 구독 설정 여부").optional().type(JsonFieldType.BOOLEAN)
                 ),
                 relaxedResponseFields(
                     fieldWithPath("success").description("성공 여부"),
                     fieldWithPath("errorCode").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data.subscribe").description("전체 알림 구독 설정 여부")
+                    , fieldWithPath("data.communitySubscribe").description("커뮤니티 알림 구독 설정 여부")
+                    ,fieldWithPath("data.adSubscribe").description("광고성 알림 구독 설정 여부")
                     , fieldWithPath("data.interestCategories.[].subscribe").description("관심 카테고리별 알림 구독 설정 여부").optional().type(JsonFieldType.BOOLEAN)
 
                 )
@@ -184,6 +191,8 @@ public class NotificationControllerTest {
 
     body = new HashMap<>() {{
       put("subscribe", true);
+      put("communitySubscribe", false);
+      put("adSubscribe", true);
       put("interestCategories", new ArrayList<>() {{
         boolean flag = true;
         for (InterestCategoryDto interestCategory : interestCategories) {
@@ -226,6 +235,8 @@ public class NotificationControllerTest {
                 ),
                 requestFields(
                     fieldWithPath("subscribe").optional().description("전체 알림 구독 설정 여부").type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("communitySubscribe").description("커뮤니티 알림 구독 설정 여부").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("adSubscribe").description("광고성 알림 구독 설정 여부").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("interestCategories.[].id").description("관심 카테고리 id")
                     , fieldWithPath("interestCategories.[].subscribe").description("관심 카테고리 알림 구독 설정 여부 (변경된 것만 보내주셔도 됩니다)")
                     , fieldWithPath("interestRegions.[].id").description("관심/기본 지역 id")
@@ -236,6 +247,8 @@ public class NotificationControllerTest {
                     , fieldWithPath("errorCode").description("응답 코드")
                     , fieldWithPath("message").description("응답 메시지")
                     , fieldWithPath("data.subscribe").description("전체 알림 구독 설정 여부")
+                    , fieldWithPath("data.communitySubscribe").description("커뮤니티 알림 구독 설정 여부")
+                    , fieldWithPath("data.adSubscribe").description("광고성 알림 구독 설정 여부")
                     , fieldWithPath("data.interestCategories.[].subscribe").description("관심 카테고리별 알림 구독 설정 여부")
                     , fieldWithPath("data.interestRegions.[].subscribe").description("관심/기본 지역별 알림 구독 설정 여부")
                 )

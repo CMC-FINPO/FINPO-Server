@@ -302,7 +302,6 @@ operation::회원탈퇴[snippets='http-request,request-fields,request-headers,ht
 ==== OAuth 연결 해제 후 탈퇴
 operation::회원탈퇴예외[snippets='http-response']
 
-
 &nbsp;
 
 &nbsp;
@@ -310,7 +309,26 @@ operation::회원탈퇴예외[snippets='http-response']
 &nbsp;
 
 
+==== 정지 내역 조회
 
+정지된 상태에서 커뮤니티 api `/post` `/comment` 조회 시 403 Forbidden을 응답합니다.
+
+    {
+      "sub": "23786",
+      "nickname": "sadfsad",
+      ...
+      "auth": "ROLE_BANNED_USER",
+    }
+
+또한 위처럼 access token 파싱하여 auth가 ROLE_BANNED_USER라면 정지된 상태입니다.
+
+operation::내정지내역조회[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 
 
@@ -552,7 +570,7 @@ operation::알림끊기[snippets='http-request,request-headers,request-fields,ht
 
 &nbsp;
 
-==== 상세 카테고리 알림 수정
+==== 알림 수정
 
 operation::알림수정[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
@@ -997,6 +1015,17 @@ operation::글북마크취소[snippets='http-request,request-headers,path-parame
 &nbsp;
 
 
+=== 차단
+==== 게시글 작성 유저 차단
+
+operation::글작성유저차단[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
 == 댓글
 
 === 조회
@@ -1071,7 +1100,20 @@ operation::댓글삭제[snippets='http-request,request-headers,path-parameters,h
 
 &nbsp;
 
-=== 신고
+=== 차단
+==== 댓글 작성 유저 차단
+
+operation::댓글작성유저차단[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+== 신고
+
+=== 신고 사유
 
 ==== 신고 사유 조회
 
@@ -1083,6 +1125,7 @@ operation::신고사유조회[snippets='http-request,request-headers,http-respon
 
 &nbsp;
 
+=== 댓글
 ==== 댓글 신고
 
 operation::댓글신고[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
@@ -1093,6 +1136,7 @@ operation::댓글신고[snippets='http-request,request-headers,path-parameters,r
 
 &nbsp;
 
+=== 게시글
 ==== 게시글 신고
 
 operation::글신고[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
