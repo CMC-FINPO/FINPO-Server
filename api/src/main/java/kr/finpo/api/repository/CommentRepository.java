@@ -23,7 +23,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
   public List<Comment> findByUserId(Long userId);
 
-  @Query("SELECT comment FROM Comment comment WHERE comment.user.id = :userId GROUP BY comment.post.id")
+  @Query("SELECT comment FROM Comment comment WHERE comment.status = true AND comment.user.id = :userId GROUP BY comment.post.id")
   public Page<Comment> findByUserId(Long userId, Pageable pageable);
 }
 
