@@ -47,7 +47,7 @@ public record PostDto(
   public static PostDto response(Post post, List<PostImg> imgs, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, BlockedUserRepository blockedUserRepository) {
     Boolean isLiked = !isEmpty(likePostRepository) && likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
     Boolean isBookmarked = !isEmpty(bookmarkPostRepository) && bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserId(SecurityUtil.getCurrentUserId(), post.getUser().getId()).isPresent();
+    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), post.getUser().getId(), post.getAnonymity()).isPresent();
 
     return new PostDto(
         post.getStatus(),
@@ -58,8 +58,8 @@ public record PostDto(
         post.getHits(),
         post.getCountOfComment(),
         post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()): null,
-        !post.getUser().getStatus() ? true : null,
         isUserBlocked,
+        !post.getUser().getStatus() ? true : null,
         Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
         isLiked,
         isBookmarked,
@@ -77,7 +77,7 @@ public record PostDto(
   public static PostDto previewResponse(Post post, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, BlockedUserRepository blockedUserRepository) {
     Boolean isLiked = likePostRepository == null ? null : likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
     Boolean isBookmarked = bookmarkPostRepository == null ? null : bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserId(SecurityUtil.getCurrentUserId(), post.getUser().getId()).isPresent();
+    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), post.getUser().getId(), post.getAnonymity()).isPresent();
 
     return new PostDto(
         post.getStatus(),

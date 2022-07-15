@@ -85,7 +85,7 @@ public class FcmService {
     try {
       Optional.ofNullable(comment.getParent()).flatMap(parentComment -> Optional.ofNullable(parentComment.getUser())).ifPresent(parentUser -> {
         if (parentUser.getId().equals(SecurityUtil.getCurrentUserId())
-            || blockedUserRepository.findOneByUserIdAndBlockedUserId(parentUser.getId(), SecurityUtil.getCurrentUserId()).isPresent()) return;
+            || blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(parentUser.getId(), SecurityUtil.getCurrentUserId(), comment.getAnonymity()).isPresent()) return;
 
         userRepository.findById(parentUser.getId()).ifPresent(user ->
             notificationRepository.save(Notification.of(user, NotificationType.CHILDCOMMENT, comment))
@@ -115,7 +115,7 @@ public class FcmService {
 
       Optional.ofNullable(comment.getPost().getUser()).ifPresent(postUser -> {
         if (postUser.getId().equals(SecurityUtil.getCurrentUserId()) || userIds.contains(postUser.getId())
-            || blockedUserRepository.findOneByUserIdAndBlockedUserId(postUser.getId(), SecurityUtil.getCurrentUserId()).isPresent()) return;
+            || blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(postUser.getId(), SecurityUtil.getCurrentUserId(), comment.getAnonymity()).isPresent()) return;
 
         userRepository.findById(postUser.getId()).ifPresent(user ->
             notificationRepository.save(Notification.of(user, NotificationType.COMMENT, comment))

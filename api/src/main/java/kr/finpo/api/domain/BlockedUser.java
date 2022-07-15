@@ -23,20 +23,25 @@ public class BlockedUser {
   @CreatedDate
   private LocalDateTime createdAt;
 
+  @Setter
+  @Column(nullable = false)
+  private Boolean anonymity;
+
   protected BlockedUser() {
   }
 
-  public BlockedUser(User user, User blockedUser) {
+  public BlockedUser(User user, User blockedUser, Boolean anonymity) {
     this.user = user;
     this.blockedUser = blockedUser;
+    this.anonymity = anonymity;
   }
 
   public static BlockedUser of() {
     return new BlockedUser();
   }
 
-  public static BlockedUser of(User user, User blockedUser) {
-    return new BlockedUser(user, blockedUser);
+  public static BlockedUser of(User user, User blockedUser, Boolean anonymity) {
+    return new BlockedUser(user, blockedUser, anonymity);
   }
 
   @Setter

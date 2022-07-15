@@ -10,8 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface BlockedUserRepository extends JpaRepository<BlockedUser, Long> {
-  public List<BlockedUser> findByUserId(Long userId);
+  public List<BlockedUser> findByUserIdAndAnonymityOrderByIdDesc(Long userId, Boolean anonymity);
 
-  public Optional<BlockedUser> findOneByUserIdAndBlockedUserId(Long userId, Long blockedUserId);
+  public Optional<BlockedUser> findOneByUserIdAndBlockedUserIdAndAnonymity(Long userId, Long blockedUserId, Boolean anonymity);
 }
 

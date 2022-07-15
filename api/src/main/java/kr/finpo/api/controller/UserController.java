@@ -4,6 +4,7 @@ import kr.finpo.api.constant.UserPurpose;
 import kr.finpo.api.constant.UserStatus;
 import kr.finpo.api.dto.*;
 import kr.finpo.api.service.BannedUserService;
+import kr.finpo.api.service.BlockedUserService;
 import kr.finpo.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class UserController {
 
   private final UserService userService;
   private final BannedUserService bannedUserService;
+  private final BlockedUserService blockedUserService;
 
   @GetMapping(path = "/status/name")
   public DataResponse<Object> getAllStatus() {
@@ -74,5 +76,15 @@ public class UserController {
   @GetMapping(value = "/banned/me")
   public DataResponse<Object> getMyBanned() {
     return DataResponse.of(bannedUserService.getMe());
+  }
+
+  @GetMapping(value = "/block/me")
+  public DataResponse<Object> getMyBlock() {
+    return DataResponse.of(blockedUserService.getNonAnonymities());
+  }
+
+  @DeleteMapping(value = "/block/{id}")
+  public DataResponse<Object> deleteBlock(@PathVariable Long id) {
+    return DataResponse.of(blockedUserService.deleteNonAnonymity(id));
   }
 }

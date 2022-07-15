@@ -40,7 +40,7 @@ public record CommentDto(
   public static CommentDto response(Comment comment, Boolean showPost, List<Comment> childs, BlockedUserRepository blockedUserRepository) {
     if (!comment.getUser().getStatus()) return withdrawResponse(comment, showPost, childs, blockedUserRepository);
     if (!comment.getStatus()) return deletedResponse(comment, showPost, childs, blockedUserRepository);
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserId(SecurityUtil.getCurrentUserId(), comment.getUser().getId()).isPresent();
+    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), comment.getUser().getId(), comment.getAnonymity()).isPresent();
     return new CommentDto(
         comment.getStatus(),
         comment.getId(),
@@ -83,7 +83,7 @@ public record CommentDto(
   }
 
   public static CommentDto deletedResponse(Comment comment, Boolean showPost, List<Comment> childs, BlockedUserRepository blockedUserRepository) {
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserId(SecurityUtil.getCurrentUserId(), comment.getUser().getId()).isPresent();
+    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), comment.getUser().getId(), comment.getAnonymity()).isPresent();
     return new CommentDto(
         comment.getStatus(),
         comment.getId(),
@@ -105,7 +105,7 @@ public record CommentDto(
   }
 
   public static CommentDto withdrawResponse(Comment comment, Boolean showPost, List<Comment> childs, BlockedUserRepository blockedUserRepository) {
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserId(SecurityUtil.getCurrentUserId(), comment.getUser().getId()).isPresent();
+    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), comment.getUser().getId(), comment.getAnonymity()).isPresent();
     return new CommentDto(
         comment.getStatus(),
         comment.getId(),
