@@ -331,6 +331,28 @@ operation::내정지내역조회[snippets='http-request,request-headers,http-res
 &nbsp;
 
 
+==== 차단한 유저 조회
+
+실명으로 작성한 유저만 조회 가능합니다
+
+operation::차단한유저조회[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
+==== 차단한 유저 해제
+
+operation::차단한유저해제[snippets='http-request,request-headers,http-response,response-fields']
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 
 
