@@ -46,6 +46,8 @@ public class NotificationService {
       List<InterestCategory> interestCategories = interestCategoryRepository.findByUserId(user.getId());
       List<InterestRegion> interestRegions = interestRegionRepository.findByUserId(user.getId());
       return FcmDto.response(fcm, interestCategories, interestRegions);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -81,6 +83,8 @@ public class NotificationService {
         });
 
       return getMy();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -92,6 +96,8 @@ public class NotificationService {
       Fcm fcm = Fcm.of(dto.subscribe(), dto.registrationToken());
       fcm.setUser(user);
       fcmRepository.save(fcm);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -102,6 +108,8 @@ public class NotificationService {
       if (Optional.ofNullable(lastId).isPresent())
         return notificationRepository.findByUserId(SecurityUtil.getCurrentUserId(), lastId, pageable).map(NotificationDto::response);
       return notificationRepository.findByUserId(SecurityUtil.getCurrentUserId(), pageable).map(NotificationDto::response);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -112,6 +120,8 @@ public class NotificationService {
       authorizeMe(notificationRepository.findById(id).get().getUser().getId());
       notificationRepository.deleteById(id);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigInteger;
@@ -87,6 +86,8 @@ public class OAuthService {
       );
 
       return response.getBody();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.KAKAO_SERVER_ERROR, e);
     }
@@ -112,6 +113,8 @@ public class OAuthService {
       );
 
       return response.getBody();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -135,6 +138,8 @@ public class OAuthService {
 
 
       return response.getBody();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.KAKAO_SERVER_ERROR, e);
     }
@@ -156,6 +161,8 @@ public class OAuthService {
       );
 
       return response.getBody();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.KAKAO_SERVER_ERROR, e);
     }
@@ -190,6 +197,8 @@ public class OAuthService {
 
       Claims userInfo = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(identityToken).getBody();
       return userInfo.get("sub", String.class);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.APPlE_IDENTITY_TOKEN_ERROR, e);
     }
@@ -228,6 +237,8 @@ public class OAuthService {
       refreshTokenRepository.save(refreshToken);
 
       return tokenDto;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.INTERNAL_ERROR, e);
     }
@@ -236,7 +247,6 @@ public class OAuthService {
 
   public TokenDto register(String oAuthAccessToken, String oAuthType, UserDto dto) {
     try {
-
       String oAuthAccountId = null;
 
       if (oAuthType.equals("kakao")) {
@@ -263,18 +273,6 @@ public class OAuthService {
         throw new GeneralException(ErrorCode.VALIDATION_ERROR, "nickname duplicated");
       });
 
-
-      if (StringUtils.hasText(dto.email())) {
-        // email duplication check
-        userRepository.findByEmail(dto.email()).ifPresent(e -> {
-          throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
-        });
-
-        // email format check
-        if (!dto.email().matches("^(.+)@(\\S+)$"))
-          throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email format error");
-      }
-
       // region check
       String profileImgUrl = dto.profileImg();
       if (dto.profileImgFile() != null)
@@ -285,7 +283,7 @@ public class OAuthService {
       );
       User user = dto.toEntity();
       user.setProfileImg(profileImgUrl);
-      user.setOAuthType(oAuthType.equals("kakao") ? OAuthType.KAKAO : oAuthType.equals("google") ? OAuthType.GOOGLE : oAuthType.equals("apple") ? OAuthType.APPLE :OAuthType.TEST );
+      user.setOAuthType(oAuthType.equals("kakao") ? OAuthType.KAKAO : oAuthType.equals("google") ? OAuthType.GOOGLE : oAuthType.equals("apple") ? OAuthType.APPLE : OAuthType.TEST);
 
       // 기본 지역 설정
       InterestRegion defaultRegion = InterestRegion.of(null, region, true);
@@ -323,6 +321,8 @@ public class OAuthService {
       refreshTokenRepository.save(refreshToken);
 
       return tokenDto;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -351,6 +351,8 @@ public class OAuthService {
       refreshTokenRepository.save(newRefreshToken);
 
       return newTokenDto;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

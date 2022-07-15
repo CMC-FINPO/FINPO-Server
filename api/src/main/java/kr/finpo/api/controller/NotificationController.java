@@ -4,13 +4,11 @@ import kr.finpo.api.dto.DataResponse;
 import kr.finpo.api.dto.FcmDto;
 import kr.finpo.api.service.NotificationService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@Slf4j
 @RequestMapping("/notification")
 public class NotificationController {
 
@@ -22,7 +20,10 @@ public class NotificationController {
   }
 
   @GetMapping("/history/me")
-  public DataResponse<Object> getMyHistories(@RequestParam(value = "lastId", required = false) Long lastId, Pageable pageable) {
+  public DataResponse<Object> getMyHistories(
+      @RequestParam(value = "lastId", required = false) Long lastId,
+      Pageable pageable
+  ) {
     return DataResponse.of(notificationService.getMyHistories(lastId, pageable));
   }
 

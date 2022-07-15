@@ -29,15 +29,10 @@ public class ReportService {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
 
-  public User getMe() {
+  private User getMe() {
     return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
         () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
     );
-  }
-
-  public void authorizeMe(Long id) {
-    if (!id.equals(SecurityUtil.getCurrentUserId()))
-      throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
   }
 
   public void initialize() {
@@ -50,6 +45,8 @@ public class ReportService {
   public List<Report> getAll() {
     try {
       return reportRepository.findAll();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -58,6 +55,8 @@ public class ReportService {
   public Page<CommunityReportDto> getCommunity(Pageable pageable) {
     try {
       return communityReportRepository.findAll(pageable).map(CommunityReportDto::response);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -69,6 +68,8 @@ public class ReportService {
       Comment comment = commentRepository.findById(id).get();
       communityReportRepository.save(CommunityReport.of(report, comment, getMe()));
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -80,6 +81,8 @@ public class ReportService {
       Post post = postRepository.findById(id).get();
       communityReportRepository.save(CommunityReport.of(report, post, getMe()));
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

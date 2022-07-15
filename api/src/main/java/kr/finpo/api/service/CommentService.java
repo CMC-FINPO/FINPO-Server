@@ -10,13 +10,13 @@ import kr.finpo.api.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 
 @RequiredArgsConstructor
@@ -57,6 +57,8 @@ public class CommentService {
       return comments.map(comment ->
           CommentDto.response(comment, false, commentRepository.findByPostIdAndParentId(postId, comment.getId()), blockedUserRepository)
       );
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -66,7 +68,6 @@ public class CommentService {
     try {
       if (dto.content().length() > Constraint.COMMENT_MAX_LENGTH)
         throw new GeneralException(ErrorCode.BAD_REQUEST, "Content's length must equal or less than " + Constraint.COMMENT_MAX_LENGTH);
-
 
       Post post = postRepository.findById(postId).get();
       postService.checkStatus(postId);
@@ -85,7 +86,7 @@ public class CommentService {
         );
       }
 
-      if (dto.parent() != null && dto.parent().id() != null)
+      if (!isEmpty(dto.parent()) && !isEmpty(dto.parent().id()))
         comment.setParent(commentRepository.findById(dto.parent().id()).get());
       comment.setUser(getMe());
       comment.setPost(post);
@@ -108,6 +109,8 @@ public class CommentService {
       checkStatus(id);
       comment = commentRepository.save(comment);
       return CommentDto.response(comment, false, null, null);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -121,6 +124,8 @@ public class CommentService {
       comment.setStatus(false);
       commentRepository.save(comment);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

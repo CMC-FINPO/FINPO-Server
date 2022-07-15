@@ -3,8 +3,6 @@ package kr.finpo.api.controller;
 import kr.finpo.api.dto.DataResponse;
 import kr.finpo.api.dto.InterestCategoryDto;
 import kr.finpo.api.service.CategoryService;
-import kr.finpo.api.service.PolicyService;
-import kr.finpo.api.service.openapi.YouthcenterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +13,6 @@ import java.util.List;
 @RequestMapping("/policy/category")
 public class CategoryController {
 
-  private final PolicyService policyService;
-  private final YouthcenterService youthcenterService;
   private final CategoryService categoryService;
 
   @GetMapping("/name")

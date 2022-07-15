@@ -83,7 +83,7 @@ public class GgdataService {
   private String url;
 
   // 10시, 15시, 19시마다 업데이트
-  @Scheduled(cron = "0 0 10,15,19 * * *")
+  @Scheduled(cron = "0 0 10,15,19 * * *", zone = "Asia/Seoul")
   public void initialize() {
     initialize(true);
   }

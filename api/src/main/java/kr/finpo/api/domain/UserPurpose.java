@@ -31,14 +31,14 @@ public class UserPurpose {
   protected UserPurpose() {
   }
 
-  protected UserPurpose(Long userPurposeId) {
+  protected UserPurpose(Long userPurposeId, User user) {
     this.userPurposeId = userPurposeId;
+    this.user = user;
   }
 
-  public static UserPurpose of(Long userPurposeId) {
-    return new UserPurpose(userPurposeId);
+  public static UserPurpose of(Long userPurposeId, User user) {
+    return new UserPurpose(userPurposeId, user);
   }
-
 
   @Setter
   @ManyToOne

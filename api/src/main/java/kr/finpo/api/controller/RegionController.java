@@ -4,7 +4,6 @@ import kr.finpo.api.dto.DataResponse;
 import kr.finpo.api.dto.InterestRegionDto;
 import kr.finpo.api.service.RegionService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/region")
-@Slf4j
 public class RegionController {
 
   private final RegionService regionService;
@@ -37,12 +35,10 @@ public class RegionController {
     return DataResponse.of(regionService.getMyInterests());
   }
 
-
   @GetMapping("/my-default")
   public DataResponse<Object> getMyDefault() {
     return DataResponse.of(regionService.getMyDefault());
   }
-
 
   @PostMapping("/me")
   public DataResponse<Object> insertMyInterests(@RequestBody List<InterestRegionDto> body) {
@@ -59,15 +55,13 @@ public class RegionController {
     return DataResponse.of(regionService.updateMyDefault(body));
   }
 
-
   @DeleteMapping("/{id}")
   public DataResponse<Object> delete(@PathVariable Long id) {
     return DataResponse.of(regionService.deleteMyInterest(id));
   }
 
-
   @DeleteMapping("")
-  public DataResponse<Object> deleteByParams(@RequestParam(name="id") List<Long> ids) {
+  public DataResponse<Object> deleteByParams(@RequestParam(name = "id") List<Long> ids) {
     return DataResponse.of(regionService.deleteMyInterestByParams(ids));
   }
 }

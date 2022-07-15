@@ -36,10 +36,9 @@ public class UserController {
     return DataResponse.of(userService.getById(id));
   }
 
-
   @GetMapping("/me")
-  public DataResponse<Object> getMyInfo() {
-    return DataResponse.of(userService.getMyInfo());
+  public DataResponse<Object> getMy() {
+    return DataResponse.of(userService.getMy());
   }
 
   @GetMapping(path = "/me/purpose")
@@ -63,23 +62,17 @@ public class UserController {
 
   @DeleteMapping("/me")
   public Object deleteMe(@RequestBody(required = false) WithdrawDto body) {
-    if(userService.deleteMe(body)) return DataResponse.of(true);
+    if (userService.deleteMe(body)) return DataResponse.of(true);
     return new ResponseEntity<>(DataResponse.of(true, "OAuth account has already withdrawn"), HttpStatus.ACCEPTED);
   }
 
   @GetMapping("/check-duplicate")
   public DataResponse<Object> checkNicknameDuplicate(@RequestParam Map<String, String> params) {
-    Boolean res = false;
-    if(params.containsKey("nickname"))
-      res = userService.isNicknameDuplicated(params.get("nickname"));
-    else if(params.containsKey("email"))
-      res = userService.isEmailDuplicated(params.get("email"));
-    return DataResponse.of(res);
+    return DataResponse.of(userService.isNicknameDuplicated(params.get("nickname")));
   }
 
   @GetMapping(value = "/banned/me")
   public DataResponse<Object> getMyBanned() {
     return DataResponse.of(bannedUserService.getMe());
   }
-
 }

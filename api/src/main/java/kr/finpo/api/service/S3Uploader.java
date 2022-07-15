@@ -11,7 +11,6 @@ import kr.finpo.api.dto.ImgUploadDto;
 import kr.finpo.api.exception.GeneralException;
 import org.springframework.beans.factory.annotation.Value;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;

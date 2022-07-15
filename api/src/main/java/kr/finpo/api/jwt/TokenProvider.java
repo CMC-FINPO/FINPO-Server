@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import kr.finpo.api.constant.ErrorCode;
+import kr.finpo.api.constant.Role;
 import kr.finpo.api.dto.TokenDto;
 import kr.finpo.api.exception.GeneralException;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class TokenProvider {
   private static final String AUTHORITIES_KEY = "auth";
   private static final String BEARER_TYPE = "bearer";
   private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 3;            // 3분
+  private static final long ADMIN_ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;
   private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 30L;  // 30일
 
   private final Key key;
@@ -40,7 +42,7 @@ public class TokenProvider {
 
     long now = (new Date()).getTime();
 
-    Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+    Date accessTokenExpiresIn = new Date(now + (user.getRole().equals(Role.ROLE_ADMIN) ? ADMIN_ACCESS_TOKEN_EXPIRE_TIME : ACCESS_TOKEN_EXPIRE_TIME));
     String accessToken = Jwts.builder()
         .setSubject(user.getId().toString())
         .claim("nickname", user.getNickname())
@@ -88,13 +90,13 @@ public class TokenProvider {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
       return true;
     } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-      log.info("잘못된 JWT 서명입니다.");
+//      log.info("잘못된 JWT 서명입니다.");
     } catch (ExpiredJwtException e) {
-      log.info("만료된 JWT 토큰입니다.");
+//      log.info("만료된 JWT 토큰입니다.");
     } catch (UnsupportedJwtException e) {
-      log.info("지원되지 않는 JWT 토큰입니다.");
+//      log.info("지원되지 않는 JWT 토큰입니다.");
     } catch (IllegalArgumentException e) {
-      log.info("JWT 토큰이 잘못되었습니다.");
+//      log.info("JWT 토큰이 잘못되었습니다.");
     }
     return false;
   }

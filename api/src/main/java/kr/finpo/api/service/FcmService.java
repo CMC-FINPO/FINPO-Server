@@ -71,8 +71,8 @@ public class FcmService {
 
       try {
         BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
-        log.debug("FCM) " + response.getSuccessCount() + " messages were sent successfully");
       } catch (FirebaseMessagingException e) {
+        log.error("policy push error");
         log.error(e.toString());
       }
     });
@@ -107,6 +107,7 @@ public class FcmService {
           try {
             FirebaseMessaging.getInstance().send(message);
           } catch (FirebaseMessagingException e) {
+            log.error("comment push error");
             log.error(e.toString());
           }
         });

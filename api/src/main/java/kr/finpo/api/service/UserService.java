@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -72,24 +71,28 @@ public class UserService {
   public Page<UserDto> getAll(Pageable pageable) {
     try {
       return userRepository.findAllByStatus(true, pageable).map(UserDto::response);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
 
   public Optional<UserDto> getById(Long id) {
     try {
       return userRepository.findById(id).map(UserDto::response);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
-
-  public Optional<UserDto> getMyInfo() {
+  public Optional<UserDto> getMy() {
     try {
       return userRepository.findById(SecurityUtil.getCurrentUserId()).map(UserDto::response);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -98,44 +101,38 @@ public class UserService {
   public List<Long> getMyPurpose() {
     try {
       return userPurposeRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(UserPurpose::getUserPurposeId).toList();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
 
   public UserDto updateMe(UserDto dto) {
     return update(SecurityUtil.getCurrentUserId(), dto);
   }
 
-
   public UserDto update(Long id, UserDto dto) {
     try {
       if (!isEmpty(dto.nickname()) && isNicknameDuplicated(dto.nickname()))
         throw new GeneralException(ErrorCode.VALIDATION_ERROR, "nickname duplicated");
-      if (!isEmpty(dto.email()) && isEmailDuplicated(dto.email()))
-        throw new GeneralException(ErrorCode.VALIDATION_ERROR, "email duplicated");
 
       User user = dto.updateEntity(userRepository.findById(id).get());
 
-      if (dto.regionId() != null)
+      if (!isEmpty(dto.regionId()))
         regionService.updateMyDefault(InterestRegionDto.of(dto.regionId(), true));
 
-      if (dto.purposeIds() != null) {
+      if (!isEmpty(dto.purposeIds())) {
         userPurposeRepository.deleteByUserId(user.getId());
-
-        dto.purposeIds().forEach(purposeId -> {
-          UserPurpose userPurpose = UserPurpose.of(purposeId);
-          userPurpose.setUser(user);
-          userPurposeRepository.save(userPurpose);
-        });
+        dto.purposeIds().forEach(purposeId -> userPurposeRepository.save(UserPurpose.of(purposeId, user)));
       }
       return UserDto.response(userRepository.save(user));
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
 
   public UserDto updateMyProfileImg(UserDto dto) {
     try {
@@ -146,6 +143,8 @@ public class UserService {
       userRepository.save(user);
 
       return UserDto.response(user);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -226,6 +225,8 @@ public class UserService {
         user.withdraw();
       }
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -237,31 +238,17 @@ public class UserService {
         return false;
 
       if (SecurityUtil.isUserLogin())
-        if (nickname.equals(userRepository.findById(SecurityUtil.getCurrentUserId()).get().getNickname()))
-          return false;
+        return !nickname.equals(userRepository.findById(SecurityUtil.getCurrentUserId()).get().getNickname());
 
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
-  public Boolean isEmailDuplicated(String email) {
-    try {
-      if (userRepository.findByEmail(email).isEmpty())
-        return false;
-
-      if (SecurityUtil.isUserLogin())
-        if (email.equals(userRepository.findById(SecurityUtil.getCurrentUserId()).get().getEmail()))
-          return false;
-
-      return true;
-    } catch (Exception e) {
-      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
-    }
-  }
-
-  public String getClientSecret() throws IOException {
+  private String getClientSecret() throws IOException {
     Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
     return Jwts.builder()
         .setHeaderParam("kid", appleKeyId)

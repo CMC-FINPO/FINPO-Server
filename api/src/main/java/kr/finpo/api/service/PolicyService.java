@@ -62,6 +62,8 @@ public class PolicyService {
         policyRepository.save(policy);
       });
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -74,6 +76,8 @@ public class PolicyService {
       joinedPolicyRepository.deleteByPolicyId(id);
       policyRepository.deleteById(id);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -83,6 +87,8 @@ public class PolicyService {
     try {
       policyRepository.increaseHits(id);
       return PolicyDto.response(policyRepository.findById(id).get(), isInterest(id));
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -94,6 +100,8 @@ public class PolicyService {
       List<InterestRegionDto> myRegionDtos = regionService.getMyInterests();
 
       return policyRepository.querydslFindMy(myCategoryDtos, myRegionDtos, pageable).map(e -> PolicyDto.previewResponse(e, isInterest(e.getId())));
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -102,6 +110,8 @@ public class PolicyService {
   public Page<PolicyDto> search(String title, LocalDate startDate, LocalDate endDate, List<Long> regionIds, List<Long> categoryIds, Boolean status, Pageable pageable) {
     try {
       return policyRepository.querydslFindbyTitle(title, startDate, endDate, categoryIds, regionIds, status, pageable).map(e -> PolicyDto.previewResponse(e, isInterest(e.getId())));
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -116,6 +126,8 @@ public class PolicyService {
       policy = policyRepository.save(policy);
       if (sendNotification) ret.add(fcmService.sendPolicyPush(policy));
       return ret.toString();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -124,6 +136,8 @@ public class PolicyService {
   public List<InterestPolicyDto> getMyInterests() {
     try {
       return interestPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(e -> InterestPolicyDto.response(e, isInterest(e.getPolicy().getId()))).toList();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -132,6 +146,8 @@ public class PolicyService {
   public List<JoinedPolicyDto> getMyJoins() {
     try {
       return joinedPolicyRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(e -> JoinedPolicyDto.response(e, isInterest(e.getPolicy().getId()))).toList();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -179,6 +195,8 @@ public class PolicyService {
       authorizeMe(joinedPolicy.getUser().getId());
       joinedPolicy.setMemo(dto.memo());
       return JoinedPolicyDto.response(joinedPolicyRepository.save(joinedPolicy), isInterest(joinedPolicy.getPolicy().getId()));
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -189,6 +207,8 @@ public class PolicyService {
       InterestPolicy interestPolicy = interestPolicyRepository.findOneByUserIdAndPolicyId(SecurityUtil.getCurrentUserId(), policyId).get();
       interestPolicyRepository.delete(interestPolicy);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -199,6 +219,8 @@ public class PolicyService {
       JoinedPolicy joinedPolicy = joinedPolicyRepository.findOneByUserIdAndPolicyId(SecurityUtil.getCurrentUserId(), policyId).get();
       joinedPolicyRepository.delete(joinedPolicy);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -210,6 +232,8 @@ public class PolicyService {
       authorizeMe(interestPolicy.getUser().getId());
       interestPolicyRepository.delete(interestPolicy);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -221,10 +245,11 @@ public class PolicyService {
       authorizeMe(joinedPolicy.getUser().getId());
       joinedPolicyRepository.delete(joinedPolicy);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
 }
 

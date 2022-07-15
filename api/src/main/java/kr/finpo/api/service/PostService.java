@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -189,7 +188,6 @@ public class PostService {
         if (postUser.getId().equals(user.getId()))
           throw new GeneralException(ErrorCode.BAD_REQUEST, "You're the writer of this post");
       });
-
 
       likePostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresentOrElse(null, () -> {
         likePostRepository.save(LikePost.of(user, post));

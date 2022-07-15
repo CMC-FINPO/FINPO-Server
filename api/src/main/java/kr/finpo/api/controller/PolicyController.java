@@ -5,7 +5,6 @@ import kr.finpo.api.dto.InterestPolicyDto;
 import kr.finpo.api.dto.JoinedPolicyDto;
 import kr.finpo.api.service.PolicyService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@Slf4j
 @RequestMapping("/policy")
 public class PolicyController {
 
@@ -43,7 +41,6 @@ public class PolicyController {
     return DataResponse.of(policyService.search(title, startDate, endDate, regionIds, categoryIds, true, pageable));
   }
 
-
   @GetMapping("/interest/me")
   public DataResponse<Object> getMyInterests() {
     return DataResponse.of(policyService.getMyInterests());
@@ -53,7 +50,6 @@ public class PolicyController {
   public DataResponse<Object> getMyJoins() {
     return DataResponse.of(policyService.getMyJoins());
   }
-
 
   @PostMapping("/interest")
   public DataResponse<Object> insertMyInterest(@RequestBody InterestPolicyDto body) {
@@ -65,12 +61,10 @@ public class PolicyController {
     return DataResponse.of(policyService.insertMyJoined(body));
   }
 
-
   @PutMapping("/joined/{id}")
   public DataResponse<Object> updateMyJoined(@PathVariable Long id, @RequestBody JoinedPolicyDto body) {
     return DataResponse.of(policyService.updateMyJoined(id, body));
   }
-
 
   @DeleteMapping("/interest/me")
   public DataResponse<Object> deleteMyInterestByPolicyId(@RequestParam("policyId") Long policyId) {

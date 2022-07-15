@@ -36,13 +36,13 @@ public class CategoryService {
   @Value("${upload.url}")
   private String uploadUrl;
 
-  public User getMe() {
+  private User getMe() {
     return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
         () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
     );
   }
 
-  public void authorizeMe(Long id) {
+  private void authorizeMe(Long id) {
     if (!id.equals(SecurityUtil.getCurrentUserId()))
       throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
   }
@@ -67,6 +67,8 @@ public class CategoryService {
   public List<CategoryDto> getByParentId(Long parentId) {
     try {
       return categoryRepository.findByParentId(parentId).stream().map(CategoryDto::response).toList();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -77,7 +79,8 @@ public class CategoryService {
       return categoryRepository.findByDepth(1L).stream().map(e ->
           CategoryDto.childsResponse(e, categoryRepository.findByParentId(e.getId()).stream().map(ee -> CategoryDto.childsResponse(ee, null)).toList())
       ).toList();
-
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -86,6 +89,8 @@ public class CategoryService {
   public List<CategoryDto> getByDepth(Long depth) {
     try {
       return categoryRepository.findByDepth(depth).stream().map(CategoryDto::response).toList();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -94,6 +99,8 @@ public class CategoryService {
   public Optional<CategoryDto> getById(Long id) {
     try {
       return categoryRepository.findById(id).map(CategoryDto::response);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -102,6 +109,8 @@ public class CategoryService {
   public List<InterestCategoryDto> getMyInterests() {
     try {
       return interestCategoryRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(InterestCategoryDto::response).toList();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -110,6 +119,8 @@ public class CategoryService {
   public List<CategoryDto> getMyInterestsByDepth() {
     try {
       return interestCategoryRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(InterestCategory::getCategory).map(Category::getParent).distinct().map(CategoryDto::response).toList();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -120,6 +131,8 @@ public class CategoryService {
       User user = getMe();
       interestCategoryRepository.deleteByUserId(user.getId());
       return insertInterests(dtos);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -159,6 +172,8 @@ public class CategoryService {
       });
 
       return res;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -168,6 +183,8 @@ public class CategoryService {
     try {
       ids.forEach(this::delete);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -179,6 +196,8 @@ public class CategoryService {
       authorizeMe(interestCategory.getUser().getId());
       interestCategoryRepository.deleteById(id);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

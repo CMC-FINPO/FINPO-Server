@@ -34,6 +34,8 @@ public class BannedUserService {
   public Page<BannedUserDto> getAll(Pageable pageable) {
     try {
       return bannedUserRepository.findByReleaseDateGreaterThan(LocalDate.now(), pageable).map(BannedUserDto::response);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -46,6 +48,8 @@ public class BannedUserService {
   public List<BannedUserDto> getByUserId(Long userId) {
     try {
       return bannedUserRepository.findByUserIdOrderByIdDesc(userId).stream().map(BannedUserDto::response).toList();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -60,6 +64,7 @@ public class BannedUserService {
       user.setRole(Role.ROLE_BANNED_USER);
       Report report = reportRepository.findById(dto.report().getId()).get();
       BannedUser bannedUser = BannedUser.of(dto.releaseDate(), dto.detail(), user, report);
+
       return BannedUserDto.response(bannedUserRepository.save(bannedUser));
     } catch (GeneralException e) {
       throw e;
@@ -80,16 +85,17 @@ public class BannedUserService {
         user.setRole(Role.ROLE_USER);
       }
       return BannedUserDto.response(bannedUserRepository.save(bannedUser));
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
 
-  @Scheduled(cron = "0 0 0 * * *")
+  @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
   public void releaseUser() {
-    log.debug("start");
     bannedUserRepository.findByReleaseDate(LocalDate.now()).forEach(bannedUser -> {
-      log.debug(bannedUser.getUser().getName());
+      log.info("user " + bannedUser.getUser().getId() + " " + bannedUser.getUser().getNickname() + " free");
       User user = bannedUser.getUser();
       user.setRole(Role.ROLE_USER);
       userRepository.save(user);

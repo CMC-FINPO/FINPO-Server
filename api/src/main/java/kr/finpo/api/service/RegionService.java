@@ -58,15 +58,10 @@ public class RegionService {
     return regions1.indexOf(region1) * REGION2_MAX + (StringUtils.isNullOrEmpty(region2) ? 0 : (regions2.get(region1).indexOf(region2) + 1));
   }
 
-  public User getMe() {
+  private User getMe() {
     return userRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(
         () -> new GeneralException(ErrorCode.USER_UNAUTHORIZED)
     );
-  }
-
-  public void authorizeMe(Long id) {
-    if (!id.equals(SecurityUtil.getCurrentUserId()))
-      throw new GeneralException(ErrorCode.USER_NOT_EQUAL);
   }
 
   public void initialize() {
@@ -91,6 +86,8 @@ public class RegionService {
   public List<Region> getAll() {
     try {
       return regionRepository.findAll();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -99,6 +96,8 @@ public class RegionService {
   public List<Region> getByParentId(Long parentId) {
     try {
       return regionRepository.findByParentIdOrderByNameAsc(parentId);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -107,19 +106,12 @@ public class RegionService {
   public List<Region> getByDepth(Long depth) {
     try {
       return regionRepository.findByDepth(depth);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
-  public Optional<Region> getById(Long id) {
-    try {
-      return regionRepository.findById(id);
-    } catch (Exception e) {
-      throw new GeneralException(ErrorCode.BAD_REQUEST, "id not valid");
-    }
-  }
-
 
   public List<InterestRegionDto> insertMyInterests(List<InterestRegionDto> dtos) {
     try {
@@ -143,6 +135,8 @@ public class RegionService {
       });
 
       return res;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -154,6 +148,8 @@ public class RegionService {
       User user = getMe();
       interestRegionRepository.deleteByUserIdAndIsDefault(user.getId(), false);
       return insertMyInterests(dtos);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -171,6 +167,8 @@ public class RegionService {
 
       interestRegionRepository.deleteById(id);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
@@ -180,29 +178,32 @@ public class RegionService {
     try {
       ids.forEach(this::deleteMyInterest);
       return true;
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
 
   public Optional<InterestRegionDto> getMyDefault() {
     try {
       return interestRegionRepository.findOneByUserIdAndIsDefault(SecurityUtil.getCurrentUserId(), true).map(InterestRegionDto::response);
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
 
   public List<InterestRegionDto> getMyInterests() {
     try {
       return interestRegionRepository.findByUserId(SecurityUtil.getCurrentUserId()).stream().map(InterestRegionDto::response).toList();
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
 
   public InterestRegionDto updateMyDefault(InterestRegionDto dto) {
     try {
@@ -223,6 +224,8 @@ public class RegionService {
       user.setDefaultRegion(defaultRegion);
 
       return InterestRegionDto.response(interestRegionRepository.save(defaultRegion));
+    } catch (GeneralException e) {
+      throw e;
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

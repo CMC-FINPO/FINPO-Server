@@ -6,7 +6,6 @@ import kr.finpo.api.service.CommentService;
 import kr.finpo.api.service.PostService;
 import kr.finpo.api.service.ReportService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@Slf4j
 @Secured({"ROLE_ADMIN", "ROLE_USER"})
 @RequestMapping("/post")
 public class PostController {
@@ -59,26 +57,19 @@ public class PostController {
   }
 
   @PostMapping
-  public DataResponse<Object> insert(
-      @RequestBody PostDto body
-  ) {
+  public DataResponse<Object> insert(@RequestBody PostDto body) {
     return DataResponse.of(postService.insert(body));
   }
 
   @PutMapping("/{id}")
-  public DataResponse<Object> update(
-      @RequestBody PostDto body, @PathVariable Long id
-  ) {
+  public DataResponse<Object> update(@RequestBody PostDto body, @PathVariable Long id) {
     return DataResponse.of(postService.update(body, id));
   }
 
   @DeleteMapping("/{id}")
-  public DataResponse<Object> delete(
-      @PathVariable Long id
-  ) {
+  public DataResponse<Object> delete(@PathVariable Long id) {
     return DataResponse.of(postService.delete(id));
   }
-
 
   @PostMapping("/{id}/like")
   public DataResponse<Object> like(@PathVariable Long id) {
@@ -99,7 +90,6 @@ public class PostController {
   public DataResponse<Object> deleteBookmark(@PathVariable Long id) {
     return DataResponse.of(postService.deleteBookmark(id));
   }
-
 
   @GetMapping("/{id}/comment")
   public DataResponse<Object> getComments(@PathVariable Long id, Pageable pageable) {

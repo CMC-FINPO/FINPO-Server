@@ -29,8 +29,8 @@ public class DbConfig {
       regionService.initialize();
       categoryService.initialize();
       reportService.initialize();
-      ggdataService.initialize();
-      youthcenterService.initialize();
+      ggdataService.initialize(true);
+      youthcenterService.initialize(true);
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
