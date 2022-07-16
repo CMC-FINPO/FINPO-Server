@@ -218,6 +218,9 @@ public class PostService {
 
   public PostDto bookmark(Long id) {
     try {
+      if (bookmarkPostRepository.countByUserId(SecurityUtil.getCurrentUserId()) >= Constraint.BOOKMARK_POST_MAX_CNT)
+        throw new GeneralException(ErrorCode.BAD_REQUEST, "Bookmarked posts must equal or less than " + Constraint.BOOKMARK_POST_MAX_CNT);
+
       Post post = postRepository.findById(id).get();
       User user = getMe();
       checkStatus(id);
