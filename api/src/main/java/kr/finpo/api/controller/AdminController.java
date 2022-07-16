@@ -1,6 +1,8 @@
 package kr.finpo.api.controller;
 
+import kr.finpo.api.domain.Information;
 import kr.finpo.api.dto.*;
+import kr.finpo.api.repository.InformationRepository;
 import kr.finpo.api.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,12 @@ public class AdminController {
   private final UserService userService;
   private final BannedUserService bannedUserService;
   private final OAuthService oAuthService;
+  private final InformationRepository informationRepository;
+
+  @PostMapping("/admin/information")
+  public DataResponse<Object> insert(@RequestBody Information body) {
+    return DataResponse.of(informationRepository.save(Information.of(body.getType(), body.getContent(), body.getUrl(), body.getStatus())));
+  }
 
   @PostMapping("/policy")
   public DataResponse<Object> insertCustom(
