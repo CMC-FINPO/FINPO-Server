@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,7 +82,7 @@ public class BannedUserService {
           bannedUser.setReport(reportRepository.findById(report.getId()).get())
       );
       if (releaseNow) {
-        bannedUser.setReleaseDate(LocalDate.now());
+        bannedUser.setReleaseDate(LocalDate.now(ZoneId.of("Asia/Seoul")));
         User user = userRepository.findById(bannedUser.getUser().getId()).get();
         user.setRole(Role.ROLE_USER);
       }
