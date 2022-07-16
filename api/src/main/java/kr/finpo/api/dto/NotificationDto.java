@@ -26,6 +26,6 @@ public record NotificationDto(
         notification.getId(),
         notification.getType(),
         Optional.ofNullable(notification.getPolicy()).map(policy -> PolicyDto.response(policy, null)).orElse(null),
-        Optional.ofNullable(notification.getComment()).map(comment -> CommentDto.response(comment, true, null, null)).orElse(null));
+        Optional.ofNullable(notification.getComment()).map(comment -> CommentDto.response(comment, true, null)).orElse(null));
   }
 }

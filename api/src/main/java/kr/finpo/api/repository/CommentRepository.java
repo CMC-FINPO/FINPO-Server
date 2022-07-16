@@ -13,9 +13,11 @@ import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-  public Page<Comment> findByPostIdAndParentId(Long id, Long parentId, Pageable pageable);
+  @Query("SELECT cm FROM Comment cm WHERE cm.parent IS NULL AND cm.post.id =:postId AND cm.user.id NOT IN (SELECT bu.blockedUser.id FROM BlockedUser bu WHERE bu.user.id = :userId AND bu.anonymity = cm.anonymity)")
+  public Page<Comment> findByPostId(Long postId, Long userId, Pageable pageable);
 
-  public List<Comment> findByPostIdAndParentId(Long id, Long parentId);
+  @Query("SELECT cm FROM Comment cm WHERE cm.parent.id =:parentId AND cm.user.id NOT IN (SELECT bu.blockedUser.id FROM BlockedUser bu WHERE bu.user.id = :userId AND bu.anonymity = cm.anonymity)")
+  public List<Comment> findByParentId(Long parentId, Long userId);
 
   public Optional<Comment> findFirst1ByPostIdAndUserIdAndAnonymity(Long id, Long userId, Boolean anonymity);
 
@@ -23,7 +25,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
   public List<Comment> findByUserId(Long userId);
 
-  @Query("SELECT comment FROM Comment comment WHERE comment.status = true AND comment.user.id = :userId GROUP BY comment.post.id")
+  @Query("SELECT cm FROM Comment cm WHERE cm.status = true AND cm.user.id =:userId AND cm.post.user.id NOT IN (SELECT bu.blockedUser.id FROM BlockedUser bu WHERE bu.user.id = :userId AND bu.anonymity = cm.post.anonymity) GROUP BY cm.post.id")
   public Page<Comment> findByUserId(Long userId, Pageable pageable);
 }
 

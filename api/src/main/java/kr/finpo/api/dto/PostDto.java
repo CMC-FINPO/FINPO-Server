@@ -7,6 +7,7 @@ import kr.finpo.api.domain.PostImg;
 import kr.finpo.api.repository.BlockedUserRepository;
 import kr.finpo.api.repository.BookmarkPostRepository;
 import kr.finpo.api.repository.LikePostRepository;
+import kr.finpo.api.repository.PostRepository;
 import kr.finpo.api.util.SecurityUtil;
 
 import java.time.LocalDateTime;
@@ -23,9 +24,8 @@ public record PostDto(
     Boolean anonymity,
     Integer likes,
     Long hits,
-    Integer countOfComment,
+    Long countOfComment,
     UserDto user,
-    Boolean isUserBlocked,
     Boolean isUserWithdraw,
     Boolean isMine,
     Boolean isLiked,
@@ -44,10 +44,9 @@ public record PostDto(
     return post;
   }
 
-  public static PostDto response(Post post, List<PostImg> imgs, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, BlockedUserRepository blockedUserRepository) {
+  public static PostDto response(Post post, List<PostImg> imgs, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, PostRepository postRepository) {
     Boolean isLiked = !isEmpty(likePostRepository) && likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
     Boolean isBookmarked = !isEmpty(bookmarkPostRepository) && bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), post.getUser().getId(), post.getAnonymity()).isPresent();
 
     return new PostDto(
         post.getStatus(),
@@ -56,9 +55,8 @@ public record PostDto(
         post.getAnonymity(),
         post.getLikes(),
         post.getHits(),
-        post.getCountOfComment(),
-        post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()): null,
-        isUserBlocked,
+        postRepository.countComments(post.getId(), SecurityUtil.getCurrentUserId()),
+        post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()) : null,
         !post.getUser().getStatus() ? true : null,
         Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
         isLiked,
@@ -74,10 +72,9 @@ public record PostDto(
     return previewResponse(post, null, null, null);
   }
 
-  public static PostDto previewResponse(Post post, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, BlockedUserRepository blockedUserRepository) {
+  public static PostDto previewResponse(Post post, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, PostRepository postRepository) {
     Boolean isLiked = likePostRepository == null ? null : likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
     Boolean isBookmarked = bookmarkPostRepository == null ? null : bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), post.getUser().getId(), post.getAnonymity()).isPresent();
 
     return new PostDto(
         post.getStatus(),
@@ -86,9 +83,8 @@ public record PostDto(
         post.getAnonymity(),
         post.getLikes(),
         post.getHits(),
-        post.getCountOfComment(),
-        post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()): null,
-        isUserBlocked,
+        isEmpty(postRepository) ? null: postRepository.countComments(post.getId(), SecurityUtil.getCurrentUserId()),
+        post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()) : null,
         !post.getUser().getStatus() ? true : null,
         Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
         isLiked,
@@ -108,9 +104,8 @@ public record PostDto(
         post.getAnonymity(),
         post.getLikes(),
         post.getHits(),
-        post.getCountOfComment(),
-        post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()): null,
         null,
+        post.getAnonymity() ? null : post.getUser().getStatus() ? UserDto.communityResponse(post.getUser()) : null,
         !post.getUser().getStatus() ? true : null,
         Optional.ofNullable(post.getUser()).map(val -> val.getId().equals(SecurityUtil.getCurrentUserId())).orElse(null),
         null,

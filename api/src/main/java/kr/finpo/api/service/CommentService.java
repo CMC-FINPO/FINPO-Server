@@ -52,10 +52,10 @@ public class CommentService {
     try {
       postService.checkStatus(postId);
 
-      Page<Comment> comments = commentRepository.findByPostIdAndParentId(postId, null, pageable);
+      Page<Comment> comments = commentRepository.findByPostId(postId, SecurityUtil.getCurrentUserId(), pageable);
 
       return comments.map(comment ->
-          CommentDto.response(comment, false, commentRepository.findByPostIdAndParentId(postId, comment.getId()), blockedUserRepository)
+          CommentDto.response(comment, false, commentRepository.findByParentId(comment.getId(), SecurityUtil.getCurrentUserId()))
       );
     } catch (GeneralException e) {
       throw e;
@@ -94,7 +94,7 @@ public class CommentService {
 
       log.debug("sendCommentPush: " + fcmService.sendCommentPush(comment).toString());
 
-      return CommentDto.response(comment, true, null, null);
+      return CommentDto.response(comment, true, null);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {
@@ -108,7 +108,7 @@ public class CommentService {
       authorizeMe(comment.getUser().getId());
       checkStatus(id);
       comment = commentRepository.save(comment);
-      return CommentDto.response(comment, false, null, null);
+      return CommentDto.response(comment, false, null);
     } catch (GeneralException e) {
       throw e;
     } catch (Exception e) {

@@ -19,7 +19,6 @@ public record CommentDto(
     Boolean anonymity,
     UserDto user,
     Boolean isUserWithdraw,
-    Boolean isUserBlocked,
     Integer anonymityId,
     Boolean isWriter,
     Boolean isMine,
@@ -37,10 +36,10 @@ public record CommentDto(
     return comment;
   }
 
-  public static CommentDto response(Comment comment, Boolean showPost, List<Comment> childs, BlockedUserRepository blockedUserRepository) {
-    if (!comment.getUser().getStatus()) return withdrawResponse(comment, showPost, childs, blockedUserRepository);
-    if (!comment.getStatus()) return deletedResponse(comment, showPost, childs, blockedUserRepository);
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), comment.getUser().getId(), comment.getAnonymity()).isPresent();
+  public static CommentDto response(Comment comment, Boolean showPost, List<Comment> childs) {
+    if (!comment.getUser().getStatus()) return withdrawResponse(comment, showPost, childs);
+    if (!comment.getStatus()) return deletedResponse(comment, showPost, childs);
+
     return new CommentDto(
         comment.getStatus(),
         comment.getId(),
@@ -49,7 +48,6 @@ public record CommentDto(
         comment.getAnonymity(),
         comment.getAnonymity() ? null : UserDto.communityResponse(comment.getUser()),
         null,
-        isUserBlocked,
         comment.getAnonymityId().equals(0) ? null : comment.getAnonymityId(),
         comment.getUser().getId().equals(Optional.ofNullable(comment.getPost().getUser()).map(User::getId).orElse(null)),
         comment.getUser().getId().equals(SecurityUtil.getCurrentUserId()),
@@ -57,7 +55,7 @@ public record CommentDto(
         comment.getCreatedAt(),
         comment.getModifiedAt(),
         showPost ? PostDto.previewResponse(comment.getPost()) : null,
-        childs == null || childs.isEmpty() ? null : childs.stream().map(child -> CommentDto.response(child, false, null, blockedUserRepository)).toList()
+        childs == null || childs.isEmpty() ? null : childs.stream().map(child -> CommentDto.response(child, false, null)).toList()
     );
   }
 
@@ -77,13 +75,11 @@ public record CommentDto(
         null,
         null,
         null,
-        null,
         null
     );
   }
 
-  public static CommentDto deletedResponse(Comment comment, Boolean showPost, List<Comment> childs, BlockedUserRepository blockedUserRepository) {
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), comment.getUser().getId(), comment.getAnonymity()).isPresent();
+  public static CommentDto deletedResponse(Comment comment, Boolean showPost, List<Comment> childs) {
     return new CommentDto(
         comment.getStatus(),
         comment.getId(),
@@ -92,7 +88,6 @@ public record CommentDto(
         null,
         null,
         null,
-        isUserBlocked,
         null,
         null,
         null,
@@ -100,12 +95,11 @@ public record CommentDto(
         null,
         null,
         showPost ? PostDto.previewResponse(comment.getPost()) : null,
-        childs == null || childs.isEmpty() ? null : childs.stream().map(child -> CommentDto.response(child, false, null, blockedUserRepository)).toList()
+        childs == null || childs.isEmpty() ? null : childs.stream().map(child -> CommentDto.response(child, false, null)).toList()
     );
   }
 
-  public static CommentDto withdrawResponse(Comment comment, Boolean showPost, List<Comment> childs, BlockedUserRepository blockedUserRepository) {
-    Boolean isUserBlocked = blockedUserRepository == null ? null : blockedUserRepository.findOneByUserIdAndBlockedUserIdAndAnonymity(SecurityUtil.getCurrentUserId(), comment.getUser().getId(), comment.getAnonymity()).isPresent();
+  public static CommentDto withdrawResponse(Comment comment, Boolean showPost, List<Comment> childs) {
     return new CommentDto(
         comment.getStatus(),
         comment.getId(),
@@ -114,15 +108,14 @@ public record CommentDto(
         comment.getAnonymity(),
         null,
         true,
-        isUserBlocked,
         comment.getAnonymityId().equals(0) ? null : comment.getAnonymityId(),
-        null,
+        comment.getUser().getId().equals(Optional.ofNullable(comment.getPost().getUser()).map(User::getId).orElse(null)),
         null,
         comment.getIsModified(),
         comment.getCreatedAt(),
         comment.getModifiedAt(),
         showPost ? PostDto.previewResponse(comment.getPost()) : null,
-        childs == null || childs.isEmpty() ? null : childs.stream().map(child -> CommentDto.response(child, false, null, blockedUserRepository)).toList()
+        childs == null || childs.isEmpty() ? null : childs.stream().map(child -> CommentDto.response(child, false, null)).toList()
     );
   }
 
@@ -134,7 +127,6 @@ public record CommentDto(
         comment.getContent(),
         comment.getAnonymity(),
         UserDto.communityResponse(comment.getUser()),
-        null,
         null,
         comment.getAnonymityId().equals(0) ? null : comment.getAnonymityId(),
         comment.getUser().getId().equals(Optional.ofNullable(comment.getPost().getUser()).map(User::getId).orElse(null)),
