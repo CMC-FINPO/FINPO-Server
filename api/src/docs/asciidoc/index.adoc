@@ -1168,3 +1168,72 @@ operation::글신고[snippets='http-request,request-headers,path-parameters,requ
 &nbsp;
 
 &nbsp;
+
+== 정보
+==== OPEN API
+
+[source,http,options="nowrap"]
+----
+GET /information/open-api HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Host: dev.finpo.kr
+----
+[source,options="nowrap"]
+----
+{
+  "success":true,
+  "errorCode":0,
+  "message":"Ok",
+  "data":[
+    {
+      "id":11827,
+      "type":"open-api",
+      "content":"한국고용정보원 온라인청년센터",
+      "url":"https://www.youthcenter.go.kr/opi/openApiIntro.do",
+      "status":null,
+      "hidden":false
+    },
+    {
+      "id":11828,
+      "type":"open-api",
+      "content":"경기데이터드림",
+      "url":"https://data.gg.go.kr/portal/intro/develop/searchBulletinPage.do",
+      "status":null,
+      "hidden":false
+    }
+  ]
+}
+----
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+==== 서버 상태
+
+[source,http,options="nowrap"]
+----
+GET /information/server HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Host: dev.finpo.kr
+----
+[source,options="nowrap"]
+----
+{
+  "success":true,
+  "errorCode":0,
+  "message":"Ok",
+  "data":[
+    {
+      "id":11829,
+      "type":"server",
+      "content":"점검중\n(`22.07.18 23:00 ~ `22.07.19 02:00)",
+      "url":null,
+      "status":false,
+      "hidden":false
+    }
+  ]
+}
+----

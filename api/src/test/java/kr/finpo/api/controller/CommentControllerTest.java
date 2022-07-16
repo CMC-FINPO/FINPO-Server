@@ -125,8 +125,6 @@ class CommentControllerTest {
     delete(deleteId, anotherAccessToken, false);
     update(updateId, "글작성자가 쓰는 세번째 대댓글 수정된거임", accessToken, false);
     uc.deleteMe(anotherAccessToken);
-    blockUser(blockId, accessToken);
-    blockUser(blockId2, accessToken);
     blockUser(blockedId3, accessToken);
     getByPostId(postId, accessToken);
   }
@@ -167,9 +165,8 @@ class CommentControllerTest {
                     , fieldWithPath("data.content.[].anonymityId").description("익명 id").optional().type(JsonFieldType.NUMBER)
                     , fieldWithPath("data.content.[].user").description("댓글 작성 유저(익명 시 빔)").optional().type(JsonFieldType.OBJECT)
                     , fieldWithPath("data.content.[].isUserWithdraw").description("댓글 작성 유저 탈퇴 여부").optional().type(JsonFieldType.BOOLEAN)
-                    , fieldWithPath("data.content.[].isUserBlocked").description("내가 차단한 유저의 댓글인가").optional().type(JsonFieldType.BOOLEAN)
-                    , fieldWithPath("data.content.[].isWriter").description("댓글 작성자가 글 작성자인가").optional()
-                    , fieldWithPath("data.content.[].isMine").description("댓글 작성자가 나인가").optional()
+                    , fieldWithPath("data.content.[].isWriter").description("댓글 작성자가 글 작성자인가").optional().type(JsonFieldType.BOOLEAN)
+                    , fieldWithPath("data.content.[].isMine").description("댓글 작성자가 나인가").optional().type(JsonFieldType.BOOLEAN)
                     , fieldWithPath("data.content.[].createdAt").description("작성일").optional()
                     , fieldWithPath("data.content.[].modifiedAt").description("수정일").optional()
 
@@ -532,9 +529,12 @@ class CommentControllerTest {
   }
 
   @Test
-  List<BlockedUserDto> getMyBlock() throws Exception {
+  void getByBlockTest() throws  Exception{
     getByPostId();
+    getMyBlock(accessToken);
+  }
 
+  List<BlockedUserDto> getMyBlock(String accessToken) throws Exception {
     MvcResult res = mockMvc.perform(get("/user/block/me")
             .contentType(MediaType.APPLICATION_JSON)
             .header("Authorization", "Bearer " + accessToken)
@@ -571,7 +571,7 @@ class CommentControllerTest {
     int postId = pc.insertPost(accessToken);
     int commentId = insert(postId, "1빠당", anotherAccessToken, false);
     blockUser(commentId, accessToken);
-    Long blockId = getMyBlock().get(0).id();
+    Long blockId = getMyBlock(accessToken).get(0).id();
     long beforeCnt = blockedUserRepository.count();
 
     mockMvc.perform(RestDocumentationRequestBuilders.delete("/user/block/{id}", blockId)
