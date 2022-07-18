@@ -188,9 +188,9 @@ public class PostService {
           throw new GeneralException(ErrorCode.BAD_REQUEST, "You're the writer of this post");
       });
 
-      likePostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresentOrElse(null, () -> {
-        likePostRepository.save(LikePost.of(user, post));
-      });
+      if (!likePostRepository.findByUserIdAndPostId(user.getId(), id).isEmpty())
+        throw new GeneralException(ErrorCode.BAD_REQUEST, "This post already liked");
+      likePostRepository.save(LikePost.of(user, post));
 
       return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository, postRepository);
     } catch (GeneralException e) {
@@ -206,7 +206,7 @@ public class PostService {
       User user = getMe();
       checkStatus(id);
 
-      likePostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresent(likePostRepository::delete);
+      likePostRepository.deleteAll(likePostRepository.findByUserIdAndPostId(user.getId(), id));
 
       return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository, postRepository);
     } catch (GeneralException e) {
@@ -225,9 +225,10 @@ public class PostService {
       User user = getMe();
       checkStatus(id);
 
-      bookmarkPostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresentOrElse(null, () -> {
-        bookmarkPostRepository.save(BookmarkPost.of(user, post));
-      });
+      if(!bookmarkPostRepository.findByUserIdAndPostId(user.getId(), id).isEmpty())
+        throw new GeneralException(ErrorCode.BAD_REQUEST, "This post already bookmarked");
+
+      bookmarkPostRepository.save(BookmarkPost.of(user, post));
 
       return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository, postRepository);
     } catch (GeneralException e) {
@@ -243,7 +244,7 @@ public class PostService {
       User user = getMe();
       checkStatus(id);
 
-      bookmarkPostRepository.findOneByUserIdAndPostId(user.getId(), id).ifPresent(bookmarkPostRepository::delete);
+      bookmarkPostRepository.deleteAll(bookmarkPostRepository.findByUserIdAndPostId(user.getId(), id));
 
       return PostDto.previewResponse(post, likePostRepository, bookmarkPostRepository, postRepository);
     } catch (GeneralException e) {

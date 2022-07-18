@@ -45,8 +45,8 @@ public record PostDto(
   }
 
   public static PostDto response(Post post, List<PostImg> imgs, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, PostRepository postRepository) {
-    Boolean isLiked = !isEmpty(likePostRepository) && likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
-    Boolean isBookmarked = !isEmpty(bookmarkPostRepository) && bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
+    Boolean isLiked = !isEmpty(likePostRepository) && !likePostRepository.findByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isEmpty();
+    Boolean isBookmarked = !isEmpty(bookmarkPostRepository) && !bookmarkPostRepository.findByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isEmpty();
 
     return new PostDto(
         post.getStatus(),
@@ -73,8 +73,8 @@ public record PostDto(
   }
 
   public static PostDto previewResponse(Post post, LikePostRepository likePostRepository, BookmarkPostRepository bookmarkPostRepository, PostRepository postRepository) {
-    Boolean isLiked = likePostRepository == null ? null : likePostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
-    Boolean isBookmarked = bookmarkPostRepository == null ? null : bookmarkPostRepository.findOneByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isPresent();
+    Boolean isLiked = !isEmpty(likePostRepository) && !likePostRepository.findByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isEmpty();
+    Boolean isBookmarked = !isEmpty(bookmarkPostRepository) && !bookmarkPostRepository.findByUserIdAndPostId(SecurityUtil.getCurrentUserId(), post.getId()).isEmpty();
 
     return new PostDto(
         post.getStatus(),

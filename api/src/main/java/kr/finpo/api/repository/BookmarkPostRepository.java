@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,7 +17,7 @@ public interface BookmarkPostRepository extends JpaRepository<BookmarkPost, Long
 
   public Long countByUserId(Long userId);
 
-  public Optional<BookmarkPost> findOneByUserIdAndPostId(Long userId, Long postId);
+  public List<BookmarkPost> findByUserIdAndPostId(Long userId, Long postId);
 
   public Long deleteByUserId(Long userId);
 
