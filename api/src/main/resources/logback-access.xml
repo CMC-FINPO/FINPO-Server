@@ -1,0 +1,33 @@
+<configuration>
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
+
+    <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
+    <property name="LOG_PATTERN"
+              value="[%d{yyyy-MM-dd HH:mm:ss}:%-4relative] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
+
+    <springProfile name="!prod">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%fullRequest%n%n%fullResponse</pattern>
+            </encoder>
+        </appender>
+    </springProfile>
+
+    <springProfile name="!prod">
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+            <file>./log/access/access-${BY_DATE}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>./backup/access/access-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>100MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder>
+                <!--            <pattern>%t{yyyy-MM-dd HH:mm:ss}\t%a\t%r\t%s\t%i{Referer}\t%i{User-Agent}\t%D\t%I</pattern>-->
+                <pattern>%fullRequest%n%fullResponse</pattern>
+            </encoder>
+        </appender>
+    </springProfile>
+
+</configuration>

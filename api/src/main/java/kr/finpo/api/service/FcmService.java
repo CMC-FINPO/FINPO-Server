@@ -137,6 +137,7 @@ public class FcmService {
             FirebaseMessaging.getInstance().send(message);
             userIds.add(postUser.getId());
           } catch (FirebaseMessagingException e) {
+            log.error("comment push error");
             log.error(e.toString());
           }
         });

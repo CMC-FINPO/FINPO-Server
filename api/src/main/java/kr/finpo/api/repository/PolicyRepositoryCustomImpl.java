@@ -107,7 +107,6 @@ public class PolicyRepositoryCustomImpl implements PolicyRepositoryCustom {
   @Override
   public Page<Policy> querydslFindbyTitle(String title, LocalDate startDate, LocalDate endDate, List<Long> categoryIds, List<Long> regionIds, Boolean status, Pageable pageable) {
 
-    System.out.println(title);
 
     List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
 

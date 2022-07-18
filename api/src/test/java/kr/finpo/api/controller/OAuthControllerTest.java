@@ -500,10 +500,8 @@ class OAuthControllerTest {
 
   @Test
   void reissueTokens() throws Exception {
-
     HashMap<String, String> map = registerAndGetToken(mockMvc);
     String accessToken = map.get("accessToken"), refreshToken = map.get("refreshToken");
-    System.out.println(refreshToken);
 
     HashMap<String, Object> body = new HashMap<>();
     ObjectMapper objectMapper = new ObjectMapper();

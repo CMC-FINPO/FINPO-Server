@@ -90,7 +90,9 @@ public class GgdataService {
 
   public void initialize(Boolean isAuto) {
     try {
-      log.debug("batch start");
+      log.info("ggdata batch start");
+      Integer cnt = 0;
+      Boolean endFlag = false;
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -118,15 +120,15 @@ public class GgdataService {
           Policy policy = row.toEntity();
           if (categoryName.get(row.DIV_CD()) == null) continue;
           if (policyRepository.findOneByPolicyKey(policy.getPolicyKey()).isPresent()) {
+            endFlag = true;
             log.debug("batch end");
-            return;
+            break;
           }
 
           try {
             Region region = regionRepository.findById(RegionService.name2regionId("경기", regionName.get(row.REGION_CD()))).get();
             policy.setRegion(region);
           } catch (Exception e) {
-            log.debug(e.toString());
             continue;
           }
 
@@ -134,7 +136,10 @@ public class GgdataService {
           if(isAuto) policy.setStatus(false);
           policyRepository.save(policy);
         }
+        if (endFlag) break;
       }
+      log.info(cnt + " policy added");
+      log.info("ggdata batch end");
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

@@ -184,7 +184,6 @@ public class AdminController {
     log.debug("애플 인증: " + appleAuthDto.toString());
     Object loginRes = oAuthService.loginWithOAuthToken(appleAuthDto.id_token(), "apple");
 
-    log.debug("loginRes: " + loginRes);
     HttpHeaders headers = new HttpHeaders();
     if (loginRes.getClass() == UserDto.class) { // not registered
       UserDto userDto = (UserDto) loginRes;

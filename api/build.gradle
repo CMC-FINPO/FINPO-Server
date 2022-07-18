@@ -45,8 +45,7 @@ dependencies {
     implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
     implementation 'org.bouncycastle:bcpkix-jdk14:1.71'
     implementation 'com.google.firebase:firebase-admin:6.8.1'
-
-
+    implementation 'ch.qos.logback:logback-access:1.2.11'
 
 
     // security 관련 의존성

@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@ToString
 public class RefreshToken {
 
   @Id

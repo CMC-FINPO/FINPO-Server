@@ -9,6 +9,8 @@ import kr.finpo.api.domain.InterestRegion;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record FcmDto(
     Long id,
@@ -32,6 +34,7 @@ public record FcmDto(
   }
 
   public static FcmDto response(Fcm fcm, List<InterestCategory> interestCategories, List<InterestRegion> interestRegions) {
+    if(isEmpty(fcm)) return new FcmDto(null, null, false, null, null, null, null);
     return new FcmDto(null, null, fcm.getSubscribe(), fcm.getCommunitySubscribe(), fcm.getAdSubscribe(), interestCategories.stream().map(InterestCategoryDto::response).toList(), interestRegions.stream().map(InterestRegionDto::response).toList());
   }
 }

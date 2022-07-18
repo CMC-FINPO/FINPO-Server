@@ -209,7 +209,8 @@ public class YouthcenterService {
 
   public void initialize(Boolean isAuto) {
     try {
-      log.debug("youthcenter batch start");
+      log.info("youthcenter batch start");
+      Integer cnt = 0;
 
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -269,11 +270,13 @@ public class YouthcenterService {
 
             if (isAuto) policy.setStatus(false);
             policyRepository.save(policy);
+            cnt++;
           }
           if (endFlag) break;
         }
       }
-      log.debug("youthcenter batch end");
+      log.info(cnt + " policy added");
+      log.info("youthcenter batch end");
     } catch (Exception e) {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }

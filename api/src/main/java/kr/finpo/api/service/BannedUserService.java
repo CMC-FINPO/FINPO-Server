@@ -96,12 +96,14 @@ public class BannedUserService {
 
   @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
   public void releaseUser() {
+    log.info("user releasing start");
     bannedUserRepository.findByReleaseDate(LocalDate.now()).forEach(bannedUser -> {
       log.info("user " + bannedUser.getUser().getId() + " " + bannedUser.getUser().getNickname() + " free");
       User user = bannedUser.getUser();
       user.setRole(Role.ROLE_USER);
       userRepository.save(user);
     });
+    log.info("user releasing finished");
   }
 }
 
