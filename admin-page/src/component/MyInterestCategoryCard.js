@@ -59,9 +59,10 @@ export default function MyInterestCategoryCard({ fetchData, fetch }) {
     });
   }, []);
   useEffect(() => {
-    axiosInstance.get(`policy/category/name?parentId=${region1}`).then((res) => {
-      setRegions2([...res.data.data]);
-    });
+    if (region1)
+      axiosInstance.get(`policy/category/name?parentId=${region1}`).then((res) => {
+        setRegions2([...res.data.data]);
+      });
   }, [region1]);
 
   return (

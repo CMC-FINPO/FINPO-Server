@@ -59,9 +59,10 @@ export default function MyInterestRegionCard({ fetchData, fetch }) {
     });
   }, []);
   useEffect(() => {
-    axiosInstance.get(`region/name?parentId=${region1}`).then((res) => {
-      setRegions2([...res.data.data]);
-    });
+    if (region1)
+      axiosInstance.get(`region/name?parentId=${region1}`).then((res) => {
+        setRegions2([...res.data.data]);
+      });
   }, [region1]);
 
   return (

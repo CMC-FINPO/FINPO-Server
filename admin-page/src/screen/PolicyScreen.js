@@ -99,21 +99,22 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
     // });
 
     axiosInstance.get('region/name').then((res) => {
-      console.log(res);
       setRegions1([...res.data.data]);
     });
   }, []);
 
   useEffect(() => {
-    axiosInstance.get(`region/name?parentId=${region1}`).then((res) => {
-      setRegions2([...res.data.data]);
-    });
+    if (region1)
+      axiosInstance.get(`region/name?parentId=${region1}`).then((res) => {
+        setRegions2([...res.data.data]);
+      });
   }, [region1]);
 
   useEffect(() => {
-    axiosInstance.get(`region/name?parentId=${r1}`).then((res) => {
-      setRegions2([...res.data.data]);
-    });
+    if (r1)
+      axiosInstance.get(`region/name?parentId=${r1}`).then((res) => {
+        setRegions2([...res.data.data]);
+      });
   }, [r1]);
 
   const [ca1, setCa1] = useState();
@@ -126,14 +127,16 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
     });
   }, []);
   useEffect(() => {
-    axiosInstance.get(`policy/category/name?parentId=${ca1}`).then((res) => {
-      setCas2([...res.data.data]);
-    });
+    if (ca1)
+      axiosInstance.get(`policy/category/name?parentId=${ca1}`).then((res) => {
+        setCas2([...res.data.data]);
+      });
   }, [ca1]);
   useEffect(() => {
-    axiosInstance.get(`policy/category/name?parentId=${c1}`).then((res) => {
-      setCas2([...res.data.data]);
-    });
+    if (c1)
+      axiosInstance.get(`policy/category/name?parentId=${c1}`).then((res) => {
+        setCas2([...res.data.data]);
+      });
   }, [c1]);
 
   const updatePolicy = (e, row, sendNotification) => {

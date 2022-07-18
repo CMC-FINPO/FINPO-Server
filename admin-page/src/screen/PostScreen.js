@@ -76,6 +76,8 @@ export default function PostScreen({ user, setUser, fetch, fetchData }) {
   }, [postId]);
 
   const reloadPost = () => {
+    if (!postId) return;
+
     axiosInstance.get(`post/${postId}`).then((res) => {
       setPost(res.data.data);
       setModifyContent(res.data.data.content);

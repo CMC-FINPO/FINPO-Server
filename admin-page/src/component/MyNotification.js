@@ -41,9 +41,9 @@ export default function MyNotification({ fetchData, fetch }) {
   useEffect(() => {
     axiosInstance.get('notification/me').then((res) => {
       setNotification(res.data.data);
-      setAllNotice(res.data.data.subscribe);
-      setCategories([...res.data.data.interestCategories]);
-      setRegions([...res.data.data.interestRegions]);
+      setAllNotice(res.data.data?.subscribe);
+      setCategories([...res.data.data?.interestCategories]);
+      setRegions([...res.data.data?.interestRegions]);
     });
   }, [fetch]);
 
