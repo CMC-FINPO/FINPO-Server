@@ -9,12 +9,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-  @Query(value = "SELECT n" +
-      " FROM Notification n" +
-      " WHERE n.user.id = :userId AND n.id < :lastId")
+  @Query(value = "SELECT n FROM Notification n WHERE n.user.id = :userId AND n.id < :lastId AND (n.comment IS NULL OR n.comment.status = true)")
   public Page<Notification> findByUserId(Long userId, Long lastId, Pageable pageable);
 
-  public Page<Notification> findByUserId(Long id, Pageable pageable);
+  @Query(value = "SELECT n FROM Notification n WHERE n.user.id = :userId AND (n.comment IS NULL OR n.comment.status = true)")
+  public Page<Notification> findByUserId(Long userId, Pageable pageable);
 
   public Long deleteByUserId(Long userId);
 
