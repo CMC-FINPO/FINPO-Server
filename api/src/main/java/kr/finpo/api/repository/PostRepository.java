@@ -21,7 +21,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   @Query("SELECT po FROM Post po WHERE po.status = true AND (:content IS NULL OR po.content LIKE CONCAT('%', :content, '%')) AND (:lastId IS NULL OR po.id < :lastId) AND po.user.id NOT IN (SELECT bu.blockedUser.id FROM BlockedUser bu WHERE bu.user.id = :userId AND bu.anonymity = po.anonymity)")
   public Page<Post> findAll(Long userId, Long lastId, String content, Pageable pageable);
 
-  @Query("SELECT po FROM Post po WHERE po.user.id = :userId")
+  @Query("SELECT po FROM Post po WHERE po.user.id = :userId AND po.status = true")
   public Page<Post> findMy(Long userId, Pageable pageable);
 
   @Modifying
