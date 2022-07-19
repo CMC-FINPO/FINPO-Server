@@ -228,9 +228,7 @@ public class OAuthService {
       TokenDto tokenDto = tokenProvider.generateTokenDto(user.get());
 
       refreshTokenRepository.findOneByUserId(user.get().getId())
-          .ifPresent(refreshToken -> {
-            refreshTokenRepository.delete(refreshToken);
-          });
+          .ifPresent(refreshTokenRepository::delete);
 
       RefreshToken refreshToken = RefreshToken.of(tokenDto.getRefreshToken());
       refreshToken.setUser(user.get());
@@ -249,23 +247,25 @@ public class OAuthService {
     try {
       String oAuthAccountId = null;
 
-      if (oAuthType.equals("kakao")) {
-        oAuthAccountId = getKakaoAccount(oAuthAccessToken).id();
-        kakaoAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
-          throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
-        });
-      }
-      else if (oAuthType.equals("google")) {
-        oAuthAccountId = getGoogleAccount(oAuthAccessToken).of().id();
-        googleAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
-          throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
-        });
-      }
-      else if (oAuthType.equals("apple")) {
-        oAuthAccountId = getAppleAccount(oAuthAccessToken);
-        appleAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
-          throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
-        });
+      switch (oAuthType) {
+        case "kakao" -> {
+          oAuthAccountId = getKakaoAccount(oAuthAccessToken).id();
+          kakaoAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
+            throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
+          });
+        }
+        case "google" -> {
+          oAuthAccountId = getGoogleAccount(oAuthAccessToken).of().id();
+          googleAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
+            throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
+          });
+        }
+        case "apple" -> {
+          oAuthAccountId = getAppleAccount(oAuthAccessToken);
+          appleAccountRepository.findById(oAuthAccountId).ifPresent(s -> {
+            throw new GeneralException(ErrorCode.USER_ALREADY_REGISTERED);
+          });
+        }
       }
 
       // nickname duplication check
@@ -302,17 +302,19 @@ public class OAuthService {
       }
 
 
-      if (oAuthType.equals("kakao")) {
-        KakaoAccount kakaoAccount = kakaoAccountRepository.save(KakaoAccount.of(oAuthAccountId));
-        kakaoAccount.setUser(user);
-      }
-      else if (oAuthType.equals("google")) {
-        GoogleAccount googleAccount = googleAccountRepository.save(GoogleAccount.of(oAuthAccountId));
-        googleAccount.setUser(user);
-      }
-      else if (oAuthType.equals("apple")) {
-        AppleAccount appleAccount = appleAccountRepository.save(AppleAccount.of(oAuthAccountId));
-        appleAccount.setUser(user);
+      switch (oAuthType) {
+        case "kakao" -> {
+          KakaoAccount kakaoAccount = kakaoAccountRepository.save(KakaoAccount.of(oAuthAccountId));
+          kakaoAccount.setUser(user);
+        }
+        case "google" -> {
+          GoogleAccount googleAccount = googleAccountRepository.save(GoogleAccount.of(oAuthAccountId));
+          googleAccount.setUser(user);
+        }
+        case "apple" -> {
+          AppleAccount appleAccount = appleAccountRepository.save(AppleAccount.of(oAuthAccountId));
+          appleAccount.setUser(user);
+        }
       }
 
       TokenDto tokenDto = tokenProvider.generateTokenDto(user);
@@ -327,7 +329,6 @@ public class OAuthService {
       throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
     }
   }
-
 
   public TokenDto reissueTokens(TokenDto tokenDto) {
     try {

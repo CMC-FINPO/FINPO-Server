@@ -135,6 +135,7 @@ public class GgdataService {
           categoryRepository.findById(categoryName.get(row.DIV_CD())).ifPresent(policy::setCategory);
           if(isAuto) policy.setStatus(false);
           policyRepository.save(policy);
+          cnt++;
         }
         if (endFlag) break;
       }
