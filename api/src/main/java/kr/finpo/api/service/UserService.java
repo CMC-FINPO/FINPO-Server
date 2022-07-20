@@ -3,8 +3,10 @@ package kr.finpo.api.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.time.LocalDate;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.OAuthType;
+import kr.finpo.api.constant.Role;
 import kr.finpo.api.domain.*;
 import kr.finpo.api.dto.*;
 import kr.finpo.api.exception.GeneralException;
@@ -20,6 +22,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -49,6 +52,7 @@ public class UserService {
   private final RegionService regionService;
   private final UserRepository userRepository;
   private final UserPurposeRepository userPurposeRepository;
+  private final DormantUserRepository dormantUserRepository;
   private final KakaoAccountRepository kakaoAccountRepository;
   private final AppleAccountRepository appleAccountRepository;
   private final GoogleAccountRepository googleAccountRepository;
@@ -270,6 +274,18 @@ public class UserService {
     JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
     PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
     return converter.getPrivateKey(object);
+  }
+
+  @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+  public void checkDormantUser() {
+    log.info("dormant checking start");
+    userRepository.findByLastRefreshedDate(LocalDate.now(ZoneId.of("Asia/Seoul")).minusDays(1)).forEach(user -> {
+      log.info(user.getNickname() + " " + user.getId());
+      DormantUser dormantUser = user.changeToDormant();
+      userRepository.save(user);
+      dormantUserRepository.save(dormantUser);
+    });
+    log.info("dormant checking finished");
   }
 }
 

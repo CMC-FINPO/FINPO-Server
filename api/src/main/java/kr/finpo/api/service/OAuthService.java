@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.OAuthType;
 import kr.finpo.api.domain.*;
@@ -45,6 +47,7 @@ public class OAuthService {
   private final AppleAccountRepository appleAccountRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final UserRepository userRepository;
+  private final DormantUserRepository dormantUserRepository;
   private final InterestRegionRepository interestRegionRepository;
   private final RegionRepository regionRepository;
   private final S3Uploader s3Uploader;
@@ -207,7 +210,7 @@ public class OAuthService {
 
   public Object loginWithOAuthToken(String oAuthAccessToken, String oAuthType) {
     try {
-      Optional<User> user = null;
+      Optional<User> user = Optional.empty();
 
       if (oAuthType.equals("kakao")) {
         KakaoAccountDto kakaoAccount = getKakaoAccount(oAuthAccessToken);
@@ -223,6 +226,13 @@ public class OAuthService {
         String appleId = getAppleAccount(oAuthAccessToken);
         user = userRepository.findByAppleAccountId(appleId);
         if (user.isEmpty()) return UserDto.appleUserDto();
+      }
+
+      if(user.get().getIsDormant()) {
+        DormantUser dormantUser = dormantUserRepository.findOneById(user.get().getId()).get();
+        user.get().changeToNormal(dormantUser);
+        dormantUserRepository.deleteById(user.get().getId());
+        userRepository.save(user.get());
       }
 
       TokenDto tokenDto = tokenProvider.generateTokenDto(user.get());
@@ -350,6 +360,8 @@ public class OAuthService {
       RefreshToken newRefreshToken = RefreshToken.of(newTokenDto.getRefreshToken());
       newRefreshToken.setUser(user.get());
       refreshTokenRepository.save(newRefreshToken);
+      user.get().setLastRefreshedDate(LocalDate.now(ZoneId.of("Asia/Seoul")));
+      userRepository.save(user.get());
 
       return newTokenDto;
     } catch (GeneralException e) {

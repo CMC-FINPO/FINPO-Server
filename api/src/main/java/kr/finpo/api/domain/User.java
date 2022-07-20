@@ -61,8 +61,16 @@ public class User{
 
   @Setter
   @Column(nullable = false)
+  private Boolean isDormant = false;
+
+  @Setter
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private Role role = Role.ROLE_USER;
+
+  @Setter
+  @Column(nullable = true)
+  private LocalDate lastRefreshedDate;
 
   @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
   @CreatedDate
@@ -98,6 +106,29 @@ public class User{
     defaultRegion = null;
   }
 
+  public DormantUser changeToDormant() {
+    DormantUser dormantUser = DormantUser.of(this);
+    name = nickname = email  = profileImg = null;
+    birth = null;
+    gender = null;
+    isDormant = true;
+    statusId = null;
+    lastRefreshedDate = null;
+    defaultRegion = null;
+    return dormantUser;
+  }
+
+  public void changeToNormal(DormantUser dormantUser) {
+    name = dormantUser.getName();
+    nickname = dormantUser.getNickname();
+    email  = dormantUser.getEmail();
+    profileImg = dormantUser.getProfileImg();
+    birth = dormantUser.getBirth();
+    gender = dormantUser.getGender();
+    statusId = dormantUser.getStatusId();
+    defaultRegion = dormantUser.getDefaultRegion();
+    isDormant = false;
+  }
 
   @OneToOne(mappedBy = "user")
   private RefreshToken refreshToken;
@@ -113,7 +144,6 @@ public class User{
 
   @Setter
   @OneToOne
-  @NotNull
   @JoinColumn(name = "default_region_id")
   private InterestRegion defaultRegion;
 }
