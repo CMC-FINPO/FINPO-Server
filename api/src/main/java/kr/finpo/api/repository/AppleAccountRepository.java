@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AppleAccountRepository extends JpaRepository<AppleAccount, String> {
-  Long deleteByUserId(Long id);
+
+    Long deleteByUserId(Long id);
 }
 

@@ -8,22 +8,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Slf4j
 public class SecurityUtil {
 
-  private SecurityUtil() {
-  }
-
-  public static Long getCurrentUserId() {
-    final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-    if (authentication == null || authentication.getName() == null || authentication.getName().equals("anonymousUser")) {
-      throw new RuntimeException("Security Context 에 인증 정보가 없습니다.");
+    private SecurityUtil() {
     }
 
-    return Long.parseLong(authentication.getName());
-  }
+    public static Long getCurrentUserId() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-  public static Boolean isUserLogin() {
-    final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getName() == null || authentication.getName()
+            .equals("anonymousUser")) {
+            throw new RuntimeException("Security Context 에 인증 정보가 없습니다.");
+        }
 
-    return !(authentication == null || authentication.getName() == null || authentication.getName().equals("anonymousUser"));
-  }
+        return Long.parseLong(authentication.getName());
+    }
+
+    public static Boolean isUserLogin() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return !(authentication == null || authentication.getName() == null || authentication.getName()
+            .equals("anonymousUser"));
+    }
 }

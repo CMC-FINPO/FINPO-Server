@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DormantUserRepository extends JpaRepository<DormantUser, Long> {
-  public Optional<DormantUser> findOneById(Long id);
 
-  public void deleteById(Long id);
+    Optional<DormantUser> findOneById(Long id);
+
+    void deleteById(Long id);
 }
 

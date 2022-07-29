@@ -20,66 +20,67 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-  private final TokenProvider tokenProvider;
-  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-  private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    private final TokenProvider tokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-  @Override
-  public void configure(WebSecurity web) {
-    web.ignoring()
-        .antMatchers("/resources/**");
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    // CSRF 설정 Disable
-    http.csrf().disable()
-        // exception handling
-        .exceptionHandling()
-        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-        .accessDeniedHandler(jwtAccessDeniedHandler)
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring()
+            .antMatchers("/resources/**");
+    }
 
-        // disable session
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // CSRF 설정 Disable
+        http.csrf().disable()
+            // exception handling
+            .exceptionHandling()
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .accessDeniedHandler(jwtAccessDeniedHandler)
 
-        // non-token request url
-        .and()
-        .authorizeRequests()
-        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-        .antMatchers("/oauth/**").permitAll()
-        .antMatchers("/user/check-duplicate").permitAll()
-        .antMatchers("/region/name/**").permitAll()
-        .antMatchers("/policy/category/name/**").permitAll()
-        .antMatchers("/upload/**").permitAll()
-        .antMatchers("/docs/**").permitAll()
-        .antMatchers("/static/**").permitAll()
-        .antMatchers("/information/**").permitAll()
+            // disable session
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-        .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
+            // non-token request url
+            .and()
+            .authorizeRequests()
+            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+            .antMatchers("/oauth/**").permitAll()
+            .antMatchers("/user/check-duplicate").permitAll()
+            .antMatchers("/region/name/**").permitAll()
+            .antMatchers("/policy/category/name/**").permitAll()
+            .antMatchers("/upload/**").permitAll()
+            .antMatchers("/docs/**").permitAll()
+            .antMatchers("/static/**").permitAll()
+            .antMatchers("/information/**").permitAll()
 
-        .and().cors()
+            .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
-        .and()
-        .apply(new JwtSecurityConfig(tokenProvider));
-  }
+            .and().cors()
 
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.addAllowedOriginPattern("*");
-    configuration.addAllowedMethod("*");
-    configuration.addAllowedHeader("*");
-    configuration.setAllowCredentials(true);
-    configuration.setMaxAge(3600L);
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-  }
+            .and()
+            .apply(new JwtSecurityConfig(tokenProvider));
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }

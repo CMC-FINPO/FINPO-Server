@@ -8,4 +8,5 @@ public record KakaoTokenDto(
     String scope,
     String token_type
 ) {
+
 }

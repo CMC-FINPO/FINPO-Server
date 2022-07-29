@@ -1,15 +1,13 @@
 package kr.finpo.api.dto;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import kr.finpo.api.domain.Comment;
+import java.util.List;
+import java.util.Optional;
 import kr.finpo.api.domain.Fcm;
 import kr.finpo.api.domain.InterestCategory;
 import kr.finpo.api.domain.InterestRegion;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record FcmDto(
@@ -22,19 +20,24 @@ public record FcmDto(
     List<InterestRegionDto> interestRegions
 ) {
 
-  public FcmDto {
-  }
+    public FcmDto {
+    }
 
-  public Fcm updateEntity(Fcm fcm) {
-    Optional.ofNullable(registrationToken).ifPresent(fcm::setRegistrationToken);
-    Optional.ofNullable(subscribe).ifPresent(fcm::setSubscribe);
-    Optional.ofNullable(communitySubscribe).ifPresent(fcm::setCommunitySubscribe);
-    Optional.ofNullable(adSubscribe).ifPresent(fcm::setAdSubscribe);
-    return fcm;
-  }
+    public Fcm updateEntity(Fcm fcm) {
+        Optional.ofNullable(registrationToken).ifPresent(fcm::setRegistrationToken);
+        Optional.ofNullable(subscribe).ifPresent(fcm::setSubscribe);
+        Optional.ofNullable(communitySubscribe).ifPresent(fcm::setCommunitySubscribe);
+        Optional.ofNullable(adSubscribe).ifPresent(fcm::setAdSubscribe);
+        return fcm;
+    }
 
-  public static FcmDto response(Fcm fcm, List<InterestCategory> interestCategories, List<InterestRegion> interestRegions) {
-    if(isEmpty(fcm)) return new FcmDto(null, null, false, null, null, null, null);
-    return new FcmDto(null, null, fcm.getSubscribe(), fcm.getCommunitySubscribe(), fcm.getAdSubscribe(), interestCategories.stream().map(InterestCategoryDto::response).toList(), interestRegions.stream().map(InterestRegionDto::response).toList());
-  }
+    public static FcmDto response(Fcm fcm, List<InterestCategory> interestCategories,
+        List<InterestRegion> interestRegions) {
+        if (isEmpty(fcm)) {
+            return new FcmDto(null, null, false, null, null, null, null);
+        }
+        return new FcmDto(null, null, fcm.getSubscribe(), fcm.getCommunitySubscribe(), fcm.getAdSubscribe(),
+            interestCategories.stream().map(InterestCategoryDto::response).toList(),
+            interestRegions.stream().map(InterestRegionDto::response).toList());
+    }
 }

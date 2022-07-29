@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommunityReportRepository extends JpaRepository<CommunityReport, Long> {
-  public Page<CommunityReport> findAll(Pageable pageable);
+
+    Page<CommunityReport> findAll(Pageable pageable);
 }
 

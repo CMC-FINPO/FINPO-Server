@@ -1,5 +1,12 @@
 package kr.finpo.api.domain;
 
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,41 +14,38 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
-
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @ToString
 public class GoogleAccount {
 
-  @Id
-  @Setter
-  private String id;
+    @Id
+    @Setter
+    private String id;
 
+    @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
+    @CreatedDate
+    private LocalDateTime createdAt;
 
-  @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
-  @CreatedDate
-  private LocalDateTime createdAt;
+    @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
+    @LastModifiedDate
+    private LocalDateTime modifiedAt;
 
-  @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
-  @LastModifiedDate
-  private LocalDateTime modifiedAt;
+    protected GoogleAccount() {
+    }
 
-  protected GoogleAccount() {
-  }
+    protected GoogleAccount(String googleId, User user) {
+        this.id = googleId;
+        this.user = user;
+    }
 
-  protected GoogleAccount(String googleId) {
-    this.id = googleId;
-  }
+    public static GoogleAccount of(String googleId, User user) {
+        return new GoogleAccount(googleId, user);
+    }
 
-  public static GoogleAccount of(String googleId) {
-    return new GoogleAccount(googleId);
-  }
-
-  @Setter
-  @OneToOne
-  @JoinColumn
-  private User user;
+    @Setter
+    @OneToOne
+    @JoinColumn
+    private User user;
 }

@@ -7,8 +7,8 @@ import com.querydsl.core.types.dsl.Expressions;
 
 public class QuerydslUtil {
 
-  public static OrderSpecifier<?> getSortedColumn(Order order, Path<?> parent, String fieldName) {
-    Path<Object> fieldPath = Expressions.path(Object.class, parent, fieldName);
-    return new OrderSpecifier(order, fieldPath);
-  }
+    public static OrderSpecifier<?> getSortedColumn(Order order, Path<?> parent, String fieldName) {
+        Path<Object> fieldPath = Expressions.path(Object.class, parent, fieldName);
+        return new OrderSpecifier(order, fieldPath);
+    }
 }

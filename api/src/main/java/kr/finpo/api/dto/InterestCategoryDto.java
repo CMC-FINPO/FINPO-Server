@@ -3,7 +3,6 @@ package kr.finpo.api.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.finpo.api.domain.Category;
 import kr.finpo.api.domain.InterestCategory;
-import kr.finpo.api.domain.User;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record InterestCategoryDto(
@@ -12,14 +11,16 @@ public record InterestCategoryDto(
     Category category,
     Boolean subscribe
 ) {
-  public InterestCategoryDto {
-  }
 
-  public static InterestCategoryDto of(Long id) {
-    return new InterestCategoryDto(null, id, null, null);
-  }
+    public InterestCategoryDto {
+    }
 
-  public static InterestCategoryDto response(InterestCategory interestCategory) {
-    return new InterestCategoryDto(interestCategory.getId(), null, interestCategory.getCategory(), interestCategory.getSubscribe());
-  }
+    public static InterestCategoryDto of(Long id) {
+        return new InterestCategoryDto(null, id, null, null);
+    }
+
+    public static InterestCategoryDto response(InterestCategory interestCategory) {
+        return new InterestCategoryDto(interestCategory.getId(), null, interestCategory.getCategory(),
+            interestCategory.getSubscribe());
+    }
 }

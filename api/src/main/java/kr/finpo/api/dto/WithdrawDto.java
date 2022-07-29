@@ -4,4 +4,5 @@ public record WithdrawDto(
     String access_token,
     String code
 ) {
+
 }

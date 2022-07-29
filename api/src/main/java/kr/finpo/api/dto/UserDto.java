@@ -1,6 +1,10 @@
 package kr.finpo.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import kr.finpo.api.constant.ErrorCode;
 import kr.finpo.api.constant.Gender;
 import kr.finpo.api.constant.OAuthType;
@@ -11,11 +15,6 @@ import kr.finpo.api.domain.User;
 import kr.finpo.api.exception.GeneralException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserDto(
@@ -37,51 +36,73 @@ public record UserDto(
     String categories,
     List<Long> purposeIds
 ) {
-  public UserDto {
-  }
 
-  public User toEntity() {
-    return User.of(name, nickname, birth, gender, email, statusId, profileImg, oAuthType);
-  }
-
-  public String toUrlParameter() {
-    try {
-      StringBuilder sb = new StringBuilder();
-      for (Field field : this.getClass().getDeclaredFields()) {
-        if (field.get(this) == null) continue;
-        sb.append(field.getName());
-        sb.append("=");
-        sb.append(field.get(this));
-        sb.append("&");
-      }
-      sb.deleteCharAt(sb.length() - 1);
-      return sb.toString().replaceAll(" ", "%20");
-    } catch (Exception e) {
-      throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+    public UserDto {
     }
-  }
 
-  public User updateEntity(User user) {
-    if (name != null) user.setName(name);
-    if (nickname != null) user.setNickname(nickname);
-    if (birth != null) user.setBirth(birth);
-    if (gender != null) user.setGender(gender);
-    if (email != null) user.setEmail(email);
-    if (statusId != null) user.setStatusId(statusId);
-    if (profileImg != null) user.setProfileImg(profileImg);
+    public User toEntity() {
+        return User.of(name, nickname, birth, gender, email, statusId, profileImg, oAuthType);
+    }
 
-    return user;
-  }
+    public String toUrlParameter() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (Field field : this.getClass().getDeclaredFields()) {
+                if (field.get(this) == null) {
+                    continue;
+                }
+                sb.append(field.getName());
+                sb.append("=");
+                sb.append(field.get(this));
+                sb.append("&");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            return sb.toString().replaceAll(" ", "%20");
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e);
+        }
+    }
 
-  public static UserDto response(User user) {
-    return new UserDto(user.getId(), user.getStatus(), user.getName(), user.getNickname(), user.getBirth(), user.getGender(), user.getEmail(), user.getStatusId(), user.getProfileImg(), user.getOAuthType(), user.getRole(), null, null, Optional.ofNullable(user.getDefaultRegion()).map(InterestRegion::getRegion).orElse(null), null, null);
-  }
+    public User updateEntity(User user) {
+        if (name != null) {
+            user.setName(name);
+        }
+        if (nickname != null) {
+            user.setNickname(nickname);
+        }
+        if (birth != null) {
+            user.setBirth(birth);
+        }
+        if (gender != null) {
+            user.setGender(gender);
+        }
+        if (email != null) {
+            user.setEmail(email);
+        }
+        if (statusId != null) {
+            user.setStatusId(statusId);
+        }
+        if (profileImg != null) {
+            user.setProfileImg(profileImg);
+        }
 
-  public static UserDto communityResponse(User user) {
-    return new UserDto(null, user.getStatus(), null, user.getNickname(), null, user.getGender(), null, null, user.getProfileImg(), null, user.getRole(), null, null, null, null, null);
-  }
+        return user;
+    }
 
-  public static UserDto appleUserDto() {
-    return new UserDto(null, null, null, null, null, null, null, null, null, OAuthType.APPLE, null, null, null, null, null, null);
-  }
+    public static UserDto response(User user) {
+        return new UserDto(user.getId(), user.getStatus(), user.getName(), user.getNickname(), user.getBirth(),
+            user.getGender(), user.getEmail(), user.getStatusId(), user.getProfileImg(), user.getOAuthType(),
+            user.getRole(), null, null,
+            Optional.ofNullable(user.getDefaultRegion()).map(InterestRegion::getRegion).orElse(null), null, null);
+    }
+
+    public static UserDto communityResponse(User user) {
+        return new UserDto(null, user.getStatus(), null, user.getNickname(), null, user.getGender(), null, null,
+            user.getProfileImg(), null, user.getRole(), null, null, null, null, null);
+    }
+
+    public static UserDto appleUserDto() {
+        return new UserDto(null, null, null, null, null, null, null, null, null, OAuthType.APPLE, null, null, null,
+            null, null, null);
+    }
 }

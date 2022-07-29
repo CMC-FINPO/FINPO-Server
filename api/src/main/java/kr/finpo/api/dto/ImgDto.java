@@ -8,10 +8,11 @@ public record ImgDto(
     String img,
     Integer order
 ) {
-  public static ImgDto response(PostImg postImg) {
-    return new ImgDto(
-        postImg.getImg(),
-        postImg.getOorder()
-    );
-  }
+
+    public static ImgDto response(PostImg postImg) {
+        return new ImgDto(
+            postImg.getImg(),
+            postImg.getOorder()
+        );
+    }
 }

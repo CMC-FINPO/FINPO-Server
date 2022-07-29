@@ -9,4 +9,5 @@ public record GoogleTokenDto(
     String token_type,
     String id_token
 ) {
+
 }

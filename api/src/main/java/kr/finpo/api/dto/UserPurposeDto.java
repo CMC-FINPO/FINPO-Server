@@ -8,10 +8,11 @@ public record UserPurposeDto(
     Long id,
     String name
 ) {
-  public UserPurposeDto {
-  }
 
-  public static UserPurposeDto response(UserPurpose userPurpose) {
-    return new UserPurposeDto(userPurpose.id, userPurpose.name);
-  }
+    public UserPurposeDto {
+    }
+
+    public static UserPurposeDto response(UserPurpose userPurpose) {
+        return new UserPurposeDto(userPurpose.id, userPurpose.name);
+    }
 }

@@ -1,14 +1,20 @@
 package kr.finpo.api.domain;
 
 import com.sun.istack.NotNull;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -16,33 +22,33 @@ import java.time.LocalDateTime;
 @Entity
 public class UserPurpose {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  @Setter
-  @Column(nullable = false)
-  private Long userPurposeId;
+    @Setter
+    @Column(nullable = false)
+    private Long userPurposeId;
 
-  @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
-  @CreatedDate
-  private LocalDateTime createdAt;
+    @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "datetime default CURRENT_TIMESTAMP")
+    @CreatedDate
+    private LocalDateTime createdAt;
 
-  protected UserPurpose() {
-  }
+    protected UserPurpose() {
+    }
 
-  protected UserPurpose(Long userPurposeId, User user) {
-    this.userPurposeId = userPurposeId;
-    this.user = user;
-  }
+    protected UserPurpose(Long userPurposeId, User user) {
+        this.userPurposeId = userPurposeId;
+        this.user = user;
+    }
 
-  public static UserPurpose of(Long userPurposeId, User user) {
-    return new UserPurpose(userPurposeId, user);
-  }
+    public static UserPurpose of(Long userPurposeId, User user) {
+        return new UserPurpose(userPurposeId, user);
+    }
 
-  @Setter
-  @ManyToOne
-  @NotNull
-  @JoinColumn
-  private User user;
+    @Setter
+    @ManyToOne
+    @NotNull
+    @JoinColumn
+    private User user;
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public record AppleTokenDto(
     String access_token
 ) {
-  public AppleTokenDto {
-  }
+
+    public AppleTokenDto {
+    }
 }

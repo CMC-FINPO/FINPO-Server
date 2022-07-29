@@ -8,6 +8,7 @@ public record AppleAuthDto(
     String id_token,
     String status
 ) {
-  public AppleAuthDto {
-  }
+
+    public AppleAuthDto {
+    }
 }
