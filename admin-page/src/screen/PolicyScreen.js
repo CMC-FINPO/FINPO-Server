@@ -104,14 +104,16 @@ export default function PolicyScreen({ user, setUser, fetch, fetchData }) {
   }, []);
 
   useEffect(() => {
-    if (region1)
+    console.log(region1);
+    if (region1 != null)
       axiosInstance.get(`region/name?parentId=${region1}`).then((res) => {
         setRegions2([...res.data.data]);
       });
   }, [region1]);
 
   useEffect(() => {
-    if (r1)
+    console.log(r1);
+    if (r1 != null)
       axiosInstance.get(`region/name?parentId=${r1}`).then((res) => {
         setRegions2([...res.data.data]);
       });
