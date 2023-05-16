@@ -38,3 +38,11 @@
 | **커뮤니티** <br> 신고 및 차단 | **마이페이지** | **알림 서비스** |
 | :---: | :---: | :---: |
 | ![커뮤니티 - 신고 및 차단](https://user-images.githubusercontent.com/81678959/183050898-281ddafe-08e4-4b1b-9ad0-23ba1d1e7794.gif) | ![마이 페이지](https://user-images.githubusercontent.com/81678959/183050820-c48b9f15-efd8-44e3-98cd-57a38a1698dd.gif) | ![알림서비스](https://user-images.githubusercontent.com/81678959/183051523-a55ef50c-d809-4773-a8de-9b5f7ca102a2.gif) |
+
+<br>
+
+<img width="1319" alt="image" src="https://github.com/CMC-FINPO/FINPO-Server/assets/54897403/0db1ce84-87e3-4c63-a70d-36e36ee17116">
+<img width="1321" alt="image" src="https://github.com/CMC-FINPO/FINPO-Server/assets/54897403/bf06ed31-5876-41ae-9266-9aef7f49081c">
+<img width="1315" alt="image" src="https://github.com/CMC-FINPO/FINPO-Server/assets/54897403/bcc0be09-eb04-4a6f-9504-b8bb1ede44f5">
+<img width="1321" alt="image" src="https://github.com/CMC-FINPO/FINPO-Server/assets/54897403/43cfc109-43f5-4b59-bdfd-8ecd28b1378f">
+
